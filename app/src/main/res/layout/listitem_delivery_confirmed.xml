@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <data>
+        <variable
+            name="vm"
+            type="com.akg.akg_sales.dto.notification.DeliveryConfirmedHeaderDto" />
+    </data>
+
+    <LinearLayout
+        android:id="@+id/card_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="10sp"
+        android:paddingBottom="10sp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="10">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textColor="@color/font_color_main"
+                android:textSize="@dimen/text_size_1"
+                android:text="Move Order:"
+                android:textStyle="bold"
+                android:layout_weight="4"/>
+            <TextView
+                android:layout_width="0dp"
+                android:text="@{vm.movOrderNo}"
+                android:layout_height="wrap_content"
+                android:textColor="@color/font_color_main"
+                android:textSize="@dimen/text_size_1"
+                android:layout_weight="6"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="10">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textColor="@color/font_color_main"
+                android:textSize="@dimen/text_size_1"
+                android:text="Delivery Date:"
+                android:textStyle="bold"
+                android:layout_weight="4"/>
+            <TextView
+                android:layout_width="0dp"
+                android:text="@{vm.confirmedDate}"
+                android:layout_height="wrap_content"
+                android:textColor="@color/font_color_main"
+                android:textSize="@dimen/text_size_1"
+                android:layout_weight="6"/>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="10">
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:textColor="@color/font_color_main"
+                android:textSize="@dimen/text_size_1"
+                android:text="Customer:"
+                android:textStyle="bold"
+                android:layout_weight="4"/>
+            <TextView
+                android:layout_width="0dp"
+                android:text="@{vm.customerName+` (`+vm.customerNumber+`)`}"
+                android:layout_height="wrap_content"
+                android:textColor="@color/font_color_main"
+                android:textSize="@dimen/text_size_1"
+                android:layout_weight="6"/>
+        </LinearLayout>
+
+    </LinearLayout>
+</layout>

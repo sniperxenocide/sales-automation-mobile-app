@@ -1,0 +1,26 @@
+package com.akg.akg_sales.api;
+
+import com.akg.akg_sales.dto.PageResponse;
+import com.akg.akg_sales.dto.notification.DeliveryConfirmedHeaderDto;
+import com.akg.akg_sales.dto.notification.OrderBookedHeaderDto;
+
+import retrofit2.Call;
+import retrofit2.http.GET;
+import retrofit2.http.Query;
+
+public interface NotificationApi {
+
+    @GET("/notification-service/api/order-booked/all")
+    Call<PageResponse<OrderBookedHeaderDto>> getOrderBooked(@Query("customerNumber") String customerNumber);
+
+    @GET("/notification-service/api/order-booked/one")
+    Call<OrderBookedHeaderDto> getOrderBookedDetail(@Query("id") String id);
+
+    @GET("/notification-service/api/delivery-confirmed/all")
+    Call<PageResponse<DeliveryConfirmedHeaderDto>> getDeliveryConfirmed();
+
+    @GET("/notification-service/api/delivery-confirmed/one")
+    Call<DeliveryConfirmedHeaderDto> getDeliveryConfirmedDetail(@Query("id") String id);
+
+
+}
