@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".view.activity.notification.NotificationActivity">
+    <data>
+        <variable
+            name="vm"
+            type="com.akg.akg_sales.dto.notification.PaymentClearedDto" />
+
+        <variable
+            name="activity"
+            type="com.akg.akg_sales.view.activity.notification.PaymentClearedActivity" />
+    </data>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/main_background">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/constraintLayout9"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHeight_percent="0.1"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Payment"
+                android:textColor="@color/font_color_main"
+                android:textSize="@dimen/text_size_4"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:nestedScrollingEnabled="true"
+            app:layout_constraintBottom_toTopOf="@id/linearLayout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/constraintLayout9">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:padding="10sp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="10">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/font_color_main"
+                            android:textSize="@dimen/text_size_1"
+                            android:text="Receipt Id:"
+                            android:textStyle="bold"
+                            android:layout_weight="4"/>
+                        <TextView
+                            android:layout_width="0dp"
+                            android:text="@{vm.cashReceiptId.toString()}"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/font_color_main"
+                            android:textSize="@dimen/text_size_1"
+                            android:layout_weight="6"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="10">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/font_color_main"
+                            android:textSize="@dimen/text_size_1"
+                            android:text="GL Date:"
+                            android:textStyle="bold"
+                            android:layout_weight="4"/>
+                        <TextView
+                            android:layout_width="0dp"
+                            android:text="@{vm.glDate}"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/font_color_main"
+                            android:textSize="@dimen/text_size_1"
+                            android:layout_weight="6"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="10">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/font_color_main"
+                            android:textSize="@dimen/text_size_1"
+                            android:text="Value(Tk):"
+                            android:textStyle="bold"
+                            android:layout_weight="4"/>
+                        <TextView
+                            android:layout_width="0dp"
+                            android:text="@{vm.amount.toString()}"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/font_color_main"
+                            android:textSize="@dimen/text_size_1"
+                            android:layout_weight="6"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="10">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/font_color_main"
+                            android:textSize="@dimen/text_size_1"
+                            android:text="Customer:"
+                            android:textStyle="bold"
+                            android:layout_weight="4"/>
+                        <TextView
+                            android:layout_width="0dp"
+                            android:text="@{vm.customerName+` (`+vm.customerNumber+`)`}"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/font_color_main"
+                            android:textSize="@dimen/text_size_1"
+                            android:layout_weight="6"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="10">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/font_color_main"
+                            android:textSize="@dimen/text_size_1"
+                            android:text="Bank:"
+                            android:textStyle="bold"
+                            android:layout_weight="4"/>
+                        <TextView
+                            android:layout_width="0dp"
+                            android:text="@{vm.bankName+` (`+vm.bankBranchName+`)`}"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/font_color_main"
+                            android:textSize="@dimen/text_size_1"
+                            android:layout_weight="6"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="10">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/font_color_main"
+                            android:textSize="@dimen/text_size_1"
+                            android:text="Account:"
+                            android:textStyle="bold"
+                            android:layout_weight="4"/>
+                        <TextView
+                            android:layout_width="0dp"
+                            android:text="@{vm.bankAccountNum}"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/font_color_main"
+                            android:textSize="@dimen/text_size_1"
+                            android:layout_weight="6"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+
+        </ScrollView>
+
+        <LinearLayout
+            android:id="@+id/linearLayout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/light_grey"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <include
+                layout="@layout/view_back_btn"
+                app:activity="@{activity}" />
+        </LinearLayout>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
+</layout>

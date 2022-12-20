@@ -1,6 +1,5 @@
 package com.akg.akg_sales.dto.notification;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -33,4 +32,6 @@ public class DeliveryConfirmedHeaderDto {
     private String dmoPhoneNumber;
     private List<DeliveryConfirmedLineDto> deliveryConfirmedLines;
     private String rowCreationTime;
+
+    //delivery location needed
 }

@@ -12,10 +12,12 @@ import com.akg.akg_sales.api.NotificationApi;
 import com.akg.akg_sales.dto.PageResponse;
 import com.akg.akg_sales.dto.notification.DeliveryConfirmedHeaderDto;
 import com.akg.akg_sales.dto.notification.OrderBookedHeaderDto;
+import com.akg.akg_sales.dto.notification.PaymentClearedDto;
 import com.akg.akg_sales.util.CommonUtil;
 import com.akg.akg_sales.view.activity.notification.NotificationActivity;
 import com.akg.akg_sales.view.adapter.DeliveryConfirmedAdapter;
 import com.akg.akg_sales.view.adapter.OrderBookedAdapter;
+import com.akg.akg_sales.view.adapter.PaymentClearedAdapter;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,6 +31,7 @@ public class NotificationViewModel extends BaseObservable {
     private final RecyclerView recyclerView;
     private PageResponse<OrderBookedHeaderDto> orderBookedPageResponse = null;
     private PageResponse<DeliveryConfirmedHeaderDto> deliveryConfirmedPageResponse = null;
+    private PageResponse<PaymentClearedDto> paymentClearedPageResponse = null;
 
     @Bindable
     public boolean[] selectedTab = {false,false,false};
@@ -105,7 +108,28 @@ public class NotificationViewModel extends BaseObservable {
 
     public void selectTabPayment(){
         updateUiOnTabChange(2,"Payment");
-        recyclerView.setAdapter(null);
+        if(this.paymentClearedPageResponse==null){
+            NotificationApi api = API.getClient().create(NotificationApi.class);
+            Call<PageResponse<PaymentClearedDto>> call = api.getAllPaymentCleared();
+            call.enqueue(new Callback<PageResponse<PaymentClearedDto>>() {
+                @Override
+                public void onResponse(Call<PageResponse<PaymentClearedDto>> call, Response<PageResponse<PaymentClearedDto>> response) {
+                    paymentClearedPageResponse = response.body();
+                    recyclerView.setAdapter(new PaymentClearedAdapter(activity,
+                            (ArrayList<PaymentClearedDto>) paymentClearedPageResponse.getData()));
+                }
+
+                @Override
+                public void onFailure(Call<PageResponse<PaymentClearedDto>> call, Throwable t) {
+                    call.cancel();
+                    CommonUtil.showToast(activity,t.getMessage(),false);
+                }
+            });
+        }
+        else {
+            recyclerView.setAdapter(new PaymentClearedAdapter(activity,
+                    (ArrayList<PaymentClearedDto>) paymentClearedPageResponse.getData()));
+        }
     }
 
     public void updateUiOnTabChange(int pos,String title){
