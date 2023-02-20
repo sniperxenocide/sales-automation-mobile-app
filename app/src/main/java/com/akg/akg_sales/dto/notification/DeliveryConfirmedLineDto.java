@@ -7,15 +7,22 @@ import lombok.NoArgsConstructor;
 @Data @NoArgsConstructor @AllArgsConstructor
 public class DeliveryConfirmedLineDto {
     private Long id;
+    private Long headerId;
+    private String movOrderNo;
+    private String customerNumber;
+    private String customerName;
     private Long orderNumber;
     private String orderedDate;
     private String doNumber;
-    private String doDate;
+    private String doDateTime;
+    private String doConfirmDate;
     private String doStatus;
-    private Long orderedItemId;
     private String itemCode;
-    private String itemShortName;
-    private Double quantity;
-    private String uom;
+    private String itemDescription;
+    private Double lineQuantity;
+    private Double shippedQty;
+    private String uomCode;
+    private String doWarehouseOrgName;
+    private String shipToLocation;
     private String rowCreationTime;
 }

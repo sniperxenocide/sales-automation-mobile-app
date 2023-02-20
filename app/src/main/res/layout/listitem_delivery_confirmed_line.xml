@@ -116,7 +116,7 @@
                     android:layout_weight="3"/>
                 <TextView
                     android:layout_width="0dp"
-                    android:text="@{vm.quantity.toString()+` `+vm.uom}"
+                    android:text="@{vm.lineQuantity.toString()+` `+vm.uomCode}"
                     android:layout_height="wrap_content"
                     android:textColor="@color/font_color_main"
                     android:textSize="@dimen/text_size_1"

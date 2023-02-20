@@ -12,14 +12,10 @@ public class OrderBookedHeaderDto {
     private Long id;
     private Long orderNumber;
     private Double orderValue;
-    private String business;
+    private String operatingUnit;
     private String customerNumber;
     private String customerName;
-    private String division;
-    private String region;
-    private String territory;
-    private String phoneNumber;
     private String bookedDate;
-
+    private String orderedDate;
     private List<OrderBookedLineDto> orderLines;
 }

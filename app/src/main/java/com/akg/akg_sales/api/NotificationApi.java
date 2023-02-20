@@ -3,7 +3,7 @@ package com.akg.akg_sales.api;
 import com.akg.akg_sales.dto.PageResponse;
 import com.akg.akg_sales.dto.notification.DeliveryConfirmedHeaderDto;
 import com.akg.akg_sales.dto.notification.OrderBookedHeaderDto;
-import com.akg.akg_sales.dto.notification.PaymentClearedDto;
+import com.akg.akg_sales.dto.notification.PaymentDto;
 
 import retrofit2.Call;
 import retrofit2.http.GET;
@@ -23,7 +23,7 @@ public interface NotificationApi {
     @GET("/notification-service/api/delivery-confirmed/one")
     Call<DeliveryConfirmedHeaderDto> getDeliveryConfirmedDetail(@Query("id") String id);
 
-    @GET("/notification-service/api/payment-cleared/all")
-    Call<PageResponse<PaymentClearedDto>> getAllPaymentCleared();
+    @GET("/notification-service/api/payment/all")
+    Call<PageResponse<PaymentDto>> getAllPaymentCleared();
 
 }

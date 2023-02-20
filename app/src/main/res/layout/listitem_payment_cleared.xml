@@ -3,7 +3,7 @@
     <data>
         <variable
             name="vm"
-            type="com.akg.akg_sales.dto.notification.PaymentClearedDto" />
+            type="com.akg.akg_sales.dto.notification.PaymentDto" />
     </data>
 
     <LinearLayout

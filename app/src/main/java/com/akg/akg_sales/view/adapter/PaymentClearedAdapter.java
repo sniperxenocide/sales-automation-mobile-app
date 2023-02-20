@@ -12,17 +12,17 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.akg.akg_sales.BR;
 import com.akg.akg_sales.R;
 import com.akg.akg_sales.databinding.ListitemPaymentClearedBinding;
-import com.akg.akg_sales.dto.notification.PaymentClearedDto;
+import com.akg.akg_sales.dto.notification.PaymentDto;
 import com.akg.akg_sales.view.activity.notification.PaymentClearedActivity;
 
 import java.util.ArrayList;
 
 public class PaymentClearedAdapter extends RecyclerView.Adapter<PaymentClearedAdapter.ViewHolder>{
 
-    private ArrayList<PaymentClearedDto> list;
+    private ArrayList<PaymentDto> list;
     private final Context context;
 
-    public PaymentClearedAdapter(Context context,ArrayList<PaymentClearedDto> list) {
+    public PaymentClearedAdapter(Context context,ArrayList<PaymentDto> list) {
         this.list = list;
         this.context = context;
     }
@@ -38,7 +38,7 @@ public class PaymentClearedAdapter extends RecyclerView.Adapter<PaymentClearedAd
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        PaymentClearedDto dto = list.get(position);
+        PaymentDto dto = list.get(position);
         holder.bind(dto);
         holder.binding.cardItem.setOnClickListener((v)->openPaymentDetailPage(dto));
     }
@@ -60,7 +60,7 @@ public class PaymentClearedAdapter extends RecyclerView.Adapter<PaymentClearedAd
         }
     }
 
-    private void openPaymentDetailPage(PaymentClearedDto dto){
+    private void openPaymentDetailPage(PaymentDto dto){
         Intent intent = new Intent(context, PaymentClearedActivity.class);
         intent.putExtra("payment",dto);
         context.startActivity(intent);

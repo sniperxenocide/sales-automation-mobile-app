@@ -7,7 +7,7 @@ import android.os.Bundle;
 
 import com.akg.akg_sales.R;
 import com.akg.akg_sales.databinding.ActivityPaymentClearedBinding;
-import com.akg.akg_sales.dto.notification.PaymentClearedDto;
+import com.akg.akg_sales.dto.notification.PaymentDto;
 import com.akg.akg_sales.util.CommonUtil;
 
 public class PaymentClearedActivity extends AppCompatActivity {
@@ -17,7 +17,7 @@ public class PaymentClearedActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         try {
-            PaymentClearedDto dto = (PaymentClearedDto) getIntent().getSerializableExtra("payment");
+            PaymentDto dto = (PaymentDto) getIntent().getSerializableExtra("payment");
             binding = DataBindingUtil.setContentView(this,R.layout.activity_payment_cleared);
             binding.setVm(dto);
             binding.setActivity(this);

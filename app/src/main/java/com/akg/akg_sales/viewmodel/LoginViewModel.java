@@ -40,6 +40,7 @@ public class LoginViewModel extends BaseObservable {
         notifyPropertyChanged(BR.password);
     }
 
+    // Customer Number 194311
     public void loginAction(){
         if(userDto.getUsername()==null || userDto.getUsername().length()==0)
             CommonUtil.showToast(activity,"Username Cannot be Empty",false);
