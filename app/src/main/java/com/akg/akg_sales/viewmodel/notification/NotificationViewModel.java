@@ -60,7 +60,7 @@ public class NotificationViewModel extends BaseObservable {
         if(this.orderBookedPageResponse==null){
             NotificationApi api = API.getClient().create(NotificationApi.class);
             Call<PageResponse<OrderBookedHeaderDto>> call
-                    = api.getOrderBooked(CommonUtil.loggedInUser.getUsername());
+                    = api.getOrderBooked(); //CommonUtil.loggedInUser.getUsername()
             call.enqueue(new Callback<PageResponse<OrderBookedHeaderDto>>() {
                 @Override
                 public void onResponse(Call<PageResponse<OrderBookedHeaderDto>> call, Response<PageResponse<OrderBookedHeaderDto>> response) {

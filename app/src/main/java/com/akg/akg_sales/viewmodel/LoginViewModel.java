@@ -8,6 +8,7 @@ import androidx.databinding.Bindable;
 import com.akg.akg_sales.BR;
 import com.akg.akg_sales.dto.UserDto;
 import com.akg.akg_sales.util.CommonUtil;
+import com.akg.akg_sales.view.activity.HomeActivity;
 import com.akg.akg_sales.view.activity.LoginActivity;
 import com.akg.akg_sales.view.activity.notification.NotificationActivity;
 
@@ -46,8 +47,8 @@ public class LoginViewModel extends BaseObservable {
             CommonUtil.showToast(activity,"Username Cannot be Empty",false);
         else {
             CommonUtil.loggedInUser = this.userDto;
-            Intent notificationIntent = new Intent(activity, NotificationActivity.class);
-            activity.startActivity(notificationIntent);
+            Intent homeIntent = new Intent(activity, HomeActivity.class);
+            activity.startActivity(homeIntent);
         }
     }
 

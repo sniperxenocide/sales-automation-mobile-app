@@ -11,8 +11,8 @@ import retrofit2.http.Query;
 
 public interface NotificationApi {
 
-    @GET("/notification-service/api/order-booked/all")
-    Call<PageResponse<OrderBookedHeaderDto>> getOrderBooked(@Query("customerNumber") String customerNumber);
+    @GET("/notification-service/api/order-booked/all")  //@Query("customerNumber") String customerNumber
+    Call<PageResponse<OrderBookedHeaderDto>> getOrderBooked();
 
     @GET("/notification-service/api/order-booked/one")
     Call<OrderBookedHeaderDto> getOrderBookedDetail(@Query("id") String id);

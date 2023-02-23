@@ -46,12 +46,12 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/font_color_main"
                 android:textSize="@dimen/text_size_1"
-                android:text="GL Date:"
+                android:text="Status:"
                 android:textStyle="bold"
                 android:layout_weight="4"/>
             <TextView
                 android:layout_width="0dp"
-                android:text="@{vm.glDate}"
+                android:text="@{vm.receiptCurrStatus}"
                 android:layout_height="wrap_content"
                 android:textColor="@color/font_color_main"
                 android:textSize="@dimen/text_size_1"

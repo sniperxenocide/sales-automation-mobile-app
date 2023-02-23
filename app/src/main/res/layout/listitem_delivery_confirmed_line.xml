@@ -37,6 +37,49 @@
             android:paddingTop="10sp"
             android:paddingBottom="10sp"
             android:layout_weight="9">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="10">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/font_color_main"
+                    android:textSize="@dimen/text_size_1"
+                    android:text="Customer:"
+                    android:textStyle="bold"
+                    android:layout_weight="3"/>
+                <TextView
+                    android:layout_width="0dp"
+                    android:text="@{vm.customerName+` (`+vm.customerNumber+`)`}"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/font_color_main"
+                    android:textSize="@dimen/text_size_1"
+                    android:layout_weight="7"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="10">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/font_color_main"
+                    android:textSize="@dimen/text_size_1"
+                    android:text="Location:"
+                    android:textStyle="bold"
+                    android:layout_weight="3"/>
+                <TextView
+                    android:layout_width="0dp"
+                    android:text="@{vm.shipToLocation}"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/font_color_main"
+                    android:textSize="@dimen/text_size_1"
+                    android:layout_weight="7"/>
+            </LinearLayout>
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
