@@ -59,18 +59,19 @@
                     android:layout_weight="1"
                     android:padding="15sp"
                     android:layout_margin="10sp"
+                    android:onClick="@{()->vm.onClickOrderBtn()}"
                     android:background="@drawable/light_grey_background"
                     >
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/btn_icon_1"
                         android:layout_width="0dp"
-                        android:layout_height="80dp"
+                        android:layout_height="0dp"
+                        app:layout_constraintDimensionRatio="1:1"
                         android:layout_marginBottom="10dp"
                         android:background="@drawable/order_booked"
                         app:layout_constraintBottom_toTopOf="@+id/textView"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHeight_percent="0.65"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintWidth_percent="0.6">
@@ -102,12 +103,12 @@
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/btn_icon_2"
                         android:layout_width="0dp"
-                        android:layout_height="80dp"
+                        android:layout_height="0dp"
                         android:layout_marginBottom="10dp"
                         android:background="@drawable/delivery_confirmed"
                         app:layout_constraintBottom_toTopOf="@+id/delivery_btn_label"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHeight_percent="0.65"
+                        app:layout_constraintDimensionRatio="1:1"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintWidth_percent="0.6">
@@ -147,12 +148,12 @@
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/btn_icon_3"
                         android:layout_width="0dp"
-                        android:layout_height="80dp"
+                        android:layout_height="0dp"
+                        app:layout_constraintDimensionRatio="1:1"
                         android:layout_marginBottom="10dp"
                         android:background="@drawable/payment"
                         app:layout_constraintBottom_toTopOf="@+id/payment_btn_label"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHeight_percent="0.65"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintWidth_percent="0.6">
@@ -185,12 +186,12 @@
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/btn_icon_4"
                         android:layout_width="0dp"
-                        android:layout_height="80dp"
+                        android:layout_height="0dp"
                         android:layout_marginBottom="10dp"
                         android:background="@drawable/notification"
                         app:layout_constraintBottom_toTopOf="@+id/notification_btn_label"
                         app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintHeight_percent="0.65"
+                        app:layout_constraintDimensionRatio="1:1"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
                         app:layout_constraintWidth_percent="0.6">

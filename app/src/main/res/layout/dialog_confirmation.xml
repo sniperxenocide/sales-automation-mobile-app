@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <data>
+        <variable
+            name="vm"
+            type="com.akg.akg_sales.view.dialog.ConfirmationDialog" />
+    </data>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:background="@android:color/white"
+        >
+
+        <TextView
+            android:id="@+id/item_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@{vm.msg}"
+            android:textColor="@color/font_color_main"
+            android:textSize="@dimen/text_size_2"
+            android:textStyle="bold"
+            android:layout_marginTop="20dp"
+            android:hint="Do you want to Create New Order?"
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2"
+            android:layout_gravity="center">
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/no_btn"
+                android:text="NO"
+                android:backgroundTint="@android:color/holo_red_light"
+                android:onClick="@{()->vm.onClickNoBtn()}"
+                android:layout_margin="20dp"
+                android:textSize="@dimen/text_size_1"
+                android:textStyle="bold"
+                android:layout_weight="1"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/yes_btn"
+                android:text="YES"
+                android:backgroundTint="@android:color/holo_green_dark"
+                android:onClick="@{()->vm.onClickYesBtn()}"
+                android:layout_margin="20dp"
+                android:textSize="@dimen/text_size_1"
+                android:textStyle="bold"
+                android:layout_weight="1"/>
+        </LinearLayout>
+
+
+
+    </LinearLayout>
+</layout>
