@@ -10,11 +10,15 @@ import android.util.DisplayMetrics;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import com.akg.akg_sales.dto.UserDto;
+import com.akg.akg_sales.dto.CustomerDto;
+import com.akg.akg_sales.dto.User;
+
+import java.util.List;
 
 public class CommonUtil {
 
-    public static UserDto loggedInUser = null;
+    public static User loggedInUser = null;
+    public static List<CustomerDto> customers;
 
     public static void showToast(Context context, String msg, boolean isSuccess){
         try{

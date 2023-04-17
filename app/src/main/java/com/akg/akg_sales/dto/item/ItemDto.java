@@ -1,4 +1,4 @@
-package com.akg.akg_sales.dto;
+package com.akg.akg_sales.dto.item;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,8 +7,9 @@ import lombok.ToString;
 
 @Data @NoArgsConstructor @AllArgsConstructor @ToString
 public class ItemDto {
-    private Long inventoryItemId;
+    private Long id;
     private String itemCode;
-    private String description;
-    private String uom;
+    private String itemDescription;
+    private String primaryUom;
+    private String secondaryUom;
 }

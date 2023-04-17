@@ -1,16 +1,11 @@
 package com.akg.akg_sales.view.dialog;
 
-import android.app.Activity;
 import android.app.Dialog;
 import android.content.Context;
-import android.graphics.Color;
-import android.graphics.drawable.ColorDrawable;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
-import android.view.WindowManager;
 
 import com.akg.akg_sales.databinding.DialogOrderItemQtyBinding;
-import com.akg.akg_sales.dto.ItemDto;
+import com.akg.akg_sales.dto.item.ItemDto;
 import com.akg.akg_sales.util.CommonUtil;
 
 public class OrderItemQuantityDialog {
@@ -22,8 +17,8 @@ public class OrderItemQuantityDialog {
 
     public OrderItemQuantityDialog(Context context, ItemDto itemDto){
         this.context=context;
-        this.itemName=itemDto.getDescription();
-        this.uom=itemDto.getUom();
+        this.itemName=itemDto.getItemDescription();
+        this.uom=itemDto.getPrimaryUom();
         dialog=new Dialog(context);
         DialogOrderItemQtyBinding binding = DialogOrderItemQtyBinding.inflate(LayoutInflater.from(context));
         dialog.setContentView(binding.getRoot());

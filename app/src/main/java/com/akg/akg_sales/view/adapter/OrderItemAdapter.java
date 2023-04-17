@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.akg.akg_sales.BR;
 import com.akg.akg_sales.R;
 import com.akg.akg_sales.databinding.ListitemOrderSkuBinding;
-import com.akg.akg_sales.dto.ItemDto;
+import com.akg.akg_sales.dto.item.ItemDto;
 import com.akg.akg_sales.view.dialog.OrderItemQuantityDialog;
 
 import java.util.ArrayList;

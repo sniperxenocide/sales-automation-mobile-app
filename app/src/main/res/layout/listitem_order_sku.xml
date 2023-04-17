@@ -4,7 +4,7 @@
     <data>
         <variable
             name="vm"
-            type="com.akg.akg_sales.dto.ItemDto" />
+            type="com.akg.akg_sales.dto.item.ItemDto" />
         <variable
             name="index"
             type="String" />
@@ -81,7 +81,7 @@
                     android:layout_weight="3"/>
                 <TextView
                     android:layout_width="0dp"
-                    android:text="@{vm.description}"
+                    android:text="@{vm.itemDescription}"
                     android:layout_height="wrap_content"
                     android:textColor="@color/font_color_main"
                     android:textSize="@dimen/text_size_1"

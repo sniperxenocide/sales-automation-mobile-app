@@ -7,7 +7,7 @@ import lombok.experimental.Accessors;
 
 @Accessors(chain = true)
 @Data @NoArgsConstructor @AllArgsConstructor
-public class UserDto {
+public class User {
     private String username;
     private String password;
     private String token;

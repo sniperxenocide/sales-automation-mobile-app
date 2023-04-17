@@ -22,38 +22,13 @@
             android:layout_marginBottom="10dp"
             />
 
-<!--        <TextView-->
-<!--            android:id="@+id/textView"-->
-<!--            android:layout_width="match_parent"-->
-<!--            android:layout_height="wrap_content"-->
-<!--            android:layout_marginTop="32dp"-->
-<!--            android:text="Business Unit"-->
-<!--            android:textColor="@color/black"-->
-<!--            android:textSize="@dimen/text_size_1"-->
-<!--            android:textStyle="bold" />-->
-
-<!--        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"-->
-        <com.google.android.material.textfield.TextInputLayout
-            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="10dp"
-            android:hint="Business Unit">
-
-            <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-                android:id="@+id/business_unit_dropdown"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:clickable="true"
-                tools:ignore="KeyboardInaccessibleWidget" />
-        </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:hint="Product Type">
+            android:hint="Item Type">
 
             <androidx.appcompat.widget.AppCompatAutoCompleteTextView
                 android:id="@+id/product_type_dropdown"
@@ -68,7 +43,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:hint="Product Subtype">
+            android:hint="Item Subtype">
 
             <androidx.appcompat.widget.AppCompatAutoCompleteTextView
                 android:id="@+id/product_subtype_dropdown"
@@ -81,7 +56,7 @@
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/qty_ok_btn"
+            android:id="@+id/apply_btn"
             android:background="@drawable/blue_background"
             android:text="Apply Filter"
             android:layout_margin="40dp"

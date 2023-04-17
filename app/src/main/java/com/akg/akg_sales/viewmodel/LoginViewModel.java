@@ -8,11 +8,10 @@ import androidx.databinding.Bindable;
 import com.akg.akg_sales.BR;
 import com.akg.akg_sales.api.API;
 import com.akg.akg_sales.api.LoginApi;
-import com.akg.akg_sales.dto.UserDto;
+import com.akg.akg_sales.dto.User;
 import com.akg.akg_sales.util.CommonUtil;
 import com.akg.akg_sales.view.activity.HomeActivity;
 import com.akg.akg_sales.view.activity.LoginActivity;
-import com.akg.akg_sales.view.activity.notification.NotificationActivity;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -20,47 +19,47 @@ import retrofit2.Response;
 
 public class LoginViewModel extends BaseObservable {
     public LoginActivity activity;
-    private UserDto userDto;
+    private User user;
 
     public LoginViewModel(LoginActivity activity){
         this.activity = activity;
-        userDto = new UserDto();
+        user = new User();
     }
 
     @Bindable
     public String getUsername() {
-        return this.userDto.getUsername();
+        return this.user.getUsername();
     }
 
     public void setUsername(String username) {
-        this.userDto.setUsername(username);
+        this.user.setUsername(username);
         notifyPropertyChanged(BR.username);
     }
 
     @Bindable
     public String getPassword() {
-        return this.userDto.getPassword();
+        return this.user.getPassword();
     }
 
     public void setPassword(String password) {
-        this.userDto.setPassword(password);
+        this.user.setPassword(password);
         notifyPropertyChanged(BR.password);
     }
 
     // Customer Number 194311
     public void loginAction(){
-        if(userDto.getUsername()==null || userDto.getUsername().length()==0)
+        if(user.getUsername()==null || user.getUsername().length()==0)
             CommonUtil.showToast(activity,"Username Cannot be Empty",false);
         else {
             try {
                 LoginApi loginApi = API.getClient().create(LoginApi.class);
-                Call<UserDto> call = loginApi.authenticate(userDto);
-                call.enqueue(new Callback<UserDto>() {
+                Call<User> call = loginApi.authenticate(user);
+                call.enqueue(new Callback<User>() {
                     @Override
-                    public void onResponse(Call<UserDto> call, Response<UserDto> response) {
-                        UserDto validUser = response.body();
+                    public void onResponse(Call<User> call, Response<User> response) {
+                        User validUser = response.body();
                         if(!validUser.getToken().isEmpty()){
-                            validUser.setUsername(userDto.getUsername()).setPassword(userDto.getPassword());
+                            validUser.setUsername(user.getUsername()).setPassword(user.getPassword());
                             CommonUtil.showToast(activity,"Login Success",true);
                             CommonUtil.loggedInUser = validUser;
                             Intent homeIntent = new Intent(activity, HomeActivity.class);
@@ -70,7 +69,7 @@ public class LoginViewModel extends BaseObservable {
                     }
 
                     @Override
-                    public void onFailure(Call<UserDto> call, Throwable t) {
+                    public void onFailure(Call<User> call, Throwable t) {
                         call.cancel();
                         CommonUtil.showToast(activity,"Login Failed",false);
                     }

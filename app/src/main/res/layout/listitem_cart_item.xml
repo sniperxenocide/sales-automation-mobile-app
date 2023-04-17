@@ -61,13 +61,13 @@
                     android:textSize="@dimen/text_size_1"
                     android:paddingStart="1dp"
                     android:paddingEnd="5dp"
-                    android:text="@{vm.itemDto.description}"
+                    android:text="@{vm.itemDto.itemDescription}"
                     android:textStyle="italic"
                     android:hint="Marks FCMP 500gm"
                     android:layout_weight="5"/>
                 <TextView
                     android:layout_width="0dp"
-                    android:text="@{vm.quantity.toString()+` `+vm.itemDto.uom}"
+                    android:text="@{vm.quantity.toString()+` `+vm.itemDto.primaryUom}"
                     android:layout_height="wrap_content"
                     android:textColor="@color/font_color_main"
                     android:textStyle="italic"
