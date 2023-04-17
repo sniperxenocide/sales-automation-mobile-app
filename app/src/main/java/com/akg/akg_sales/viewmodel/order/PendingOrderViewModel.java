@@ -16,10 +16,8 @@ public class PendingOrderViewModel extends BaseObservable {
     }
 
     public void onClickNewOrder(){
-        new ConfirmationDialog(activity, "Create New Order?", a->{
-            Intent orderIntent = new Intent(activity, OrderActivity.class);
-            activity.startActivity(orderIntent);
-        });
+        Intent orderIntent = new Intent(activity, OrderActivity.class);
+        activity.startActivity(orderIntent);
     }
 
     public void onClickFilter(){

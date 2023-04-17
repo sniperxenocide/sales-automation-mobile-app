@@ -11,9 +11,12 @@ import lombok.ToString;
 public class OrderDto {
     private Long id;
     private String orderNumber;
-    private String orderDate;
+    private String creationTime;
     private String customerNumber;
     private String customerName;
+    private String salesDeskName;
+    private String marketSegmentName;
+    private String salesEmployeeName;
     private String status;
     private Double value;
 }
