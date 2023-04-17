@@ -11,6 +11,7 @@ import com.akg.akg_sales.R;
 import com.akg.akg_sales.databinding.ActivityCartBinding;
 import com.akg.akg_sales.dto.CartItemDto;
 import com.akg.akg_sales.dto.item.ItemDto;
+import com.akg.akg_sales.util.CommonUtil;
 import com.akg.akg_sales.view.adapter.CartItemAdapter;
 import com.akg.akg_sales.viewmodel.order.CartViewModel;
 
@@ -34,17 +35,12 @@ public class CartActivity extends AppCompatActivity {
     }
 
     private void loadCartListView(){
-        ArrayList<CartItemDto> list = new ArrayList<>();
-        loadDummyItems(list);
         RecyclerView recyclerView = cartBinding.selectedItemListview;
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        CartItemAdapter adapter = new CartItemAdapter(this,list);
+        CartItemAdapter adapter = new CartItemAdapter(this, (ArrayList<CartItemDto>) CommonUtil.cartItems);
         recyclerView.setAdapter(adapter);
     }
 
-    private void loadDummyItems(ArrayList<CartItemDto> list){
-
-    }
 }

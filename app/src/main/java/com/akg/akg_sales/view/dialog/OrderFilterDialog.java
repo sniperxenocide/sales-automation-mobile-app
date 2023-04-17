@@ -86,6 +86,10 @@ public class OrderFilterDialog {
     }
 
     private void onClickApply(){
+        if(selectedSubTypeId==null){
+            CommonUtil.showToast(activity,"Must Select all options",false);
+            return;
+        }
         activity.fetchItemFromServer(selectedSubTypeId);
         dialog.dismiss();
     }
