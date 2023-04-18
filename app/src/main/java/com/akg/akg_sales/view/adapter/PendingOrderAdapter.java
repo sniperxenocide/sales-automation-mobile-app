@@ -11,7 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.akg.akg_sales.BR;
 import com.akg.akg_sales.R;
 import com.akg.akg_sales.databinding.ListitemPendingOrderBinding;
-import com.akg.akg_sales.dto.OrderDto;
+import com.akg.akg_sales.dto.order.OrderDto;
 
 import java.util.ArrayList;
 

@@ -27,12 +27,11 @@ import retrofit2.Response;
 
 public class OrderActivity extends AppCompatActivity {
     private ActivityOrderBinding orderBinding;
-    public CustomerDto selectedCustomer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if(CommonUtil.customers.size()>0) selectedCustomer = CommonUtil.customers.get(0);
+        setCustomer();
         loadPage();
     }
 
@@ -54,7 +53,7 @@ public class OrderActivity extends AppCompatActivity {
 
     public void fetchItemFromServer(Long subTypeId){
         API.getClient().create(ItemApi.class)
-                .getOrderItems(selectedCustomer.getId(),subTypeId)
+                .getOrderItems(CommonUtil.selectedCustomer.getId(),subTypeId)
                 .enqueue(new Callback<List<ItemDto>>() {
                     @Override
                     public void onResponse(Call<List<ItemDto>> call, Response<List<ItemDto>> response) {
@@ -65,6 +64,11 @@ public class OrderActivity extends AppCompatActivity {
                     @Override
                     public void onFailure(Call<List<ItemDto>> call, Throwable t) {call.cancel();}
                 });
+    }
+
+    private void setCustomer(){
+        if(CommonUtil.customers.size()>0)
+            CommonUtil.selectedCustomer = CommonUtil.customers.get(0);
     }
 
 }

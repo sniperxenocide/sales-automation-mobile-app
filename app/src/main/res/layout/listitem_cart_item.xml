@@ -5,7 +5,7 @@
     <data>
         <variable
             name="vm"
-            type="com.akg.akg_sales.dto.CartItemDto" />
+            type="com.akg.akg_sales.dto.order.CartItemDto" />
         <variable
             name="index"
             type="String" />

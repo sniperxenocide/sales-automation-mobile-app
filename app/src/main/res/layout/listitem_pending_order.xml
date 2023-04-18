@@ -4,7 +4,7 @@
     <data>
         <variable
             name="vm"
-            type="com.akg.akg_sales.dto.OrderDto" />
+            type="com.akg.akg_sales.dto.order.OrderDto" />
         <variable
             name="index"
             type="String" />

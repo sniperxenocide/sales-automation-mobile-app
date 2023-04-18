@@ -1,4 +1,4 @@
-package com.akg.akg_sales.dto;
+package com.akg.akg_sales.dto.order;
 
 import java.util.List;
 

@@ -10,7 +10,7 @@ import android.util.DisplayMetrics;
 import android.view.WindowManager;
 import android.widget.Toast;
 
-import com.akg.akg_sales.dto.CartItemDto;
+import com.akg.akg_sales.dto.order.CartItemDto;
 import com.akg.akg_sales.dto.CustomerDto;
 import com.akg.akg_sales.dto.User;
 
@@ -21,6 +21,7 @@ public class CommonUtil {
 
     public static User loggedInUser = null;
     public static List<CustomerDto> customers;
+    public static CustomerDto selectedCustomer;
     public static List<CartItemDto> cartItems=new ArrayList<>();
 
     public static void showToast(Context context, String msg, boolean isSuccess){

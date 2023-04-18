@@ -71,7 +71,7 @@ public class OrderFilterDialog {
 
     private void fetchData(){
         API.getClient().create(ItemApi.class)
-                .getItemTypes(activity.selectedCustomer.getId())
+                .getItemTypes(CommonUtil.selectedCustomer.getId())
                 .enqueue(new Callback<List<ItemTypeDto>>() {
                     @Override
                     public void onResponse(Call<List<ItemTypeDto>> call, Response<List<ItemTypeDto>> response) {

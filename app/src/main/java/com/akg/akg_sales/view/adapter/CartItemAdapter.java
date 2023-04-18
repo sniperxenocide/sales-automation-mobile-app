@@ -1,6 +1,5 @@
 package com.akg.akg_sales.view.adapter;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -11,17 +10,20 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.akg.akg_sales.BR;
 import com.akg.akg_sales.R;
 import com.akg.akg_sales.databinding.ListitemCartItemBinding;
-import com.akg.akg_sales.dto.CartItemDto;
+import com.akg.akg_sales.dto.order.CartItemDto;
+import com.akg.akg_sales.util.CommonUtil;
+import com.akg.akg_sales.view.activity.order.CartActivity;
+import com.akg.akg_sales.view.dialog.ConfirmationDialog;
 
 import java.util.ArrayList;
 
 public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHolder>{
-    private ArrayList<CartItemDto> headers;
-    private final Context context;
+    private final ArrayList<CartItemDto> headers;
+    private final CartActivity activity;
 
-    public CartItemAdapter(Context context,ArrayList<CartItemDto> objects){
+    public CartItemAdapter(CartActivity activity,ArrayList<CartItemDto> objects){
         this.headers = objects;
-        this.context = context;
+        this.activity = activity;
     }
 
     @NonNull
@@ -37,6 +39,12 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
     public void onBindViewHolder(@NonNull CartItemAdapter.ViewHolder holder, int position) {
         CartItemDto header = headers.get(position);
         holder.bind(header,Integer.toString(position+1));
+        holder.itemBinding.deleteCartItem.setOnClickListener(view -> {
+            new ConfirmationDialog(activity,"Delete Item from Cart?",i->{
+                CommonUtil.cartItems.remove(header);
+                activity.loadCartListView();
+            });
+        });
     }
 
 

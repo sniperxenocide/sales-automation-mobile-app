@@ -5,7 +5,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 
 import com.akg.akg_sales.databinding.DialogOrderItemQtyBinding;
-import com.akg.akg_sales.dto.CartItemDto;
+import com.akg.akg_sales.dto.order.CartItemDto;
 import com.akg.akg_sales.dto.item.ItemDto;
 import com.akg.akg_sales.util.CommonUtil;
 
@@ -31,11 +31,11 @@ public class OrderItemQuantityDialog {
         try {
             double qty = Double.parseDouble(binding.quantity.getText().toString());
             if(qty<=0) throw new Exception("Invalid Quantity");
-            if(itemExistInCart(itemDto)) throw new Exception("Item Already Added in Cart");
-            CommonUtil.cartItems.add(new CartItemDto(itemDto,qty));
+            if(itemExistInCart(itemDto)) throw new Exception("Item Already Exist in Cart");
+            CommonUtil.cartItems.add(
+                    new CartItemDto(CommonUtil.selectedCustomer,itemDto,qty));
             CommonUtil.showToast(dialog.getContext(), "Item Added to Cart",true);
             dialog.dismiss();
-            System.out.println(CommonUtil.cartItems);
         }catch (Exception e){
             CommonUtil.showToast(dialog.getContext(),e.getMessage(),false);
         }
@@ -43,7 +43,9 @@ public class OrderItemQuantityDialog {
 
     private boolean itemExistInCart(ItemDto itemDto){
         for (CartItemDto i:CommonUtil.cartItems) {
-            if(Objects.equals(i.getItemDto().getId(), itemDto.getId())) return true;
+            if(Objects.equals(i.getItemDto().getId(), itemDto.getId())
+            && Objects.equals(i.getCustomerDto().getId(), CommonUtil.selectedCustomer.getId()))
+                return true;
         }
         return false;
     }

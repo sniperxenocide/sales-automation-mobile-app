@@ -1,5 +1,6 @@
-package com.akg.akg_sales.dto;
+package com.akg.akg_sales.dto.order;
 
+import com.akg.akg_sales.dto.CustomerDto;
 import com.akg.akg_sales.dto.item.ItemDto;
 
 import lombok.AllArgsConstructor;
@@ -12,6 +13,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @ToString
 public class CartItemDto {
+    private CustomerDto customerDto;
     private ItemDto itemDto;
     private Double quantity;
 }

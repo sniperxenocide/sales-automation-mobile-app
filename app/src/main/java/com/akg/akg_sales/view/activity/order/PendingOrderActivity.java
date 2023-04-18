@@ -11,7 +11,7 @@ import com.akg.akg_sales.R;
 import com.akg.akg_sales.api.API;
 import com.akg.akg_sales.api.OrderApi;
 import com.akg.akg_sales.databinding.ActivityPendingOrderBinding;
-import com.akg.akg_sales.dto.OrderDto;
+import com.akg.akg_sales.dto.order.OrderDto;
 import com.akg.akg_sales.util.CommonUtil;
 import com.akg.akg_sales.view.adapter.PendingOrderAdapter;
 import com.akg.akg_sales.viewmodel.order.PendingOrderViewModel;
