@@ -1,5 +1,7 @@
 package com.akg.akg_sales.view.adapter;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -44,6 +46,19 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
                 CommonUtil.cartItems.remove(header);
                 activity.loadCartListView();
             });
+        });
+        holder.itemBinding.quantity.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+                try {
+                    header.setQuantity(Integer.parseInt(editable.toString()));
+                }catch (Exception e){}
+            }
         });
     }
 

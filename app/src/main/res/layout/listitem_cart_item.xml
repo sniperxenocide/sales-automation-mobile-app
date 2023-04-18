@@ -53,32 +53,63 @@
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
                 android:gravity="center_vertical"
-                android:weightSum="10">
+                >
                 <TextView
-                    android:layout_width="0dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/font_color_main"
                     android:textSize="@dimen/text_size_1"
                     android:paddingStart="1dp"
                     android:paddingEnd="5dp"
+                    android:paddingBottom="10dp"
                     android:text="@{vm.itemDto.itemDescription}"
                     android:textStyle="italic"
                     android:hint="Marks FCMP 500gm"
-                    android:layout_weight="5"/>
+                    />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:gravity="center_vertical"
+                android:weightSum="10">
+
                 <TextView
                     android:layout_width="0dp"
-                    android:text="@{vm.quantity.toString()+` `+vm.itemDto.primaryUom}"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="4"/>
+                <EditText
+                    android:id="@+id/quantity"
+                    android:inputType="number"
+                    android:layout_width="wrap_content"
+                    android:background="@drawable/white_background"
+                    android:layout_height="wrap_content"
+                    android:text="@{vm.quantity.toString()}"
+                    android:textColor="@color/font_color_main"
+                    android:textStyle="italic"
+                    android:textSize="@dimen/text_size_1"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:paddingStart="15dp"
+                    android:paddingEnd="15dp"
+                    android:hint="5.0"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:textAlignment="center"
+                    android:text="@{vm.itemDto.primaryUom}"
                     android:layout_height="wrap_content"
                     android:textColor="@color/font_color_main"
                     android:textStyle="italic"
                     android:textSize="@dimen/text_size_1"
-                    android:hint="13 CTN"
-                    android:layout_weight="3"/>
+                    android:padding="10dp"
+                    android:hint="CTN"
+                    />
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/delete_cart_item"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="2">
+                    android:layout_weight="3">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="45dp"
@@ -89,6 +120,7 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
+
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

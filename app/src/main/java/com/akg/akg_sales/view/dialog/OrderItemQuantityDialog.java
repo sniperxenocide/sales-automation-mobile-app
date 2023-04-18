@@ -29,7 +29,7 @@ public class OrderItemQuantityDialog {
 
     public void onClickAddToCart(){
         try {
-            double qty = Double.parseDouble(binding.quantity.getText().toString());
+            int qty = Integer.parseInt(binding.quantity.getText().toString());
             if(qty<=0) throw new Exception("Invalid Quantity");
             if(itemExistInCart(itemDto)) throw new Exception("Item Already Exist in Cart");
             CommonUtil.cartItems.add(

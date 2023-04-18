@@ -15,5 +15,5 @@ import lombok.ToString;
 public class CartItemDto {
     private CustomerDto customerDto;
     private ItemDto itemDto;
-    private Double quantity;
+    private Integer quantity;
 }
