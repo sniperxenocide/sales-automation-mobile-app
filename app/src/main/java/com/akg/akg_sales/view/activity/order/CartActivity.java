@@ -21,6 +21,7 @@ import java.util.Objects;
 
 public class CartActivity extends AppCompatActivity {
     public ActivityCartBinding cartBinding;
+    public RecyclerView recyclerView;
     public Long selectedCustomerId;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +42,7 @@ public class CartActivity extends AppCompatActivity {
         for(CartItemDto c:CommonUtil.cartItems)
             if(Objects.equals(c.getCustomerDto().getId(), selectedCustomerId))
                 list.add(c);
-        RecyclerView recyclerView = cartBinding.selectedItemListview;
+        recyclerView = cartBinding.selectedItemListview;
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);

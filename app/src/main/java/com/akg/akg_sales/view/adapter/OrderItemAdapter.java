@@ -12,9 +12,12 @@ import com.akg.akg_sales.BR;
 import com.akg.akg_sales.R;
 import com.akg.akg_sales.databinding.ListitemOrderSkuBinding;
 import com.akg.akg_sales.dto.item.ItemDto;
-import com.akg.akg_sales.view.dialog.OrderItemQuantityDialog;
+import com.akg.akg_sales.dto.order.CartItemDto;
+import com.akg.akg_sales.util.CommonUtil;
+import com.akg.akg_sales.view.dialog.ItemQuantityDialog;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.ViewHolder>{
     private ArrayList<ItemDto> headers;
@@ -39,7 +42,7 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.View
         ItemDto header = headers.get(position);
         holder.bind(header,Integer.toString(position+1));
         holder.itemBinding.cardItem
-                .setOnClickListener((v)->onItemSelect(position));
+                .setOnClickListener((v)->onItemSelect(header));
     }
 
     @Override
@@ -60,7 +63,27 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.View
         }
     }
 
-    private void onItemSelect(int position){
-        OrderItemQuantityDialog dialog = new OrderItemQuantityDialog(context, headers.get(position));
+    private void onItemSelect(ItemDto itemDto){
+        if(itemExistInCart(itemDto)){
+            CommonUtil.showToast(context,"Item Already Exist in Cart",false);
+        }
+        else {
+            ItemQuantityDialog dialog = new ItemQuantityDialog(context, itemDto,
+                    0,"Add to Cart",
+                    qty->{
+                        CommonUtil.cartItems.add(
+                                new CartItemDto(CommonUtil.selectedCustomer,itemDto,qty));
+                        CommonUtil.showToast(context, "Item Added to Cart",true);
+            });
+        }
+    }
+
+    private boolean itemExistInCart(ItemDto itemDto){
+        for (CartItemDto i: CommonUtil.cartItems) {
+            if(Objects.equals(i.getItemDto().getId(), itemDto.getId())
+                    && Objects.equals(i.getCustomerDto().getId(), CommonUtil.selectedCustomer.getId()))
+                return true;
+        }
+        return false;
     }
 }

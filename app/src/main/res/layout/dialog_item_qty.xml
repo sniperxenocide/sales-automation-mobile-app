@@ -4,7 +4,7 @@
     <data>
         <variable
             name="vm"
-            type="com.akg.akg_sales.view.dialog.OrderItemQuantityDialog" />
+            type="com.akg.akg_sales.view.dialog.ItemQuantityDialog" />
     </data>
 
     <LinearLayout
@@ -48,6 +48,7 @@
                 android:layout_width="100dp"
                 android:layout_height="wrap_content"
                 android:id="@+id/quantity"
+                android:text="@{vm.quantity.toString()}"
                 android:inputType="number"
                 android:textColor="@color/font_color_main"
                 android:textSize="@dimen/text_size_1"
@@ -69,13 +70,12 @@
 
         </LinearLayout>
 
-
-
         <Button
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/qty_ok_btn"
-            android:text="Add to Cart"
+            android:text="@{vm.btnLabel}"
+            android:hint="Add to Cart"
             android:onClick="@{()->vm.onClickAddToCart()}"
             android:layout_margin="40dp"
             android:background="@drawable/blue_background"

@@ -1,7 +1,5 @@
 package com.akg.akg_sales.view.adapter;
 
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -16,8 +14,10 @@ import com.akg.akg_sales.dto.order.CartItemDto;
 import com.akg.akg_sales.util.CommonUtil;
 import com.akg.akg_sales.view.activity.order.CartActivity;
 import com.akg.akg_sales.view.dialog.ConfirmationDialog;
+import com.akg.akg_sales.view.dialog.ItemQuantityDialog;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHolder>{
     private final ArrayList<CartItemDto> headers;
@@ -47,19 +47,7 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
                 activity.loadCartListView();
             });
         });
-        holder.itemBinding.quantity.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                try {
-                    header.setQuantity(Integer.parseInt(editable.toString()));
-                }catch (Exception e){}
-            }
-        });
+        holder.itemBinding.quantity.setOnClickListener(view -> onClickQuantityUpdate(header));
     }
 
 
@@ -79,5 +67,23 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
             itemBinding.setVariable(BR.index, idx);
             itemBinding.executePendingBindings();
         }
+    }
+
+    private void onClickQuantityUpdate(CartItemDto cartItem){
+        ItemQuantityDialog dialog = new ItemQuantityDialog(activity, cartItem.getItemDto(),
+                cartItem.getQuantity(), "Update Quantity",
+                qty->{
+                    for (CartItemDto i:CommonUtil.cartItems) {
+                        if(Objects.equals(i.getItemDto().getId(), cartItem.getItemDto().getId())){
+                            i.setQuantity(qty);
+                            //cartItem.setQuantity(qty);
+                            break;
+                        }
+                    }
+                    try {
+                        Objects.requireNonNull(activity.recyclerView.getAdapter())
+                                .notifyItemChanged(headers.indexOf(cartItem));
+                    }catch (Exception ignored){}
+                });
     }
 }
