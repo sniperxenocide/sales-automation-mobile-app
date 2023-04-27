@@ -10,6 +10,7 @@
             type="String" />
     </data>
     <LinearLayout
+        android:id="@+id/order_item"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
@@ -125,7 +126,7 @@
                     android:layout_weight="3"/>
                 <TextView
                     android:layout_width="0dp"
-                    android:text="@{vm.status}"
+                    android:text="@{vm.currentStatus}"
                     android:layout_height="wrap_content"
                     android:textColor="@color/font_color_main"
                     android:textSize="@dimen/text_size_1"

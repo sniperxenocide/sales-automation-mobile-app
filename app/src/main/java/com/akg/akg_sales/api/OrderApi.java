@@ -20,4 +20,7 @@ public interface OrderApi {
 
     @POST("/order-service/api/order/create")
     Call<OrderDto> createOrder(@Body OrderRequest body);
+
+    @POST("/order-service/api/order/approve")
+    Call<OrderDto> approveOrder(@Body OrderRequest body);
 }

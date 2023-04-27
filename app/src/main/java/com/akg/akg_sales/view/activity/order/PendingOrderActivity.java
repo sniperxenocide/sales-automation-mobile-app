@@ -33,6 +33,13 @@ public class PendingOrderActivity extends AppCompatActivity {
         fetchOrderFromServer();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        fetchOrderFromServer();
+    }
+
+
     private void loadPage(){
         binding= DataBindingUtil.setContentView(this,R.layout.activity_pending_order);
         binding.setVm(new PendingOrderViewModel(this));
@@ -70,15 +77,4 @@ public class PendingOrderActivity extends AppCompatActivity {
         }
     }
 
-    private void loadDummyPendingOrder(ArrayList<OrderDto> list){
-//        list.add(new OrderDto(1L,"20415.20230329.1","29-Mar-2023",
-//                "20415","Bismillah Treaders","Pending Approval",235400.0));
-//        list.add(new OrderDto(2L,"20415.20230329.2","29-Mar-2023",
-//                "20415","Bismillah Treaders","Pending Approval",120500.0));
-//        list.add(new OrderDto(3L,"20415.20230326.1","26-Mar-2023",
-//                "20415","Bismillah Treaders","Awaiting Software Posting (Approved)",305000.0));
-//        list.add(new OrderDto(4L,"20415.20230325.1","25-Mar-2023",
-//                "20415","Bismillah Treaders","Order Posted.Wait for Notification",212500.0));
-
-    }
 }

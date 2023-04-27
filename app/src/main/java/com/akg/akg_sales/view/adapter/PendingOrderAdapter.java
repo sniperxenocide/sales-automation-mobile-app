@@ -1,7 +1,9 @@
 package com.akg.akg_sales.view.adapter;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -12,6 +14,7 @@ import com.akg.akg_sales.BR;
 import com.akg.akg_sales.R;
 import com.akg.akg_sales.databinding.ListitemPendingOrderBinding;
 import com.akg.akg_sales.dto.order.OrderDto;
+import com.akg.akg_sales.view.activity.order.OrderDetailActivity;
 
 import java.util.ArrayList;
 
@@ -37,6 +40,11 @@ public class PendingOrderAdapter extends RecyclerView.Adapter<PendingOrderAdapte
     public void onBindViewHolder(@NonNull PendingOrderAdapter.ViewHolder holder, int position) {
         OrderDto header = headers.get(position);
         holder.bind(header,Integer.toString(position+1));
+        holder.itemBinding.orderItem.setOnClickListener(view -> {
+            Intent intent = new Intent(context, OrderDetailActivity.class);
+            intent.putExtra("orderId",header.getId().toString());
+            context.startActivity(intent);
+        });
     }
 
     @Override

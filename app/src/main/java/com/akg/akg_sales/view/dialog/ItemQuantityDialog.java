@@ -12,7 +12,8 @@ import com.akg.akg_sales.util.CommonUtil;
 
 public class ItemQuantityDialog {
     DialogItemQtyBinding binding;
-    public ItemDto itemDto;
+    public String itemName;
+    public String itemUom;
     public Integer quantity;
     public String btnLabel;
     private Context context;
@@ -20,10 +21,11 @@ public class ItemQuantityDialog {
     Consumer<Integer> callback;
 
     public ItemQuantityDialog(
-            Context context, ItemDto itemDto,
+            Context context, String itemName,String itemUom,
             Integer quantity,String btnLabel,Consumer<Integer> callback){
         this.context = context;
-        this.itemDto = itemDto;
+        this.itemName = itemName;
+        this.itemUom = itemUom;
         this.quantity= quantity;
         this.btnLabel = btnLabel;
         this.callback = callback;

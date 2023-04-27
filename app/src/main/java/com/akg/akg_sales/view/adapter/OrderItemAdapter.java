@@ -68,8 +68,8 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.View
             CommonUtil.showToast(context,"Item Already Exist in Cart",false);
         }
         else {
-            ItemQuantityDialog dialog = new ItemQuantityDialog(context, itemDto,
-                    0,"Add to Cart",
+            ItemQuantityDialog dialog = new ItemQuantityDialog(context, itemDto.getItemDescription(),
+                    itemDto.getPrimaryUom(),0,"Add to Cart",
                     qty->{
                         CommonUtil.cartItems.add(
                                 new CartItemDto(CommonUtil.selectedCustomer,itemDto,qty));

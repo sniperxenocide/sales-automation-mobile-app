@@ -6,9 +6,12 @@ import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import lombok.experimental.Accessors;
 
 @Data @NoArgsConstructor @AllArgsConstructor
+@Accessors(chain = true)
 public class OrderRequest {
+    private Long orderId;
     private Long customerId;
     private List<OrderLineRequest> lines = new ArrayList<>();
 

@@ -12,11 +12,16 @@ public class OrderDto {
     private Long id;
     private String orderNumber;
     private String creationTime;
+    private Long customerId;
     private String customerNumber;
     private String customerName;
     private String salesDeskName;
     private String marketSegmentName;
     private String salesEmployeeName;
-    private String status;
+    private String operatingUnit;
+    private Long currentApproverUserId;
+    private String currentApproverUsername;
+    private String currentStatus;
     private Double value;
+    private List<OrderLineDto> orderLines;
 }

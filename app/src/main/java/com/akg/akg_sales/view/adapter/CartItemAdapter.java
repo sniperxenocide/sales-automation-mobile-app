@@ -70,13 +70,12 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
     }
 
     private void onClickQuantityUpdate(CartItemDto cartItem){
-        ItemQuantityDialog dialog = new ItemQuantityDialog(activity, cartItem.getItemDto(),
-                cartItem.getQuantity(), "Update Quantity",
+        ItemQuantityDialog dialog = new ItemQuantityDialog(activity, cartItem.getItemDto().getItemDescription(),
+                cartItem.getItemDto().getPrimaryUom(),cartItem.getQuantity(), "Update Quantity",
                 qty->{
                     for (CartItemDto i:CommonUtil.cartItems) {
                         if(Objects.equals(i.getItemDto().getId(), cartItem.getItemDto().getId())){
                             i.setQuantity(qty);
-                            //cartItem.setQuantity(qty);
                             break;
                         }
                     }
