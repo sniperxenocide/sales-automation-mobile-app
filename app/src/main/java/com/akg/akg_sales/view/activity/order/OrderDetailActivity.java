@@ -135,7 +135,7 @@ public class OrderDetailActivity extends AppCompatActivity {
             binding.orderApprove.setOnClickListener(view -> onClickApprove());
             binding.orderCancel.setOnClickListener(view -> onClickCancel());
         }
-        else binding.orderAction.setVisibility(View.GONE);
+        else binding.orderAction.setVisibility(View.INVISIBLE);
     }
 
 }

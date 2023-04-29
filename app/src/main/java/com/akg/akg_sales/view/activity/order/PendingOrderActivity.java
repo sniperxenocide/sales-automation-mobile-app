@@ -11,6 +11,7 @@ import com.akg.akg_sales.R;
 import com.akg.akg_sales.api.API;
 import com.akg.akg_sales.api.OrderApi;
 import com.akg.akg_sales.databinding.ActivityPendingOrderBinding;
+import com.akg.akg_sales.dto.PageResponse;
 import com.akg.akg_sales.dto.order.OrderDto;
 import com.akg.akg_sales.util.CommonUtil;
 import com.akg.akg_sales.view.adapter.PendingOrderAdapter;
@@ -58,13 +59,14 @@ public class PendingOrderActivity extends AppCompatActivity {
 
     private void fetchOrderFromServer(){
         try {
-            Call<List<OrderDto>> call = API.getClient().create(OrderApi.class).getAllOrders();
-            call.enqueue(new Callback<List<OrderDto>>() {
+            API.getClient().create(OrderApi.class).getAllOrders()
+            .enqueue(new Callback<PageResponse<OrderDto>>() {
                 @Override
-                public void onResponse(Call<List<OrderDto>> call, Response<List<OrderDto>> response) {
+                public void onResponse(Call<PageResponse<OrderDto>> call, Response<PageResponse<OrderDto>> response) {
                     try {
                         if(response.code()==200){
-                            ArrayList<OrderDto> orders = (ArrayList<OrderDto>) response.body();
+                            PageResponse<OrderDto> page = response.body();
+                            ArrayList<OrderDto> orders = (ArrayList<OrderDto>) page.getData();
                             loadPendingOrderListView(orders);
                         }else throw new Exception(response.code()+"."+response.message());
                     }catch (Exception e){
@@ -72,7 +74,7 @@ public class PendingOrderActivity extends AppCompatActivity {
                     }
                 }
                 @SneakyThrows @Override
-                public void onFailure(Call<List<OrderDto>> call, Throwable t) {
+                public void onFailure(Call<PageResponse<OrderDto>> call, Throwable t) {
                     call.cancel();
                     throw new Exception(t.getMessage());
                 }
