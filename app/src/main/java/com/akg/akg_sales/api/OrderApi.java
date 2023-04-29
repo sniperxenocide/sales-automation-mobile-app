@@ -23,4 +23,7 @@ public interface OrderApi {
 
     @POST("/order-service/api/order/approve")
     Call<OrderDto> approveOrder(@Body OrderRequest body);
+
+    @POST("/order-service/api/order/cancel")
+    Call<OrderDto> cancelOrder(@Query("orderId") String orderId);
 }

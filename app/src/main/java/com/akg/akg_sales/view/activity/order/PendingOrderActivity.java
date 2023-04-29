@@ -62,8 +62,14 @@ public class PendingOrderActivity extends AppCompatActivity {
             call.enqueue(new Callback<List<OrderDto>>() {
                 @Override
                 public void onResponse(Call<List<OrderDto>> call, Response<List<OrderDto>> response) {
-                    ArrayList<OrderDto> orders = (ArrayList<OrderDto>) response.body();
-                    loadPendingOrderListView(orders);
+                    try {
+                        if(response.code()==200){
+                            ArrayList<OrderDto> orders = (ArrayList<OrderDto>) response.body();
+                            loadPendingOrderListView(orders);
+                        }else throw new Exception(response.code()+"."+response.message());
+                    }catch (Exception e){
+                        CommonUtil.showToast(getApplicationContext(),e.getMessage(),false);
+                    }
                 }
                 @SneakyThrows @Override
                 public void onFailure(Call<List<OrderDto>> call, Throwable t) {

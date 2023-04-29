@@ -102,7 +102,27 @@ public class OrderDetailActivity extends AppCompatActivity {
 
     public void onClickCancel(){
         new ConfirmationDialog(this,"Cancel Order?",i->{
-
+            API.getClient().create(OrderApi.class).cancelOrder(orderDto.getId().toString())
+                    .enqueue(new Callback<OrderDto>() {
+                        @Override
+                        public void onResponse(Call<OrderDto> call, Response<OrderDto> response) {
+                            try {
+                                if(response.code()==200){
+                                    CommonUtil.showToast(getApplicationContext(),"Order Canceled",true);
+                                    finish();
+                                }
+                                else throw new Exception(response.code()+"."+response.message());
+                            }catch (Exception e){
+                                CommonUtil.showToast(getApplicationContext(),e.getMessage(), false);
+                                e.printStackTrace();
+                            }
+                        }
+                        @Override
+                        public void onFailure(Call<OrderDto> call, Throwable t) {
+                            t.printStackTrace();
+                            CommonUtil.showToast(getApplicationContext(),t.getLocalizedMessage(),false);
+                        }
+                    });
         });
     }
 
