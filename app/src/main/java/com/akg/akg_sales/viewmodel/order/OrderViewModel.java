@@ -6,7 +6,7 @@ import androidx.databinding.BaseObservable;
 
 import com.akg.akg_sales.view.activity.order.CartActivity;
 import com.akg.akg_sales.view.activity.order.OrderActivity;
-import com.akg.akg_sales.view.dialog.OrderFilterDialog;
+import com.akg.akg_sales.view.dialog.ItemFilterDialog;
 
 public class OrderViewModel extends BaseObservable {
     public OrderActivity activity;
@@ -15,7 +15,7 @@ public class OrderViewModel extends BaseObservable {
     }
 
     public void onClickFilter(){
-        OrderFilterDialog dialog = new OrderFilterDialog(activity);
+        ItemFilterDialog dialog = new ItemFilterDialog(activity);
     }
 
     public void onClickCart(){

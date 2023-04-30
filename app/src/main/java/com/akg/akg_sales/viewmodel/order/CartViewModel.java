@@ -1,5 +1,7 @@
 package com.akg.akg_sales.viewmodel.order;
 
+import android.app.ProgressDialog;
+
 import androidx.databinding.BaseObservable;
 
 import com.akg.akg_sales.api.API;
@@ -25,21 +27,30 @@ public class CartViewModel extends BaseObservable {
     }
 
     public void onClickSubmitBtn(){
+        ProgressDialog progressDialog = CommonUtil.showProgressDialog(activity);
         new ConfirmationDialog(activity, "Submit Order?", a->{
             OrderRequest postBody = getPostBody();
             API.getClient().create(OrderApi.class).createOrder(postBody)
                     .enqueue(new Callback<OrderDto>() {
                         @Override
                         public void onResponse(Call<OrderDto> call, Response<OrderDto> response) {
-                            OrderDto orderDto = response.body();
-                            System.out.println(orderDto);
-                            CommonUtil.showToast(activity,"Order Created Successfully",true);
-                            removeCartItems();
-                            activity.finish();
+                            progressDialog.dismiss();
+                            if(response.code()==200){
+                                OrderDto orderDto = response.body();
+                                System.out.println(orderDto);
+                                CommonUtil.showToast(activity,"Order Created Successfully",true);
+                                removeCartItems();
+                                activity.finish();
+                            }
+                            else {
+                                CommonUtil.showToast(activity,response.code()+"."+response.message(),false);
+                            }
+
                         }
 
                         @Override
                         public void onFailure(Call<OrderDto> call, Throwable t) {
+                            progressDialog.dismiss();
                             call.cancel();
                             CommonUtil.showToast(activity,"Order Creation Failed."+t.getMessage(),false);
                         }

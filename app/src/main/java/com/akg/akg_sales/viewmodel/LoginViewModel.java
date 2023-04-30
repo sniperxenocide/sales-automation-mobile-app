@@ -1,5 +1,6 @@
 package com.akg.akg_sales.viewmodel;
 
+import android.app.ProgressDialog;
 import android.content.Intent;
 
 import androidx.databinding.BaseObservable;
@@ -52,11 +53,13 @@ public class LoginViewModel extends BaseObservable {
             CommonUtil.showToast(activity,"Username Cannot be Empty",false);
         else {
             try {
-                LoginApi loginApi = API.getClient().create(LoginApi.class);
-                Call<User> call = loginApi.authenticate(user);
-                call.enqueue(new Callback<User>() {
+                ProgressDialog progressDialog=CommonUtil.showProgressDialog(activity);
+                API.getClient().create(LoginApi.class).authenticate(user)
+                .enqueue(new Callback<User>() {
                     @Override
                     public void onResponse(Call<User> call, Response<User> response) {
+                        System.out.println("Login Success****************");
+                        progressDialog.dismiss();
                         User validUser = response.body();
                         if(!validUser.getToken().isEmpty()){
                             validUser.setUsername(user.getUsername()).setPassword(user.getPassword());
@@ -70,6 +73,7 @@ public class LoginViewModel extends BaseObservable {
 
                     @Override
                     public void onFailure(Call<User> call, Throwable t) {
+                        progressDialog.dismiss();
                         call.cancel();
                         CommonUtil.showToast(activity,"Login Failed",false);
                     }

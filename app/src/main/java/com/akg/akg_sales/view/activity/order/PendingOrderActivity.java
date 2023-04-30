@@ -1,11 +1,13 @@
 package com.akg.akg_sales.view.activity.order;
 
+import android.app.ProgressDialog;
+import android.os.Bundle;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-
-import android.os.Bundle;
 
 import com.akg.akg_sales.R;
 import com.akg.akg_sales.api.API;
@@ -18,7 +20,9 @@ import com.akg.akg_sales.view.adapter.PendingOrderAdapter;
 import com.akg.akg_sales.viewmodel.order.PendingOrderViewModel;
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 
 import lombok.SneakyThrows;
 import retrofit2.Call;
@@ -27,16 +31,25 @@ import retrofit2.Response;
 
 public class PendingOrderActivity extends AppCompatActivity {
     private ActivityPendingOrderBinding binding;
+    private Map<String,String> filter = new HashMap<>();
+    PageResponse<OrderDto> pageResponse;
+    ArrayList<OrderDto> orders = new ArrayList<>();
+    RecyclerView recyclerView ;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         loadPage();
+        initFilter();
         fetchOrderFromServer();
     }
 
     @Override
-    protected void onResume() {
-        super.onResume();
+    protected void onRestart() {
+        super.onRestart();
+        System.out.println("Inside onRestart***********************");
+        initFilter();
+        orders.clear();
         fetchOrderFromServer();
     }
 
@@ -45,44 +58,86 @@ public class PendingOrderActivity extends AppCompatActivity {
         binding= DataBindingUtil.setContentView(this,R.layout.activity_pending_order);
         binding.setVm(new PendingOrderViewModel(this));
         binding.setActivity(this);
+        initRecycleView();
     }
 
-    private void loadPendingOrderListView(ArrayList<OrderDto> list){
-        if(list.isEmpty()) CommonUtil.showToast(this,"No Orders Available",false);
-        RecyclerView recyclerView = binding.pendingOrderListview;
+    private void initRecycleView(){
+        recyclerView = binding.pendingOrderListview;
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
-        PendingOrderAdapter adapter = new PendingOrderAdapter(this,list);
+        handleLoadMoreData();
+    }
+
+    private void loadOrdersInRecycleView(){
+        orders.addAll(pageResponse.getData());
+        if(orders.isEmpty()) CommonUtil.showToast(this,"No Orders Available",false);
+        PendingOrderAdapter adapter = new PendingOrderAdapter(this,orders);
         recyclerView.setAdapter(adapter);
+        if(orders.size()>pageResponse.getPageSize()){
+            recyclerView.scrollToPosition(orders.size()-pageResponse.getData().size());
+        }
+    }
+
+    private void initFilter(){
+        filter.put("page","1");
     }
 
     private void fetchOrderFromServer(){
-        try {
-            API.getClient().create(OrderApi.class).getAllOrders()
-            .enqueue(new Callback<PageResponse<OrderDto>>() {
+        ProgressDialog progressDialog=CommonUtil.showProgressDialog(this);
+        API.getClient().create(OrderApi.class).getAllOrders(filter)
+                .enqueue(new Callback<PageResponse<OrderDto>>() {
                 @Override
                 public void onResponse(Call<PageResponse<OrderDto>> call, Response<PageResponse<OrderDto>> response) {
+                    progressDialog.dismiss();
                     try {
                         if(response.code()==200){
-                            PageResponse<OrderDto> page = response.body();
-                            ArrayList<OrderDto> orders = (ArrayList<OrderDto>) page.getData();
-                            loadPendingOrderListView(orders);
+                            pageResponse = response.body();
+                            if(pageResponse.getData().isEmpty())
+                                CommonUtil.showToast(getApplicationContext(),"No More Data",false);
+                            else {
+                                loadOrdersInRecycleView();
+                                CommonUtil.showToast(getApplicationContext(),"Data Loaded",true);
+                            }
                         }else throw new Exception(response.code()+"."+response.message());
                     }catch (Exception e){
                         CommonUtil.showToast(getApplicationContext(),e.getMessage(),false);
                     }
                 }
-                @SneakyThrows @Override
+                @Override
                 public void onFailure(Call<PageResponse<OrderDto>> call, Throwable t) {
+                    progressDialog.dismiss();
                     call.cancel();
-                    throw new Exception(t.getMessage());
                 }
             });
-        }catch (Exception e){
-            CommonUtil.showToast(this,e.getMessage(),false);
-            e.printStackTrace();
-        }
     }
+
+    private void handleLoadMoreData(){
+        recyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView rv, int newState) {
+                super.onScrollStateChanged(rv, newState);
+                LinearLayoutManager layoutManager = (LinearLayoutManager) rv.getLayoutManager();
+                assert layoutManager != null;
+                int visibleItemCount = layoutManager.getChildCount();
+                int totalItemCount = layoutManager.getItemCount();
+                int pastVisibleItems = layoutManager.findFirstCompletelyVisibleItemPosition();
+
+                if(pastVisibleItems+visibleItemCount > totalItemCount){
+                    // End of the list is here.
+                    System.out.println("List End");
+                    if(pageResponse.getCurrentPage()<pageResponse.getTotalPages()){
+                        try {
+                            int nextPage = Integer.parseInt(Objects.requireNonNull(filter.get("page")))+1;
+                            filter.put("page",Integer.toString(nextPage));
+                            fetchOrderFromServer();
+                        }catch (Exception ignored){}
+
+                    }
+                }
+            }
+        });
+    }
+
 
 }

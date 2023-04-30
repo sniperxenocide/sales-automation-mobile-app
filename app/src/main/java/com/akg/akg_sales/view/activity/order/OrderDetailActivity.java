@@ -1,5 +1,6 @@
 package com.akg.akg_sales.view.activity.order;
 
+import android.app.ProgressDialog;
 import android.os.Bundle;
 import android.view.View;
 
@@ -78,6 +79,7 @@ public class OrderDetailActivity extends AppCompatActivity {
     }
 
     public void onClickApprove(){
+        ProgressDialog progressDialog = CommonUtil.showProgressDialog(this);
         new ConfirmationDialog(this,"Approve Order?",i->{
             OrderRequest body = new OrderRequest();
             body.setOrderId(orderDto.getId()).setCustomerId(orderDto.getCustomerId());
@@ -88,12 +90,17 @@ public class OrderDetailActivity extends AppCompatActivity {
                     .enqueue(new Callback<OrderDto>() {
                         @Override
                         public void onResponse(Call<OrderDto> call, Response<OrderDto> response) {
-                            CommonUtil.showToast(getApplicationContext(),"Order Approved",true);
-                            finish();
+                            progressDialog.dismiss();
+                            if(response.code()==200){
+                                CommonUtil.showToast(getApplicationContext(),"Order Approved",true);
+                                finish();
+                            }
+                            else CommonUtil.showToast(getApplicationContext(),response.code()+"."+response.message(),false);
                         }
 
                         @Override
                         public void onFailure(Call<OrderDto> call, Throwable t) {
+                            progressDialog.dismiss();
                             CommonUtil.showToast(getApplicationContext(),"Order Approve Failed",false);
                         }
                     });
@@ -101,11 +108,13 @@ public class OrderDetailActivity extends AppCompatActivity {
     }
 
     public void onClickCancel(){
+        ProgressDialog progressDialog = CommonUtil.showProgressDialog(this);
         new ConfirmationDialog(this,"Cancel Order?",i->{
             API.getClient().create(OrderApi.class).cancelOrder(orderDto.getId().toString())
                     .enqueue(new Callback<OrderDto>() {
                         @Override
                         public void onResponse(Call<OrderDto> call, Response<OrderDto> response) {
+                            progressDialog.dismiss();
                             try {
                                 if(response.code()==200){
                                     CommonUtil.showToast(getApplicationContext(),"Order Canceled",true);
@@ -119,6 +128,7 @@ public class OrderDetailActivity extends AppCompatActivity {
                         }
                         @Override
                         public void onFailure(Call<OrderDto> call, Throwable t) {
+                            progressDialog.dismiss();
                             t.printStackTrace();
                             CommonUtil.showToast(getApplicationContext(),t.getLocalizedMessage(),false);
                         }

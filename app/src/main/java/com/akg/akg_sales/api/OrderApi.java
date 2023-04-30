@@ -5,16 +5,18 @@ import com.akg.akg_sales.dto.order.OrderDto;
 import com.akg.akg_sales.dto.order.OrderRequest;
 
 import java.util.List;
+import java.util.Map;
 
 import retrofit2.Call;
 import retrofit2.http.Body;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
+import retrofit2.http.QueryMap;
 
 public interface OrderApi {
     @GET("/order-service/api/order/all")
-    Call<PageResponse<OrderDto>> getAllOrders();
+    Call<PageResponse<OrderDto>> getAllOrders(@QueryMap Map<String,String> filter);
 
     @GET("/order-service/api/order/detail")
     Call<OrderDto> getOrderDetail(@Query("orderId") String orderId);

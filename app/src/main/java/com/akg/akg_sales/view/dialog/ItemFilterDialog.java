@@ -7,7 +7,7 @@ import android.widget.AutoCompleteTextView;
 
 import com.akg.akg_sales.api.API;
 import com.akg.akg_sales.api.ItemApi;
-import com.akg.akg_sales.databinding.DialogOrderFilterBinding;
+import com.akg.akg_sales.databinding.DialogItemFilterBinding;
 import com.akg.akg_sales.dto.item.ItemSubTypeDto;
 import com.akg.akg_sales.dto.item.ItemTypeDto;
 import com.akg.akg_sales.util.CommonUtil;
@@ -19,17 +19,17 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class OrderFilterDialog {
-    DialogOrderFilterBinding binding;
+public class ItemFilterDialog {
+    DialogItemFilterBinding binding;
     private OrderActivity activity;
     private Dialog dialog;
     private List<ItemTypeDto> itemTypes;
     private Long selectedSubTypeId;
 
-    public OrderFilterDialog(OrderActivity activity){
+    public ItemFilterDialog(OrderActivity activity){
         this.activity=activity;
         dialog=new Dialog(activity);
-        binding = DialogOrderFilterBinding.inflate(LayoutInflater.from(activity));
+        binding = DialogItemFilterBinding.inflate(LayoutInflater.from(activity));
         dialog.setContentView(binding.getRoot());
         CommonUtil.setDialogWindowParams(this.activity,this.dialog);
         binding.applyBtn.setOnClickListener(view -> onClickApply());
