@@ -19,7 +19,9 @@ import com.akg.akg_sales.util.CommonUtil;
 import com.akg.akg_sales.view.adapter.PendingOrderAdapter;
 import com.akg.akg_sales.viewmodel.order.PendingOrderViewModel;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
@@ -31,9 +33,9 @@ import retrofit2.Response;
 
 public class PendingOrderActivity extends AppCompatActivity {
     private ActivityPendingOrderBinding binding;
-    private Map<String,String> filter = new HashMap<>();
+    public Map<String,String> filter = new HashMap<>();
     PageResponse<OrderDto> pageResponse;
-    ArrayList<OrderDto> orders = new ArrayList<>();
+    public ArrayList<OrderDto> orders = new ArrayList<>();
     RecyclerView recyclerView ;
 
     @Override
@@ -81,9 +83,14 @@ public class PendingOrderActivity extends AppCompatActivity {
 
     private void initFilter(){
         filter.put("page","1");
+        Calendar calendar = Calendar.getInstance();
+        SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd");
+        filter.put("endDate",s.format(calendar.getTime()));
+        calendar.add(Calendar.DATE,-1);
+        filter.put("startDate",s.format(calendar.getTime()));
     }
 
-    private void fetchOrderFromServer(){
+    public void fetchOrderFromServer(){
         ProgressDialog progressDialog=CommonUtil.showProgressDialog(this);
         API.getClient().create(OrderApi.class).getAllOrders(filter)
                 .enqueue(new Callback<PageResponse<OrderDto>>() {
@@ -93,12 +100,8 @@ public class PendingOrderActivity extends AppCompatActivity {
                     try {
                         if(response.code()==200){
                             pageResponse = response.body();
-                            if(pageResponse.getData().isEmpty())
-                                CommonUtil.showToast(getApplicationContext(),"No More Data",false);
-                            else {
-                                loadOrdersInRecycleView();
-                                CommonUtil.showToast(getApplicationContext(),"Data Loaded",true);
-                            }
+                            loadOrdersInRecycleView();
+                            CommonUtil.showToast(getApplicationContext(),"Data Loaded",true);
                         }else throw new Exception(response.code()+"."+response.message());
                     }catch (Exception e){
                         CommonUtil.showToast(getApplicationContext(),e.getMessage(),false);

@@ -7,6 +7,7 @@ import androidx.databinding.BaseObservable;
 import com.akg.akg_sales.view.activity.order.OrderActivity;
 import com.akg.akg_sales.view.activity.order.PendingOrderActivity;
 import com.akg.akg_sales.view.dialog.ConfirmationDialog;
+import com.akg.akg_sales.view.dialog.OrderFilterDialog;
 
 public class PendingOrderViewModel extends BaseObservable {
     PendingOrderActivity activity;
@@ -21,6 +22,6 @@ public class PendingOrderViewModel extends BaseObservable {
     }
 
     public void onClickFilter(){
-
+        new OrderFilterDialog(activity);
     }
 }
