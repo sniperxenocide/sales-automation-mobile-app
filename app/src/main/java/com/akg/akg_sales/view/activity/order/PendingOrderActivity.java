@@ -15,6 +15,7 @@ import com.akg.akg_sales.api.OrderApi;
 import com.akg.akg_sales.databinding.ActivityPendingOrderBinding;
 import com.akg.akg_sales.dto.PageResponse;
 import com.akg.akg_sales.dto.order.OrderDto;
+import com.akg.akg_sales.dto.order.OrderStatusDto;
 import com.akg.akg_sales.util.CommonUtil;
 import com.akg.akg_sales.view.adapter.PendingOrderAdapter;
 import com.akg.akg_sales.viewmodel.order.PendingOrderViewModel;
@@ -33,7 +34,7 @@ import retrofit2.Response;
 
 public class PendingOrderActivity extends AppCompatActivity {
     private ActivityPendingOrderBinding binding;
-    public Map<String,String> filter = new HashMap<>();
+    public HashMap<String,String> filter = new HashMap<>();
     PageResponse<OrderDto> pageResponse;
     public ArrayList<OrderDto> orders = new ArrayList<>();
     RecyclerView recyclerView ;
@@ -86,8 +87,9 @@ public class PendingOrderActivity extends AppCompatActivity {
         Calendar calendar = Calendar.getInstance();
         SimpleDateFormat s = new SimpleDateFormat("yyyy-MM-dd");
         filter.put("endDate",s.format(calendar.getTime()));
-        calendar.add(Calendar.DATE,-1);
+        calendar.add(Calendar.DATE,-30);
         filter.put("startDate",s.format(calendar.getTime()));
+        filter.put("statusId","%");
     }
 
     public void fetchOrderFromServer(){

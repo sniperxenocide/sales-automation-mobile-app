@@ -1,11 +1,15 @@
 package com.akg.akg_sales.view.dialog;
 
 import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.view.LayoutInflater;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 
-import androidx.core.util.Consumer;
-
+import com.akg.akg_sales.api.API;
+import com.akg.akg_sales.api.OrderApi;
 import com.akg.akg_sales.databinding.DialogOrderFilterBinding;
+import com.akg.akg_sales.dto.order.OrderStatusDto;
 import com.akg.akg_sales.util.CommonUtil;
 import com.akg.akg_sales.view.activity.order.PendingOrderActivity;
 import com.google.android.material.datepicker.CalendarConstraints;
@@ -13,15 +17,20 @@ import com.google.android.material.datepicker.CompositeDateValidator;
 import com.google.android.material.datepicker.DateValidatorPointBackward;
 import com.google.android.material.datepicker.DateValidatorPointForward;
 import com.google.android.material.datepicker.MaterialDatePicker;
-import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
-import java.util.Locale;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 
 public class OrderFilterDialog {
     DialogOrderFilterBinding binding;
@@ -29,6 +38,7 @@ public class OrderFilterDialog {
     Dialog dialog;
     Calendar calendar = Calendar.getInstance();
     SimpleDateFormat sdf = new SimpleDateFormat();
+    HashMap<String,String> tempFilter = new HashMap<>();
 
     public OrderFilterDialog(PendingOrderActivity activity){
         this.activity=activity;
@@ -37,23 +47,46 @@ public class OrderFilterDialog {
         binding.setVm(this);
         dialog.setContentView(binding.getRoot());
         CommonUtil.setDialogWindowParams(this.activity,this.dialog);
-        fetchData();
-        initDateFields();
+        initFields();
     }
 
-    private void fetchData(){
-
+    private void updateStatusUI(){
+        ArrayList<OrderStatusDto> statusList = CommonUtil.statusList;
+        if(statusList==null || statusList.isEmpty()) return;
+        int arrLen = statusList.size()+1;
+        AutoCompleteTextView tView=binding.statusDropdown;
+        String[] statusIds = new String[arrLen];
+        String[] status = new String[arrLen];
+        statusIds[0]="%";status[0]="All";
+        for (int i=0;i< statusList.size();i++) {
+            statusIds[i+1]=statusList.get(i).getId().toString();
+            status[i+1]=statusList.get(i).getStatus();
+        }
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(activity, android.R.layout.simple_spinner_item, status);
+        tView.setAdapter(adapter);
+        tView.setOnItemClickListener((adapterView, view, i, l) -> {
+            tempFilter.put("statusId",statusIds[i]) ;
+        });
+        for(int i=0;i<arrLen;i++){
+            if(Objects.equals(statusIds[i], tempFilter.get("statusId")))
+                tView.setText(status[i],false);
+        }
     }
 
-    private void initDateFields(){
+    private void initFields(){
         try {
+            tempFilter.putAll(activity.filter);
+            tempFilter.put("page","1");
+
             sdf.applyPattern("yyyy-MM-dd");
-            Date sd = sdf.parse(Objects.requireNonNull(activity.filter.get("startDate")));
-            Date ed = sdf.parse(Objects.requireNonNull(activity.filter.get("endDate")));
+            Date sd = sdf.parse(Objects.requireNonNull(tempFilter.get("startDate")));
+            Date ed = sdf.parse(Objects.requireNonNull(tempFilter.get("endDate")));
             sdf.applyPattern("dd MMMM yyyy");
             assert sd != null; assert ed != null;
             binding.dateFrom.setText(sdf.format(sd));
             binding.dateTo.setText(sdf.format(ed));
+
+            updateStatusUI();
         }catch (Exception e){e.printStackTrace();}
 
     }
@@ -71,7 +104,7 @@ public class OrderFilterDialog {
         Calendar cCal = Calendar.getInstance();
         CalendarConstraints.Builder constraintsBuilderRange = new CalendarConstraints.Builder();
         CalendarConstraints.DateValidator dateValidatorMax = DateValidatorPointBackward.before(cCal.getTimeInMillis());
-        cCal.add(Calendar.DATE,-10);
+        cCal.add(Calendar.DATE,-30);
         CalendarConstraints.DateValidator dateValidatorMin = DateValidatorPointForward.from(cCal.getTimeInMillis());
         ArrayList<CalendarConstraints.DateValidator> listValidators = new ArrayList<>();
         listValidators.add(dateValidatorMin);
@@ -85,7 +118,7 @@ public class OrderFilterDialog {
         datePicker.addOnPositiveButtonClickListener(selection -> {
             calendar.setTimeInMillis(selection);
             sdf.applyPattern("yyyy-MM-dd");
-            activity.filter.put(filterKey,sdf.format(calendar.getTime()));
+            tempFilter.put(filterKey,sdf.format(calendar.getTime()));
             sdf.applyPattern("dd MMMM yyyy");
             textView.setText(sdf.format(calendar.getTime()));
         });
@@ -95,7 +128,7 @@ public class OrderFilterDialog {
     public void onClickApplyFilter(){
         dialog.dismiss();
         activity.orders.clear();
-        activity.filter.put("page","1");
+        activity.filter.putAll(tempFilter);
         activity.fetchOrderFromServer();
     }
 

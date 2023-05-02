@@ -3,6 +3,7 @@ package com.akg.akg_sales.api;
 import com.akg.akg_sales.dto.PageResponse;
 import com.akg.akg_sales.dto.order.OrderDto;
 import com.akg.akg_sales.dto.order.OrderRequest;
+import com.akg.akg_sales.dto.order.OrderStatusDto;
 
 import java.util.List;
 import java.util.Map;
@@ -29,4 +30,7 @@ public interface OrderApi {
 
     @POST("/order-service/api/order/cancel")
     Call<OrderDto> cancelOrder(@Query("orderId") String orderId);
+
+    @GET("/order-service/api/order/status/all")
+    Call<List<OrderStatusDto>> getOrderStatus();
 }
