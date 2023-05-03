@@ -1,0 +1,47 @@
+package com.akg.akg_sales.service;
+
+import android.app.ProgressDialog;
+import android.content.Context;
+
+import androidx.core.util.Consumer;
+
+import com.akg.akg_sales.api.API;
+import com.akg.akg_sales.api.ItemApi;
+import com.akg.akg_sales.dto.item.ItemDto;
+import com.akg.akg_sales.util.CommonUtil;
+
+import java.util.List;
+
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
+
+public class OrderService {
+    public OrderService(){}
+
+    public static void fetchItemFromServer(Context context,Long subTypeId, Consumer<List<ItemDto>> callback){
+        ProgressDialog progressDialog = CommonUtil.showProgressDialog(context);
+        API.getClient().create(ItemApi.class)
+                .getOrderItems(CommonUtil.selectedCustomer.getId(),subTypeId)
+                .enqueue(new Callback<List<ItemDto>>() {
+                    @Override
+                    public void onResponse(Call<List<ItemDto>> call, Response<List<ItemDto>> response) {
+                        progressDialog.dismiss();
+                        try {
+                            if(response.code()==200){
+                                callback.accept(response.body());
+                            }
+                            else throw new Exception(response.code()+"."+response.message());
+                        }catch (Exception e){
+                            CommonUtil.showToast(context,e.getMessage(),false);
+                        }
+                    }
+                    @Override
+                    public void onFailure(Call<List<ItemDto>> call, Throwable t) {
+                        progressDialog.dismiss();
+                        call.cancel();}
+                });
+    }
+
+
+}

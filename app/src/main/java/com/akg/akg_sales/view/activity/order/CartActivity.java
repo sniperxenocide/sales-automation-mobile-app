@@ -69,7 +69,7 @@ public class CartActivity extends AppCompatActivity {
 
     private void initialClick(){
         AutoCompleteTextView tView=cartBinding.customerList;
-        tView.setText(CommonUtil.customers.get(0).getCustomerName());
+        tView.setText(CommonUtil.customers.get(0).getCustomerName(),false);
         onClickCustomer(0);
     }
 

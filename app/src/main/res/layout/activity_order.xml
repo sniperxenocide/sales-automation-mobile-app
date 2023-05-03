@@ -5,10 +5,6 @@
 
     <data>
         <variable
-            name="vm"
-            type="com.akg.akg_sales.viewmodel.order.OrderViewModel" />
-
-        <variable
             name="activity"
             type="com.akg.akg_sales.view.activity.order.OrderActivity" />
     </data>
@@ -64,7 +60,7 @@
                     android:id="@+id/cartBtn"
                     android:layout_width="0dp"
                     android:background="#6dbd8b"
-                    android:onClick="@{()->vm.onClickCart()}"
+                    android:onClick="@{()->activity.onClickCart()}"
                     android:layout_height="wrap_content"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -104,7 +100,7 @@
                     android:id="@+id/filterBtn"
                     android:layout_width="0dp"
                     android:background="#7195c7"
-                    android:onClick="@{()->vm.onClickFilter()}"
+                    android:onClick="@{()->activity.onClickFilter()}"
                     android:layout_height="wrap_content"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
@@ -145,13 +141,62 @@
                 android:id="@+id/item_listview"
                 android:layout_width="0dp"
                 android:layout_height="0dp"
-                android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/filter_cart_container"
+                app:layout_constraintTop_toBottomOf="@+id/apply_filter_msg_text"
                 app:layout_constraintWidth_percent="0.95" />
+
+            <TextView
+                android:id="@+id/apply_filter_msg_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginBottom="8dp"
+                android:text="Select Item:"
+                android:textSize="@dimen/text_size_1"
+                android:textColor="@color/font_color_main"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/item_listview"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/customer_list_layout" />
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/customer_list_layout"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="24dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginRight="24dp"
+                android:hint="Customer"
+                app:layout_constraintBottom_toTopOf="@+id/apply_filter_msg_text"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/filter_cart_container">
+
+                <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                    android:id="@+id/customer_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:clickable="true"
+                    android:focusable="false"
+                    tools:ignore="KeyboardInaccessibleWidget" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="(Apply Filter to View Items)"
+                app:layout_constraintBottom_toTopOf="@+id/item_listview"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/apply_filter_msg_text"
+                app:layout_constraintTop_toBottomOf="@+id/customer_list_layout" />
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
         <LinearLayout

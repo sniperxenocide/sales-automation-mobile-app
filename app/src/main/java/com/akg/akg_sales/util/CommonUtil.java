@@ -11,6 +11,8 @@ import android.util.DisplayMetrics;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.akg.akg_sales.dto.order.CartItemDto;
 import com.akg.akg_sales.dto.CustomerDto;
 import com.akg.akg_sales.dto.User;
@@ -50,8 +52,6 @@ public class CommonUtil {
 
     public static ProgressDialog showProgressDialog(Context context){
         ProgressDialog mProgressDialog = new ProgressDialog(context);
-//        ((Activity) context).getWindow().setFlags(WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
-//                WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE);
         mProgressDialog.setIndeterminate(true);
         mProgressDialog.setMessage("Loading...");
         mProgressDialog.setCanceledOnTouchOutside(false);

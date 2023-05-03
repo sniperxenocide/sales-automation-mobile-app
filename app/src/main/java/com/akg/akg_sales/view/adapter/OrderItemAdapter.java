@@ -14,6 +14,7 @@ import com.akg.akg_sales.databinding.ListitemOrderSkuBinding;
 import com.akg.akg_sales.dto.item.ItemDto;
 import com.akg.akg_sales.dto.order.CartItemDto;
 import com.akg.akg_sales.util.CommonUtil;
+import com.akg.akg_sales.view.activity.order.OrderActivity;
 import com.akg.akg_sales.view.dialog.ItemQuantityDialog;
 
 import java.util.ArrayList;
@@ -21,11 +22,11 @@ import java.util.Objects;
 
 public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.ViewHolder>{
     private ArrayList<ItemDto> headers;
-    private final Context context;
+    private final OrderActivity activity;
 
-    public OrderItemAdapter(Context context,ArrayList<ItemDto> objects){
+    public OrderItemAdapter(OrderActivity activity,ArrayList<ItemDto> objects){
         this.headers = objects;
-        this.context = context;
+        this.activity = activity;
     }
 
     @NonNull
@@ -65,15 +66,16 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.View
 
     private void onItemSelect(ItemDto itemDto){
         if(itemExistInCart(itemDto)){
-            CommonUtil.showToast(context,"Item Already Exist in Cart",false);
+            CommonUtil.showToast(activity,"Item Already Exist in Cart",false);
         }
         else {
-            ItemQuantityDialog dialog = new ItemQuantityDialog(context, itemDto.getItemDescription(),
+            ItemQuantityDialog dialog = new ItemQuantityDialog(activity, itemDto.getItemDescription(),
                     itemDto.getPrimaryUom(),0,"Add to Cart",
                     qty->{
                         CommonUtil.cartItems.add(
                                 new CartItemDto(CommonUtil.selectedCustomer,itemDto,qty));
-                        CommonUtil.showToast(context, "Item Added to Cart",true);
+                        CommonUtil.showToast(activity, "Item Added to Cart",true);
+                        activity.updateCartBtnLabel();
             });
         }
     }
