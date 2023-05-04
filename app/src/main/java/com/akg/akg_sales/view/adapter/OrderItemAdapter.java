@@ -1,6 +1,5 @@
 package com.akg.akg_sales.view.adapter;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -18,7 +17,6 @@ import com.akg.akg_sales.view.activity.order.OrderActivity;
 import com.akg.akg_sales.view.dialog.ItemQuantityDialog;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.ViewHolder>{
     private ArrayList<ItemDto> headers;
@@ -72,8 +70,11 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.View
             ItemQuantityDialog dialog = new ItemQuantityDialog(activity, itemDto.getItemDescription(),
                     itemDto.getPrimaryUom(),0,"Add to Cart",
                     qty->{
-                        CommonUtil.cartItems.add(
-                                new CartItemDto(CommonUtil.selectedCustomer,itemDto,qty));
+                        ArrayList<CartItemDto> cartItems = CommonUtil.orderCart.get(CommonUtil.selectedCustomer.getId());
+                        if(cartItems==null) cartItems = new ArrayList<>();
+                        cartItems.add(new CartItemDto(CommonUtil.selectedCustomer,itemDto,qty));
+                        CommonUtil.orderCart.put(CommonUtil.selectedCustomer.getId(), cartItems);
+
                         CommonUtil.showToast(activity, "Item Added to Cart",true);
                         activity.updateCartBtnLabel();
             });
@@ -81,10 +82,10 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.View
     }
 
     private boolean itemExistInCart(ItemDto itemDto){
-        for (CartItemDto i: CommonUtil.cartItems) {
-            if(Objects.equals(i.getItemDto().getId(), itemDto.getId())
-                    && Objects.equals(i.getCustomerDto().getId(), CommonUtil.selectedCustomer.getId()))
-                return true;
+        ArrayList<CartItemDto> cartItems = CommonUtil.orderCart.get(CommonUtil.selectedCustomer.getId());
+        if(cartItems==null || cartItems.isEmpty()) return false;
+        for(CartItemDto c:cartItems){
+            if(c.getItemDto().getId().intValue()==itemDto.getId().intValue()) return true;
         }
         return false;
     }

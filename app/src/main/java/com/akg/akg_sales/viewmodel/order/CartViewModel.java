@@ -30,6 +30,10 @@ public class CartViewModel extends BaseObservable {
         ProgressDialog progressDialog = CommonUtil.showProgressDialog(activity);
         new ConfirmationDialog(activity, "Submit Order?", a->{
             OrderRequest postBody = getPostBody();
+            if(postBody==null){
+                CommonUtil.showToast(activity,"No Item Selected",false);
+                return;
+            }
             API.getClient().create(OrderApi.class).createOrder(postBody)
                     .enqueue(new Callback<OrderDto>() {
                         @Override
@@ -59,23 +63,19 @@ public class CartViewModel extends BaseObservable {
     }
 
     private void removeCartItems(){
-        ArrayList<CartItemDto> removable = new ArrayList<>();
-        for (int i=0;i<CommonUtil.cartItems.size();i++){
-            CartItemDto item = CommonUtil.cartItems.get(i);
-            if(Objects.equals(item.getCustomerDto().getId(), activity.selectedCustomerId)){
-                removable.add(item);
-            }
-        }
-        CommonUtil.cartItems.removeAll(removable);
+        activity.cartMap.remove(activity.cSelectedCustomer.getId());
     }
 
     private OrderRequest getPostBody(){
         OrderRequest postBody = new OrderRequest();
-        postBody.setCustomerId(activity.selectedCustomerId);
-        for(CartItemDto i: CommonUtil.cartItems){
-            if(Objects.equals(i.getCustomerDto().getId(), activity.selectedCustomerId)){
-                postBody.addLine(i.getItemDto().getId(),i.getQuantity());
-            }
+        ArrayList<CartItemDto> items = activity.cartMap.get(activity.cSelectedCustomer.getId());
+        if(items==null){
+            CommonUtil.showToast(activity,"Item List Empty",false);
+            return null;
+        }
+        postBody.setCustomerId(activity.cSelectedCustomer.getId());
+        for(CartItemDto i: items){
+            postBody.addLine(i.getItemDto().getId(),i.getQuantity());
         }
         return postBody;
     }

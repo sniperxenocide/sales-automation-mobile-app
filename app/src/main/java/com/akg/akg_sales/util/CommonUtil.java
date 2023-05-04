@@ -10,15 +10,13 @@ import android.text.Html;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
 import android.widget.Toast;
-
-import androidx.recyclerview.widget.RecyclerView;
-
 import com.akg.akg_sales.dto.order.CartItemDto;
 import com.akg.akg_sales.dto.CustomerDto;
 import com.akg.akg_sales.dto.User;
 import com.akg.akg_sales.dto.order.OrderStatusDto;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class CommonUtil {
@@ -26,8 +24,8 @@ public class CommonUtil {
     public static User loggedInUser = null;
     public static List<CustomerDto> customers;
     public static CustomerDto selectedCustomer;
-    public static List<CartItemDto> cartItems=new ArrayList<>();
     public static ArrayList<OrderStatusDto> statusList;
+    public static HashMap<Long,ArrayList<CartItemDto>> orderCart = new HashMap<>();
 
     public static void showToast(Context context, String msg, boolean isSuccess){
         try{

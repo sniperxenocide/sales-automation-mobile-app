@@ -43,8 +43,14 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
         holder.bind(header,Integer.toString(position+1));
         holder.itemBinding.deleteCartItem.setOnClickListener(view -> {
             new ConfirmationDialog(activity,"Delete Item from Cart?",i->{
-                CommonUtil.cartItems.remove(header);
-                activity.loadCartListView();
+                try {
+                    ArrayList<CartItemDto> itemList = activity.cartMap.get(activity.cSelectedCustomer.getId());
+                    System.out.println(itemList);
+                    itemList.remove(header);
+                    System.out.println(itemList);
+                    if(itemList.size()==0) activity.finish();
+                    else activity.loadCartListView();
+                }catch (Exception e){}
             });
         });
         holder.itemBinding.quantity.setOnClickListener(view -> onClickQuantityUpdate(header));
@@ -73,12 +79,7 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
         ItemQuantityDialog dialog = new ItemQuantityDialog(activity, cartItem.getItemDto().getItemDescription(),
                 cartItem.getItemDto().getPrimaryUom(),cartItem.getQuantity(), "Update Quantity",
                 qty->{
-                    for (CartItemDto i:CommonUtil.cartItems) {
-                        if(Objects.equals(i.getItemDto().getId(), cartItem.getItemDto().getId())){
-                            i.setQuantity(qty);
-                            break;
-                        }
-                    }
+                    cartItem.setQuantity(qty);
                     try {
                         Objects.requireNonNull(activity.recyclerView.getAdapter())
                                 .notifyItemChanged(headers.indexOf(cartItem));

@@ -11,18 +11,25 @@ import android.widget.AutoCompleteTextView;
 
 import com.akg.akg_sales.R;
 import com.akg.akg_sales.databinding.ActivityCartBinding;
+import com.akg.akg_sales.dto.CustomerDto;
 import com.akg.akg_sales.dto.order.CartItemDto;
 import com.akg.akg_sales.util.CommonUtil;
 import com.akg.akg_sales.view.adapter.CartItemAdapter;
 import com.akg.akg_sales.viewmodel.order.CartViewModel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
 
 public class CartActivity extends AppCompatActivity {
     public ActivityCartBinding cartBinding;
     public RecyclerView recyclerView;
-    public Long selectedCustomerId;
+    public CustomerDto cSelectedCustomer;
+    public HashMap<Long,ArrayList<CartItemDto>> cartMap = CommonUtil.orderCart;
+
+    String[] customers;
+    Long[] customerIds;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,10 +45,7 @@ public class CartActivity extends AppCompatActivity {
     }
 
     public void loadCartListView(){
-        ArrayList<CartItemDto> list = new ArrayList<>();
-        for(CartItemDto c:CommonUtil.cartItems)
-            if(Objects.equals(c.getCustomerDto().getId(), selectedCustomerId))
-                list.add(c);
+        ArrayList<CartItemDto> list = cartMap.get(cSelectedCustomer.getId());
         recyclerView = cartBinding.selectedItemListview;
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -50,27 +54,28 @@ public class CartActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
     }
 
-    private void loadCustomerList(){
+    public void loadCustomerList(){
         AutoCompleteTextView tView=cartBinding.customerList;
-        String[] customers = new String[CommonUtil.customers.size()];
-        for (int i=0;i< CommonUtil.customers.size();i++)
-            customers[i]=CommonUtil.customers.get(i).getCustomerName();
+        customers = new String[cartMap.size()];
+        customerIds = new Long[cartMap.size()];
+        int j=0;
+        for (Long k: cartMap.keySet()){
+            try {
+                customers[j]=cartMap.get(k).get(0).getCustomerDto().getCustomerName();
+                customerIds[j]=k;
+                j++;
+            }catch (Exception e){e.getMessage();}
+        }
         ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, customers);
         tView.setAdapter(adapter);
-        tView.setOnItemClickListener((adapterView, view, i, l) -> onClickCustomer(i));
-
-        initialClick();
+        tView.setOnItemClickListener((adapterView, view, i, l) -> onClickCustomer(tView,i));
+        onClickCustomer(tView,0);
     }
 
-    private void onClickCustomer(int idx){
-        this.selectedCustomerId = CommonUtil.customers.get(idx).getId();
+    private void onClickCustomer(AutoCompleteTextView tView,int idx){
+        cSelectedCustomer = cartMap.get(customerIds[idx]).get(0).getCustomerDto();
+        tView.setText(cSelectedCustomer.getCustomerName(),false);
         loadCartListView();
-    }
-
-    private void initialClick(){
-        AutoCompleteTextView tView=cartBinding.customerList;
-        tView.setText(CommonUtil.customers.get(0).getCustomerName(),false);
-        onClickCustomer(0);
     }
 
 }
