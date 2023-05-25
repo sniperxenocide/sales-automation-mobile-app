@@ -97,6 +97,7 @@
                     android:layout_weight="1"
                     android:padding="15sp"
                     android:layout_margin="10sp"
+                    android:onClick="@{()->vm.onClickDeliveryBtn()}"
                     android:background="@drawable/light_grey_background"
                     >
 
@@ -142,6 +143,7 @@
                     android:layout_weight="1"
                     android:padding="15sp"
                     android:layout_margin="10sp"
+                    android:onClick="@{()->vm.onClickPaymentBtn()}"
                     android:background="@drawable/light_grey_background"
                     >
 
