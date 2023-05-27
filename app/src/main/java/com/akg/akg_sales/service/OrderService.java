@@ -8,6 +8,7 @@ import androidx.core.util.Consumer;
 import com.akg.akg_sales.api.API;
 import com.akg.akg_sales.api.ItemApi;
 import com.akg.akg_sales.dto.item.ItemDto;
+import com.akg.akg_sales.dto.item.ItemTypeDto;
 import com.akg.akg_sales.util.CommonUtil;
 
 import java.util.List;
@@ -39,9 +40,35 @@ public class OrderService {
                     @Override
                     public void onFailure(Call<List<ItemDto>> call, Throwable t) {
                         progressDialog.dismiss();
-                        call.cancel();}
+                        call.cancel();
+                    }
                 });
     }
 
+
+    public static void fetchItemTypeSubTypeFromServer(Context context,Long customerId, Consumer<List<ItemTypeDto>> callback){
+        ProgressDialog progressDialog = CommonUtil.showProgressDialog(context);
+        API.getClient().create(ItemApi.class)
+                .getItemTypes(customerId)
+                .enqueue(new Callback<List<ItemTypeDto>>() {
+                    @Override
+                    public void onResponse(Call<List<ItemTypeDto>> call, Response<List<ItemTypeDto>> response) {
+                        progressDialog.dismiss();
+                        try {
+                            if(response.code()==200){
+                                callback.accept(response.body());
+                            }
+                            else throw new Exception(response.code()+"."+response.message());
+                        }catch (Exception e){
+                            CommonUtil.showToast(context,e.getMessage(),false);
+                        }
+                    }
+                    @Override
+                    public void onFailure(Call<List<ItemTypeDto>> call, Throwable t) {
+                        progressDialog.dismiss();
+                        call.cancel();
+                    }
+                });
+    }
 
 }

@@ -10,6 +10,7 @@ import com.akg.akg_sales.api.ItemApi;
 import com.akg.akg_sales.databinding.DialogItemFilterBinding;
 import com.akg.akg_sales.dto.item.ItemSubTypeDto;
 import com.akg.akg_sales.dto.item.ItemTypeDto;
+import com.akg.akg_sales.service.OrderService;
 import com.akg.akg_sales.util.CommonUtil;
 import com.akg.akg_sales.view.activity.order.OrderActivity;
 
@@ -59,18 +60,10 @@ public class ItemFilterDialog {
     }
 
     private void fetchData(){
-        API.getClient().create(ItemApi.class)
-                .getItemTypes(CommonUtil.selectedCustomer.getId())
-                .enqueue(new Callback<List<ItemTypeDto>>() {
-                    @Override
-                    public void onResponse(Call<List<ItemTypeDto>> call, Response<List<ItemTypeDto>> response) {
-                        itemTypes = response.body();
-                        loadItemType();
-                    }
-                    @Override
-                    public void onFailure(Call<List<ItemTypeDto>> call, Throwable t) {
-                        call.cancel();
-                    }
+        OrderService.fetchItemTypeSubTypeFromServer(activity,
+                CommonUtil.selectedCustomer.getId(), list->{
+                    itemTypes = list;
+                    loadItemType();
                 });
     }
 

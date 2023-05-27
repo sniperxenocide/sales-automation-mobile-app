@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <data>
         <variable
@@ -195,7 +196,8 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
-                            android:weightSum="10">
+                            android:weightSum="10"
+                            android:visibility="gone">
 
                             <TextView
                                 android:layout_width="0dp"
@@ -210,10 +212,10 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="7"
+                                android:hint="data"
                                 android:text="@{vm.value.toString()}"
                                 android:textColor="@color/font_color_main"
-                                android:textSize="@dimen/text_size_1"
-                                android:hint="data"/>
+                                android:textSize="@dimen/text_size_1" />
                         </LinearLayout>
 
                     </LinearLayout>

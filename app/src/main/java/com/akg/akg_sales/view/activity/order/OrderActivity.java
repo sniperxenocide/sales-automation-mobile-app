@@ -1,10 +1,16 @@
 package com.akg.akg_sales.view.activity.order;
 
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.EditText;
 
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -18,9 +24,11 @@ import com.akg.akg_sales.util.CommonUtil;
 import com.akg.akg_sales.view.adapter.OrderItemAdapter;
 import com.akg.akg_sales.view.dialog.ItemFilterDialog;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class OrderActivity extends AppCompatActivity {
     public ActivityOrderBinding orderBinding;
+    ArrayList<ItemDto> itemList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,9 +47,13 @@ public class OrderActivity extends AppCompatActivity {
         orderBinding.setActivity(this);
         orderBinding.executePendingBindings();
         setCustomer();
+        enableItemSearch();
     }
 
     private void updateItemList(ArrayList<ItemDto> list){
+        if(list.isEmpty())
+            CommonUtil.showToast(getApplicationContext(),"No Matching Items Found",false);
+
         RecyclerView recyclerView = orderBinding.itemListview;
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
@@ -50,10 +62,51 @@ public class OrderActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
     }
 
+    private void enableItemSearch(){
+        orderBinding.itemSearchBox.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                ArrayList<ItemDto> tmpItemList = new ArrayList<>();
+                if(s==null || s.length()==0) tmpItemList = itemList;
+                else if(s.length()<=10){
+                    for(ItemDto i:itemList){
+                        String dataText = (i.getItemCode()+" "+i.getItemDescription()).toUpperCase();
+                        boolean match = true;
+                        for (String w:s.toString().split(" ")){
+                            if(!dataText.contains(w.toUpperCase())) {
+                                match = false;
+                                break;
+                            }
+                        }
+                        if(match) tmpItemList.add(i);
+                    }
+                }
+                updateItemList(tmpItemList);
+            }
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+        disableSearchField();
+    }
+
+    private void disableSearchField(){
+        orderBinding.itemSearchBox.setVisibility(View.GONE);
+        orderBinding.applyFilterMsgText.setVisibility(View.VISIBLE);
+    }
+
+    private void enableSearchField(){
+        orderBinding.itemSearchBox.setVisibility(View.VISIBLE);
+        orderBinding.applyFilterMsgText.setVisibility(View.GONE);
+    }
+
     public void fetchItemFromServer(Long subTypeId){
         OrderService.fetchItemFromServer(this,subTypeId,list->{
-            if(list.isEmpty()) CommonUtil.showToast(getApplicationContext(),"No Items Found",false);
-            else updateItemList((ArrayList<ItemDto>) list);
+            itemList = (ArrayList<ItemDto>) list;
+            updateItemList(itemList);
+            if(itemList.isEmpty()) disableSearchField();
+            else enableSearchField();
         });
     }
 
@@ -74,11 +127,13 @@ public class OrderActivity extends AppCompatActivity {
         tView.setText(CommonUtil.customers.get(idx).getCustomerName(),false);
         CommonUtil.selectedCustomer = CommonUtil.customers.get(idx);
         updateCartBtnLabel();
-        updateItemList(new ArrayList<>());
+        itemList.clear();
+        updateItemList(itemList);
+        disableSearchField();
     }
 
     public void onClickFilter(){
-        ItemFilterDialog dialog = new ItemFilterDialog(this);
+        new ItemFilterDialog(this);
     }
 
     public void onClickCart(){
