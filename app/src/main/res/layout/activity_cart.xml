@@ -34,7 +34,7 @@
                 android:layout_marginBottom="8dp"
                 android:text="My Cart"
                 android:textColor="@color/font_color_main"
-                android:textSize="@dimen/text_size_4"
+                android:textSize="@dimen/text_size_3"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"

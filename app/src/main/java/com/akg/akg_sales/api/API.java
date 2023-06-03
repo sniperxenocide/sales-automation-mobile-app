@@ -21,8 +21,8 @@ public class API {
     public static Retrofit getClient() {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-//        String baseUrl = "http://10.0.2.2:5000";  // Dev
-        String baseUrl = "http://10.10.1.108:5000";  //Test Server
+        String baseUrl = "http://10.0.2.2:5000";  // Dev
+//        String baseUrl = "http://10.10.1.108:5000";  //Test Server
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor)
                 .addInterceptor(chain -> {
                     String token = "";

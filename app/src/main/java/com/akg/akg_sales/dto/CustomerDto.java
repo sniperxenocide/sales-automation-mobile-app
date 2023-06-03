@@ -23,6 +23,7 @@ public class CustomerDto implements Serializable {
     private String customerName;
     private String customerPhone;
     private String address;
+    private String operatingUnitId;
     private String operatingUnit;
     private String marketSegment;
     private String salesDesk;

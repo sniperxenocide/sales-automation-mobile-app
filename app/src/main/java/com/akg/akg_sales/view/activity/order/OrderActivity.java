@@ -149,7 +149,7 @@ public class OrderActivity extends AppCompatActivity {
     public void updateCartBtnLabel(){
         ArrayList<CartItemDto> cartItems = CommonUtil.orderCart.get(CommonUtil.selectedCustomer.getId());
         int size = cartItems==null?0:cartItems.size();
-        orderBinding.cartBtnLabel.setText("CART("+size+")");
+        orderBinding.cartBtnLabel.setText("("+size+")");
     }
 
 }

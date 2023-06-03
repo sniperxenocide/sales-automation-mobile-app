@@ -27,13 +27,13 @@ public class CartViewModel extends BaseObservable {
     }
 
     public void onClickSubmitBtn(){
-        ProgressDialog progressDialog = CommonUtil.showProgressDialog(activity);
         new ConfirmationDialog(activity, "Submit Order?", a->{
             OrderRequest postBody = getPostBody();
             if(postBody==null){
                 CommonUtil.showToast(activity,"No Item Selected",false);
                 return;
             }
+            ProgressDialog progressDialog = CommonUtil.showProgressDialog(activity);
             API.getClient().create(OrderApi.class).createOrder(postBody)
                     .enqueue(new Callback<OrderDto>() {
                         @Override
