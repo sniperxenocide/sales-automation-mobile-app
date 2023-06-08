@@ -1,28 +1,41 @@
 package com.akg.akg_sales.view.activity.payment;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.BaseObservable;
 import androidx.databinding.DataBindingUtil;
+import androidx.databinding.ObservableField;
 
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
-import android.widget.ArrayAdapter;
-import android.widget.AutoCompleteTextView;
+import android.text.Html;
+import android.view.View;
 
 import com.akg.akg_sales.R;
 import com.akg.akg_sales.databinding.ActivityNewPaymentBinding;
 import com.akg.akg_sales.dto.CustomerDto;
+import com.akg.akg_sales.dto.payment.BankDto;
 import com.akg.akg_sales.dto.payment.PaymentAccountDto;
+import com.akg.akg_sales.dto.payment.PaymentMasterDto;
+import com.akg.akg_sales.dto.payment.PaymentRequestDto;
+import com.akg.akg_sales.dto.payment.PaymentTypeDto;
 import com.akg.akg_sales.service.PaymentService;
 import com.akg.akg_sales.util.CommonUtil;
-import com.akg.akg_sales.view.dialog.PaymentAccountDialog;
+import com.akg.akg_sales.view.dialog.SearchableTextListDialog;
+import com.akg.akg_sales.viewmodel.PaymentViewModel;
+import com.google.android.material.datepicker.MaterialDatePicker;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Calendar;
 
 public class NewPaymentActivity extends AppCompatActivity {
     ActivityNewPaymentBinding binding;
+    public PaymentMasterDto masterDto;
     public PaymentAccountDto accountDto;
     private CustomerDto selectedCustomer;
-    private List<PaymentAccountDto> paymentAccounts;
+    public PaymentViewModel paymentViewModel = new PaymentViewModel();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,49 +46,92 @@ public class NewPaymentActivity extends AppCompatActivity {
     private void initPage(){
         accountDto = new PaymentAccountDto();
         loadUI();
-        setCustomer();
         loadPaymentAccounts();
     }
 
     private void loadUI(){
         binding = DataBindingUtil.setContentView(this,R.layout.activity_new_payment);
         binding.setActivity(this);
+        binding.setVm(paymentViewModel);
         binding.executePendingBindings();
-    }
-
-    private void setCustomer(){
-        if(CommonUtil.customers.size()>0){
-            AutoCompleteTextView tView=binding.customerList;
-            String[] customers = new String[CommonUtil.customers.size()];
-            for (int i=0;i< CommonUtil.customers.size();i++)
-                customers[i]=CommonUtil.customers.get(i).getCustomerName();
-            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, customers);
-            tView.setAdapter(adapter);
-            tView.setOnItemClickListener((adapterView, view, i, l) -> onCustomerSelect(tView,i));
-            onCustomerSelect(tView,0);
-        }
-    }
-
-    private void onCustomerSelect(AutoCompleteTextView tView,int idx){
-        selectedCustomer = CommonUtil.customers.get(idx);
-        tView.setText(this.selectedCustomer.getCustomerName(),false);
     }
 
     private void loadPaymentAccounts(){
         try {
-            PaymentService.getPaymentAccounts(this,selectedCustomer.getOperatingUnitId(),
-                    list-> paymentAccounts = list);
+            selectedCustomer = CommonUtil.customers.get(0);
+            PaymentService.getPaymentMaster(this,selectedCustomer.getOperatingUnitId(),
+                    master-> masterDto = master);
         }catch (Exception e){e.printStackTrace();}
     }
 
     public void showAccountSelectionDialog(){
         ArrayList<String> accounts = new ArrayList<>();
-        for(PaymentAccountDto a:paymentAccounts){
+        for(PaymentAccountDto a:masterDto.getPaymentAccounts()){
             accounts.add(a.getBankName()+" "+a.getBankAccountNumber());
         }
-        new PaymentAccountDialog(this,accounts,i->{
-            this.accountDto = paymentAccounts.get(i);
-            binding.setActivity(this);
+        new SearchableTextListDialog(this,accounts, i->{
+            this.accountDto = masterDto.getPaymentAccounts().get(i);
+            binding.accInfoContainer.setVisibility(View.VISIBLE);
+            binding.accInfo.setText(Html.fromHtml(
+                    "<b>Bank: </b>"+accountDto.getBankName()+"<br>"
+                            +"<b>Branch: </b>"+accountDto.getBankBranchName()+"<br>"
+                            +"<b>AC: </b>"+accountDto.getBankAccountNumber()+"<br>"
+                            +"<b>Name: </b>"+accountDto.getAccountHolderName()
+                    ));
+            paymentViewModel.getPaymentAccountId().set(accountDto.getId().toString());
         });
     }
+
+    public void showCustomerBankDialog(){
+        ArrayList<String> banks = new ArrayList<>();
+        for (BankDto b:masterDto.getBanks())
+            banks.add(b.getBankName()+" "+b.getShortBankName());
+        new SearchableTextListDialog(this,banks,idx->{
+            binding.custBankName.setText(masterDto.getBanks().get(idx).getBankName());
+            paymentViewModel.getCustomerBankId().set(masterDto.getBanks().get(idx).getId().toString());
+        });
+    }
+
+    public void showPaymentMethodsDialog(){
+        ArrayList<String> methods = new ArrayList<>();
+        for (PaymentTypeDto t:masterDto.getPaymentTypes())
+            methods.add(t.getDescription());
+        new SearchableTextListDialog(this,methods,idx->{
+            binding.paymentMethod.setText(masterDto.getPaymentTypes().get(idx).getDescription());
+            paymentViewModel.getPaymentTypeId().set(masterDto.getPaymentTypes().get(idx).getId().toString());
+        });
+    }
+
+    public void showPaymentDatePicker(){
+        MaterialDatePicker<Long> datePicker = MaterialDatePicker.Builder.datePicker()
+                .setTitleText("Payment Date").build();
+        datePicker.addOnPositiveButtonClickListener(selection -> {
+            Calendar calendar = Calendar.getInstance();
+            SimpleDateFormat sdf = new SimpleDateFormat();
+            calendar.setTimeInMillis(selection);
+            sdf.applyPattern("yyyy-MM-dd");
+            paymentViewModel.getPaymentDate().set(sdf.format(calendar.getTime()));
+            sdf.applyPattern("dd MMMM yyyy");
+            binding.paymentDate.setText(sdf.format(calendar.getTime()));
+        });
+        datePicker.show(getSupportFragmentManager(),"DATE_PICKER");
+    }
+
+    public void onClickAttachment(){
+
+    }
+
+    public void onClickSubmit(){
+        try {
+            PaymentRequestDto paymentRequestDto = new PaymentRequestDto(paymentViewModel);
+            PaymentService.createPayment(this,paymentRequestDto,
+                    res->{
+
+            });
+        }catch (Exception e){
+            CommonUtil.showToast(this,"Please Fill up Mandatory Fields ",false);
+        }
+
+    }
+
 }

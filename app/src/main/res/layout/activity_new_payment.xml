@@ -6,6 +6,9 @@
         <variable
             name="activity"
             type="com.akg.akg_sales.view.activity.payment.NewPaymentActivity" />
+        <variable
+            name="vm"
+            type="com.akg.akg_sales.viewmodel.PaymentViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -59,54 +62,57 @@
                 android:focusable="true"
                 android:focusableInTouchMode="true">
 
-                <com.google.android.material.textfield.TextInputLayout
-                    android:id="@+id/customer_list_layout"
-                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="Select Customer">
-
-                    <androidx.appcompat.widget.AppCompatAutoCompleteTextView
-                        android:id="@+id/customer_list"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:clickable="true"
-                        android:focusable="false"
-                        android:textColor="@color/font_color_main"
-                        android:textSize="@dimen/text_size_1"
-                        tools:ignore="KeyboardInaccessibleWidget" />
-                </com.google.android.material.textfield.TextInputLayout>
-
-
                 <Button
                     android:id="@+id/account_selection_btn"
-                    android:layout_marginTop="10dp"
                     android:padding="15dp"
-                    android:textStyle="bold"
                     android:backgroundTint="#a5c9af"
                     android:textSize="@dimen/text_size_1"
                     android:textColor="@color/dark_green"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Select Bank Account"
+                    android:text="Beneficiary Account"
+                    android:drawableEnd="@android:drawable/arrow_down_float"
+                    android:drawableTint="@color/font_color_red"
                     android:onClick="@{()->activity.showAccountSelectionDialog()}"
                     style="@style/Widget.MaterialComponents.Button.OutlinedButton"
                     />
 
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/acc_info_container"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:visibility="gone"
+                    android:textColorHint="@color/dark_green"
+                    android:hint="Beneficiary Account Info">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/acc_info"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:enabled="false"
+                        android:focusable="false"
+                        android:backgroundTint="#dbebd5"
+                        android:textColor="@color/font_color_main"
+                        android:textSize="18sp" />
+                </com.google.android.material.textfield.TextInputLayout>
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:hint="Bank">
+                    android:hint="Payment Amount"
+                    android:textColorHint="@color/dark_green">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:enabled="false"
-                        android:focusable="false"
+                        android:inputType="number"
+                        android:backgroundTint="#dbebd5"
+                        android:text="@={vm.paymentAmount}"
+                        android:drawableEnd="@android:drawable/star_off"
+                        android:drawableTint="@color/font_color_red"
                         android:textColor="@color/font_color_main"
-                        android:text="@{activity.accountDto.bankName}"
                         android:textSize="@dimen/text_size_1" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -114,15 +120,128 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:hint="Branch">
+                    android:hint="Payment Method"
+                    android:textColorHint="@color/dark_green">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/payment_method"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text"
+                        android:focusable="false"
+                        android:onClick="@{()->activity.showPaymentMethodsDialog()}"
+                        android:backgroundTint="#dbebd5"
+                        android:drawableEnd="@android:drawable/arrow_down_float"
+                        android:drawableTint="@color/font_color_red"
+                        android:textColor="@color/font_color_main"
+                        android:textSize="@dimen/text_size_1" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:hint="Payment Date"
+                    android:textColorHint="@color/dark_green">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/payment_date"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text"
+                        android:focusable="false"
+                        android:onClick="@{()->activity.showPaymentDatePicker()}"
+                        android:backgroundTint="#dbebd5"
+                        android:drawableEnd="@android:drawable/star_off"
+                        android:drawableTint="@color/font_color_red"
+                        android:textColor="@color/font_color_main"
+                        android:textSize="@dimen/text_size_1" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:hint="Receipt/Transaction No."
+                    android:textColorHint="@color/dark_green">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:enabled="false"
-                        android:focusable="false"
+                        android:inputType="text"
+                        android:text="@={vm.receiptNumber}"
+                        android:backgroundTint="#dbebd5"
+                        android:drawableEnd="@android:drawable/star_off"
+                        android:drawableTint="@color/font_color_red"
                         android:textColor="@color/font_color_main"
-                        android:text="@{activity.accountDto.bankBranchName}"
+                        android:textSize="@dimen/text_size_1" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:hint="Attachment"
+                    android:textColorHint="@color/dark_green">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text"
+                        android:focusable="false"
+                        android:onClick="@{()->activity.onClickAttachment()}"
+                        android:backgroundTint="#dbebd5"
+                        android:drawableEnd="@android:drawable/ic_menu_report_image"
+                        android:drawableTint="@color/font_color_red"
+                        android:textColor="@color/font_color_main"
+                        android:textSize="@dimen/text_size_1" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:text="Customer Account Info:"
+                    android:textColor="@color/font_color_main"
+                    android:textSize="@dimen/text_size_1"
+                    android:textStyle="bold"
+                    />
+
+
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:hint="Bank Name"
+                    >
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/cust_bank_name"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text"
+                        android:focusable="false"
+                        android:onClick="@{()->activity.showCustomerBankDialog()}"
+                        android:drawableEnd="@android:drawable/arrow_down_float"
+                        android:textColor="@color/font_color_main"
+                        android:textSize="@dimen/text_size_1" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:hint="Branch Name">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:inputType="text"
+                        android:text="@={vm.customerBankBranch}"
+                        android:textColor="@color/font_color_main"
                         android:textSize="@dimen/text_size_1" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -135,10 +254,9 @@
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:enabled="false"
-                        android:focusable="false"
+                        android:inputType="text"
+                        android:text="@={vm.customerAccountNumber}"
                         android:textColor="@color/font_color_main"
-                        android:text="@{activity.accountDto.bankAccountNumber}"
                         android:textSize="@dimen/text_size_1" />
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -146,31 +264,39 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="10dp"
-                    android:hint="Account Holder">
+                    android:hint="Note">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:enabled="false"
-                        android:focusable="false"
+                        android:inputType="text"
+                        android:text="@={vm.comment}"
                         android:textColor="@color/font_color_main"
-                        android:text="@{activity.accountDto.accountHolderName}"
                         android:textSize="@dimen/text_size_1" />
                 </com.google.android.material.textfield.TextInputLayout>
 
-                <com.google.android.material.textfield.TextInputLayout
+
+                <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:hint="Payment Amount">
-
-                    <com.google.android.material.textfield.TextInputEditText
-                        android:layout_width="match_parent"
+                    android:gravity="center">
+                    <Button
+                        android:id="@+id/submit_btn"
+                        android:layout_marginTop="10dp"
+                        android:padding="15dp"
+                        android:paddingStart="30dp"
+                        android:paddingEnd="30dp"
+                        android:textStyle="bold"
+                        android:onClick="@{()->activity.onClickSubmit()}"
+                        android:backgroundTint="#a5c9af"
+                        android:textSize="@dimen/text_size_1"
+                        android:textColor="@color/dark_green"
+                        android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:inputType="number"
-                        android:textColor="@color/font_color_main"
-                        android:textSize="@dimen/text_size_1" />
-                </com.google.android.material.textfield.TextInputLayout>
+                        android:text="Submit"
+                        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+                        />
+                </LinearLayout>
 
             </LinearLayout>
         </ScrollView>
