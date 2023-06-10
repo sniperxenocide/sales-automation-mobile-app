@@ -81,18 +81,25 @@ public class LoginViewModel extends BaseObservable {
                 .enqueue(new Callback<User>() {
                     @Override
                     public void onResponse(Call<User> call, Response<User> response) {
-                        System.out.println("Login Success****************");
                         progressDialog.dismiss();
-                        User validUser = response.body();
-                        if(!validUser.getToken().isEmpty()){
-                            validUser.setUsername(user.getUsername()).setPassword(user.getPassword());
-                            storeCred(validUser);
-                            CommonUtil.showToast(activity,"Login Success",true);
-                            CommonUtil.loggedInUser = validUser;
-                            Intent homeIntent = new Intent(activity, HomeActivity.class);
-                            activity.startActivity(homeIntent);
+                        try {
+                            if(response.code()==200){
+                                System.out.println("Login Success****************");
+                                User validUser = response.body();
+                                if(!validUser.getToken().isEmpty()){
+                                    validUser.setUsername(user.getUsername()).setPassword(user.getPassword());
+                                    storeCred(validUser);
+                                    CommonUtil.showToast(activity,"Login Success",true);
+                                    CommonUtil.loggedInUser = validUser;
+                                    Intent homeIntent = new Intent(activity, HomeActivity.class);
+                                    activity.startActivity(homeIntent);
+                                }
+                                else CommonUtil.showToast(activity,"Login Failed",false);
+                            }
+                            else throw new Exception(response.code()+"."+response.message());
+                        }catch (Exception e){
+                            CommonUtil.showToast(activity,e.getMessage(),false);
                         }
-                        else CommonUtil.showToast(activity,"Login Failed",false);
                     }
 
                     @Override

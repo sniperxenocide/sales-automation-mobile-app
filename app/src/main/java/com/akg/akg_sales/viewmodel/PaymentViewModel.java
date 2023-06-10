@@ -18,4 +18,5 @@ public class PaymentViewModel extends BaseObservable {
     private ObservableField<String> customerBankBranch = new ObservableField<>();
     private ObservableField<String> customerAccountNumber = new ObservableField<>();
     private ObservableField<String> comment = new ObservableField<>();
+    private ObservableField<String> attachment = new ObservableField<>();
 }

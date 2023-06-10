@@ -1,8 +1,5 @@
 package com.akg.akg_sales.dto.payment;
 
-import android.content.Context;
-
-import com.akg.akg_sales.util.CommonUtil;
 import com.akg.akg_sales.viewmodel.PaymentViewModel;
 
 import java.io.File;
@@ -15,6 +12,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor @AllArgsConstructor
 public class PaymentRequestDto {
+    private Long customerId;
+
     private Long paymentAccountId;
     private Double paymentAmount;
     private Long paymentTypeId;
@@ -28,7 +27,9 @@ public class PaymentRequestDto {
 
     private File attachment;
 
-    public PaymentRequestDto(PaymentViewModel vm) throws Exception{
+    public PaymentRequestDto(PaymentViewModel vm,Long customerId) throws Exception{
+        this.customerId = customerId;
+
         this.paymentAccountId = Long.parseLong(Objects.requireNonNull(vm.getPaymentAccountId().get()));
         this.paymentAmount = Double.parseDouble(Objects.requireNonNull(vm.getPaymentAmount().get()));
         this.paymentTypeId = Long.parseLong(Objects.requireNonNull(vm.getPaymentTypeId().get()));
@@ -45,7 +46,7 @@ public class PaymentRequestDto {
         this.customerAccountNumber = vm.getCustomerAccountNumber().get();
         this.comment = vm.getComment().get();
 
-        this.attachment = new File("img.txt");
+        attachment = new File(Objects.requireNonNull(vm.getAttachment().get()));
         System.out.println(this);
     }
 

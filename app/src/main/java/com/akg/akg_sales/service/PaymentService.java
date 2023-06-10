@@ -7,13 +7,16 @@ import androidx.core.util.Consumer;
 
 import com.akg.akg_sales.api.API;
 import com.akg.akg_sales.api.PaymentApi;
+import com.akg.akg_sales.dto.PageResponse;
 import com.akg.akg_sales.dto.payment.PaymentAccountDto;
+import com.akg.akg_sales.dto.payment.PaymentDto;
 import com.akg.akg_sales.dto.payment.PaymentMasterDto;
 import com.akg.akg_sales.dto.payment.PaymentRequestDto;
 import com.akg.akg_sales.util.CommonUtil;
 
 import java.lang.reflect.Field;
 import java.util.List;
+import java.util.Map;
 
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
@@ -53,7 +56,7 @@ public class PaymentService {
     }
 
     public static void createPayment(Context context, PaymentRequestDto requestDto,
-                                     Consumer<String> callback){
+                                     Consumer<PaymentDto> callback){
         try {
             MultipartBody.Builder builder = new MultipartBody.Builder();
             builder.setType(MultipartBody.FORM);
@@ -61,6 +64,7 @@ public class PaymentService {
             for(Field f:PaymentRequestDto.class.getDeclaredFields()){
                 try {
                     f.setAccessible(true);
+                    if(f.get(requestDto)==null) continue;
                     if(f.getName().equals("attachment")){
                         RequestBody fileRequestBody = RequestBody.create(MediaType.parse("multipart/form-data"), requestDto.getAttachment());
                         builder.addFormDataPart("attachment",requestDto.getAttachment().getName(), fileRequestBody);
@@ -74,22 +78,24 @@ public class PaymentService {
 
             ProgressDialog progressDialog = CommonUtil.showProgressDialog(context);
             API.getClient().create(PaymentApi.class).createPayment(body)
-                    .enqueue(new Callback<String>() {
+                    .enqueue(new Callback<PaymentDto>() {
                         @Override
-                        public void onResponse(Call<String> call, Response<String> response) {
+                        public void onResponse(Call<PaymentDto> call, Response<PaymentDto> response) {
                             progressDialog.dismiss();
                             try {
                                 if(response.code()==200){
+                                    CommonUtil.showToast(context,"Payment Success",true);
                                     callback.accept(response.body());
                                 }
                                 else throw new Exception(response.code()+"."+response.message());
                             }catch (Exception e){
                                 CommonUtil.showToast(context,e.getMessage(),false);
+                                e.printStackTrace();
                             }
                         }
 
                         @Override
-                        public void onFailure(Call<String> call, Throwable t) {
+                        public void onFailure(Call<PaymentDto> call, Throwable t) {
                             progressDialog.dismiss();
                             call.cancel();
                             System.out.println(t.getMessage());
@@ -97,5 +103,35 @@ public class PaymentService {
                     });
         }catch (Exception e){e.printStackTrace();}
 
+    }
+
+
+    public static void getPayments(Context context, Map<String,String> filter,
+                                   Consumer<PageResponse<PaymentDto>> callback){
+        ProgressDialog progressDialog = CommonUtil.showProgressDialog(context);
+        API.getClient().create(PaymentApi.class).getPayments(filter)
+                .enqueue(new Callback<PageResponse<PaymentDto>>() {
+                    @Override
+                    public void onResponse(Call<PageResponse<PaymentDto>> call, Response<PageResponse<PaymentDto>> response) {
+                        progressDialog.dismiss();
+                        try {
+                            if(response.code()==200){
+                                CommonUtil.showToast(context,"Success",true);
+                                callback.accept(response.body());
+                            }
+                            else throw new Exception(response.code()+"."+response.message());
+                        }catch (Exception e){
+                            CommonUtil.showToast(context,e.getMessage(),false);
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<PageResponse<PaymentDto>> call, Throwable t) {
+                        progressDialog.dismiss();
+                        call.cancel();
+                        System.out.println(t.getMessage());
+                    }
+                });
     }
 }
