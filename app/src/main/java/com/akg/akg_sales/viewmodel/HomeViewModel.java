@@ -9,6 +9,7 @@ import com.akg.akg_sales.view.activity.order.OrderActivity;
 import com.akg.akg_sales.view.activity.notification.NotificationActivity;
 import com.akg.akg_sales.view.activity.order.PendingOrderActivity;
 import com.akg.akg_sales.view.activity.payment.NewPaymentActivity;
+import com.akg.akg_sales.view.activity.payment.PaymentListActivity;
 import com.akg.akg_sales.view.dialog.ConfirmationDialog;
 import com.akg.akg_sales.view.dialog.GeneralDialog;
 
@@ -35,7 +36,7 @@ public class HomeViewModel extends BaseObservable {
     }
 
     public void onClickPaymentBtn(){
-        Intent intent = new Intent(activity, NewPaymentActivity.class);
+        Intent intent = new Intent(activity, PaymentListActivity.class);
         activity.startActivity(intent);
     }
 }

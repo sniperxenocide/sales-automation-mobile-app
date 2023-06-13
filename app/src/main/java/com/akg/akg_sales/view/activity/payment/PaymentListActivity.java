@@ -6,6 +6,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.akg.akg_sales.R;
@@ -13,12 +14,16 @@ import com.akg.akg_sales.databinding.ActivityPaymentListBinding;
 import com.akg.akg_sales.dto.PageResponse;
 import com.akg.akg_sales.dto.payment.PaymentDto;
 import com.akg.akg_sales.service.PaymentService;
+import com.akg.akg_sales.util.CommonUtil;
+import com.akg.akg_sales.view.activity.order.OrderActivity;
+import com.akg.akg_sales.view.adapter.PaymentListAdapter;
+import com.akg.akg_sales.view.adapter.PendingOrderAdapter;
+import com.akg.akg_sales.view.dialog.PaymentFilterDialog;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
 public class PaymentListActivity extends AppCompatActivity {
@@ -32,6 +37,8 @@ public class PaymentListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         loadPage();
+        initFilter();
+        fetchPaymentsFromServer();
     }
 
     @Override
@@ -40,18 +47,39 @@ public class PaymentListActivity extends AppCompatActivity {
         System.out.println("Inside onRestart***********************");
         initFilter();
         payments.clear();
-        fetchPayments();
+        fetchPaymentsFromServer();
     }
 
     private void loadPage(){
         binding = DataBindingUtil.setContentView(this,R.layout.activity_payment_list);
         binding.setActivity(this);
         binding.executePendingBindings();
+        initRecycleView();
     }
 
-    private void fetchPayments(){
-        PaymentService.getPayments(this,filter,res->{
+    private void initRecycleView(){
+        recyclerView = binding.paymentListview;
+        recyclerView.setHasFixedSize(true);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(layoutManager);
+        recyclerView.setAdapter(new PaymentListAdapter(this,new ArrayList<>()));
+        handleLoadMoreData();
+    }
 
+    private void loadPaymentsInRecycleView(){
+        if(pageResponse!=null) payments.addAll(pageResponse.getData());
+        if(payments.isEmpty()) CommonUtil.showToast(this,"No Payments Available",false);
+        PaymentListAdapter adapter = new PaymentListAdapter(this,payments);
+        recyclerView.setAdapter(adapter);
+        if(payments.size()>pageResponse.getPageSize()){
+            recyclerView.scrollToPosition(payments.size()-pageResponse.getData().size());
+        }
+    }
+
+    public void fetchPaymentsFromServer(){
+        PaymentService.getPayments(this,filter,res->{
+            pageResponse = res;
+            loadPaymentsInRecycleView();
         });
     }
 
@@ -83,13 +111,21 @@ public class PaymentListActivity extends AppCompatActivity {
                         try {
                             int nextPage = Integer.parseInt(Objects.requireNonNull(filter.get("page")))+1;
                             filter.put("page",Integer.toString(nextPage));
-                            fetchPayments();
+                            fetchPaymentsFromServer();
                         }catch (Exception ignored){}
 
                     }
                 }
             }
         });
+    }
+
+    public void onClickNewPayment(){
+        startActivity(new Intent(this, NewPaymentActivity.class));
+    }
+
+    public void onClickFilter(){
+        new PaymentFilterDialog(this);
     }
 
 }

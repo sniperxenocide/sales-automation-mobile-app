@@ -1,6 +1,8 @@
 package com.akg.akg_sales.dto.payment;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.util.Date;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,7 +18,7 @@ public class PaymentDto {
     private String branchName;
     private Double paymentAmount;
     private String paymentType;
-    private LocalDateTime paymentDate;
+    private String paymentDate;
     private String receiptNumber;
     private String customerBankName;
     private String customerBankBranch;
@@ -25,4 +27,11 @@ public class PaymentDto {
     private String customerName;
     private Long createdByUserId;
     private String createdByUsername;
+
+    public String getPaymentDate(){
+        try {
+            return this.paymentDate.split("T")[0];
+        }catch (Exception e){return this.paymentDate;}
+
+    }
 }

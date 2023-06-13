@@ -17,13 +17,13 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class API {
+    //        public static String baseUrl = "http://10.10.144.31:5000";  // Dev
+    public static String baseUrl = "http://10.0.2.2:5000";  // Dev
+    //        public static String baseUrl = "http://10.10.1.108:5000";  //Test Server
     private static Retrofit retrofit = null;
     public static Retrofit getClient() {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-//        String baseUrl = "http://10.10.144.31:5000";  // Dev
-        String baseUrl = "http://10.0.2.2:5000";  // Dev
-//        String baseUrl = "http://10.10.1.108:5000";  //Test Server
         OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor)
                 .addInterceptor(chain -> {
                     String token = "";

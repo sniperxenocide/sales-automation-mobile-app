@@ -1,6 +1,7 @@
 package com.akg.akg_sales.view.activity.order;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -15,19 +16,16 @@ import com.akg.akg_sales.api.OrderApi;
 import com.akg.akg_sales.databinding.ActivityPendingOrderBinding;
 import com.akg.akg_sales.dto.PageResponse;
 import com.akg.akg_sales.dto.order.OrderDto;
-import com.akg.akg_sales.dto.order.OrderStatusDto;
 import com.akg.akg_sales.util.CommonUtil;
 import com.akg.akg_sales.view.adapter.PendingOrderAdapter;
-import com.akg.akg_sales.viewmodel.order.PendingOrderViewModel;
+import com.akg.akg_sales.view.dialog.OrderFilterDialog;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
-import java.util.Map;
 import java.util.Objects;
 
-import lombok.SneakyThrows;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -56,10 +54,8 @@ public class PendingOrderActivity extends AppCompatActivity {
         fetchOrderFromServer();
     }
 
-
     private void loadPage(){
         binding= DataBindingUtil.setContentView(this,R.layout.activity_pending_order);
-        binding.setVm(new PendingOrderViewModel(this));
         binding.setActivity(this);
         initRecycleView();
     }
@@ -144,5 +140,12 @@ public class PendingOrderActivity extends AppCompatActivity {
         });
     }
 
+    public void onClickNewOrder(){
+        startActivity(new Intent(this, OrderActivity.class));
+    }
+
+    public void onClickFilter(){
+        new OrderFilterDialog(this);
+    }
 
 }
