@@ -3,6 +3,7 @@ package com.akg.akg_sales.view.activity;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -72,11 +73,15 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void fetchCustomerListForUser(){
+        ProgressDialog progressDialog = CommonUtil.showProgressDialog(this);
         API.getClient().create(CustomerApi.class).getCustomersForUser()
                 .enqueue(new Callback<List<CustomerDto>>() {
                     @Override
                     public void onResponse(Call<List<CustomerDto>> call, Response<List<CustomerDto>> response) {
-                        CommonUtil.customers = response.body();
+                        progressDialog.dismiss();
+                        if(response.code()==200){
+                            CommonUtil.customers = response.body();
+                        }
                     }
 
                     @Override
@@ -87,16 +92,19 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void fetchOrderStatusFromServer(){
+        ProgressDialog progressDialog = CommonUtil.showProgressDialog(this);
         API.getClient().create(OrderApi.class).getOrderStatus()
                 .enqueue(new Callback<List<OrderStatusDto>>() {
                     @Override
                     public void onResponse(Call<List<OrderStatusDto>> call, Response<List<OrderStatusDto>> response) {
+                        progressDialog.dismiss();
                         if(response.code()==200){
                             CommonUtil.statusList = (ArrayList<OrderStatusDto>) response.body();
                         }
                     }
                     @Override
                     public void onFailure(Call<List<OrderStatusDto>> call, Throwable t) {
+                        progressDialog.dismiss();
                         call.cancel();
                     }
                 });

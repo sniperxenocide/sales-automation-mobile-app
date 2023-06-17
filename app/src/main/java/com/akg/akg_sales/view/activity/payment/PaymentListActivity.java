@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import com.akg.akg_sales.R;
 import com.akg.akg_sales.databinding.ActivityPaymentListBinding;
@@ -55,6 +56,12 @@ public class PaymentListActivity extends AppCompatActivity {
         binding.setActivity(this);
         binding.executePendingBindings();
         initRecycleView();
+        newPaymentControl();
+    }
+
+    private void newPaymentControl(){
+        if(CommonUtil.loggedInUser.getCategory().equals("Customer"))
+            binding.newPaymentBtn.setVisibility(View.VISIBLE);
     }
 
     private void initRecycleView(){

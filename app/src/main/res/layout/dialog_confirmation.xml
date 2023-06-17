@@ -21,7 +21,7 @@
             android:layout_height="wrap_content"
             android:text="@{vm.msg}"
             android:textColor="@color/font_color_main"
-            android:textSize="@dimen/text_size_2"
+            android:textSize="@dimen/text_size_1"
             android:textStyle="bold"
             android:layout_marginTop="20dp"
             android:hint="Do you want to Create New Order?"
