@@ -40,14 +40,14 @@ public class LoginActivity extends AppCompatActivity {
 
     private void checkForUpdate(){
         fetchAppUpdateInfo(v->{
-            //if(v.getVersionCode()>BuildConfig.VERSION_CODE){
+            if(v.getVersionCode()>BuildConfig.VERSION_CODE){
                 new ConfirmationDialog(this,
                         "New Version Available. Download Now?", i->{
                     try {startActivity(new Intent(Intent.ACTION_VIEW,
                                 Uri.parse(v.getDownloadUrl())));
                     }catch (Exception e){e.printStackTrace();}
                 });
-            //}
+            }
         });
 
     }
