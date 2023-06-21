@@ -1,5 +1,8 @@
 package com.akg.akg_sales.dto.order;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 import lombok.AllArgsConstructor;
@@ -24,4 +27,12 @@ public class OrderDto {
     private String currentStatus;
     private Double value;
     private List<OrderLineDto> orderLines;
+
+    public String getCreationTime(){
+        try {
+            Date dt=new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").parse(creationTime);
+            return (new SimpleDateFormat("dd-MMM-yyyy hh:mm a")).format(dt);
+        }catch (Exception e){e.printStackTrace();}
+        return creationTime;
+    }
 }

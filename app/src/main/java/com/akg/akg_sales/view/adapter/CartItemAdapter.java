@@ -41,18 +41,19 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
     public void onBindViewHolder(@NonNull CartItemAdapter.ViewHolder holder, int position) {
         CartItemDto header = headers.get(position);
         holder.bind(header,Integer.toString(position+1));
-        holder.itemBinding.deleteCartItem.setOnClickListener(view -> {
-            new ConfirmationDialog(activity,"Delete Item from Cart?",i->{
-                try {
-                    ArrayList<CartItemDto> itemList = activity.cartMap.get(activity.cSelectedCustomer.getId());
-                    System.out.println(itemList);
-                    itemList.remove(header);
-                    System.out.println(itemList);
-                    if(itemList.size()==0) activity.finish();
-                    else activity.loadCartListView();
-                }catch (Exception e){}
-            });
-        });
+        holder.itemBinding.deleteCartItem.setOnClickListener(view ->
+                new ConfirmationDialog(activity,"Delete Item from Cart?",
+                        i->{
+            try {
+                ArrayList<CartItemDto> itemList = activity.cartMap.get(activity.cSelectedCustomer.getId());
+                System.out.println(itemList);
+                itemList.remove(header);
+                System.out.println(itemList);
+                if(itemList.size()==0) activity.finish();
+                else activity.loadCartListView();
+            }catch (Exception e){}
+            activity.calculateOrderValue();
+        }));
         holder.itemBinding.quantity.setOnClickListener(view -> onClickQuantityUpdate(header));
     }
 
@@ -84,6 +85,7 @@ public class CartItemAdapter extends RecyclerView.Adapter<CartItemAdapter.ViewHo
                         Objects.requireNonNull(activity.recyclerView.getAdapter())
                                 .notifyItemChanged(headers.indexOf(cartItem));
                     }catch (Exception ignored){}
+                    activity.calculateOrderValue();
                 });
     }
 }

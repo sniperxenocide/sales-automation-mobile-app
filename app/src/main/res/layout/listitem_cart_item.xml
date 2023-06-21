@@ -50,21 +50,21 @@
             android:paddingEnd="10sp"
             android:layout_weight="9"
             android:weightSum="10"
+            android:gravity="center_vertical"
             android:baselineAligned="false">
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:gravity="center_vertical"
                 android:layout_weight="6">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:textColor="@color/font_color_main"
-                    android:textSize="@dimen/text_size_1"
                     android:paddingStart="1dp"
                     android:paddingEnd="5dp"
                     android:paddingBottom="10dp"
+                    android:textSize="18sp"
                     android:text="@{vm.itemDto.itemDescription}"
                     android:textStyle="italic"
                     android:hint="Marks FCMP 500gm"
@@ -91,7 +91,6 @@
                         android:text="@{vm.quantity.toString()}"
                         android:textColor="@color/font_color_main"
                         android:textStyle="italic"
-                        android:textSize="@dimen/text_size_1"
                         android:paddingTop="10dp"
                         android:paddingBottom="10dp"
                         android:paddingStart="15dp"
@@ -104,8 +103,7 @@
                         android:layout_height="wrap_content"
                         android:textColor="@color/font_color_main"
                         android:textStyle="italic"
-                        android:textSize="@dimen/text_size_1"
-                        android:padding="10dp"
+                        android:padding="5dp"
                         android:hint="CTN"
                         />
 
@@ -120,8 +118,8 @@
                     android:padding="10dp">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="45dp"
-                        android:layout_height="45dp"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
                         android:background="@drawable/delete"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"

@@ -76,6 +76,15 @@ public class CartActivity extends AppCompatActivity {
         cSelectedCustomer = cartMap.get(customerIds[idx]).get(0).getCustomerDto();
         tView.setText(cSelectedCustomer.getCustomerName(),false);
         loadCartListView();
+        calculateOrderValue();
+    }
+
+    public void calculateOrderValue(){
+        double value = 0.0;
+        for(CartItemDto c: Objects.requireNonNull(cartMap.get(cSelectedCustomer.getId()))){
+            value = value + c.getQuantity()*c.getItemDto().getUnitPrice();
+        }
+        cartBinding.orderValue.setText("Approx Value:\n"+value+" Tk");
     }
 
 }

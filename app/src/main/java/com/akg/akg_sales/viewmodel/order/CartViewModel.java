@@ -27,7 +27,9 @@ public class CartViewModel extends BaseObservable {
     }
 
     public void onClickSubmitBtn(){
-        new ConfirmationDialog(activity, "Submit Order?", a->{
+        new ConfirmationDialog(activity,
+                "Order Confirmation.\n\nAttention! Actual Value of this Order will be Confirmed after Order Book.",
+                a->{
             OrderRequest postBody = getPostBody();
             if(postBody==null){
                 CommonUtil.showToast(activity,"No Item Selected",false);

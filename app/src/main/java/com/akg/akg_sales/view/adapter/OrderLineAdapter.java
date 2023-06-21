@@ -42,13 +42,14 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
     public void onBindViewHolder(@NonNull OrderLineAdapter.ViewHolder holder, int position) {
         OrderLineDto line = lines.get(position);
         holder.bind(line,Integer.toString(position+1));
-        holder.itemBinding.quantity.setOnClickListener(view -> onQuantityUpdate(line));
-        holder.itemBinding.deleteLineItem.setOnClickListener(view -> onClickDeleteItem(line));
+        //holder.itemBinding.quantity.setOnClickListener(view -> onQuantityUpdate(line));
+        //holder.itemBinding.deleteLineItem.setOnClickListener(view -> onClickDeleteItem(line));
 
-        if(activity.orderActionPermitted){
-            holder.itemBinding.deleteLineItem.setVisibility(View.VISIBLE);
-        }
-        else holder.itemBinding.deleteLineItem.setVisibility(View.INVISIBLE);
+//        if(activity.orderActionPermitted){
+//            holder.itemBinding.deleteLineItem.setVisibility(View.VISIBLE);
+//        }
+//        else holder.itemBinding.deleteLineItem.setVisibility(View.GONE);
+        holder.itemBinding.deleteLineItem.setVisibility(View.GONE);
     }
 
 

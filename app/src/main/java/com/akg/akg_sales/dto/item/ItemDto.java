@@ -12,4 +12,5 @@ public class ItemDto {
     private String itemDescription;
     private String primaryUom;
     private String secondaryUom;
+    private Double unitPrice;
 }

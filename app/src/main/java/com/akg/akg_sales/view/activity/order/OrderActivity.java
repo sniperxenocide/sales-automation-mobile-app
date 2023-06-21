@@ -111,7 +111,7 @@ public class OrderActivity extends AppCompatActivity {
     }
 
     private void setCustomer(){
-        if(CommonUtil.customers.size()>0){
+        if(CommonUtil.customers!=null && CommonUtil.customers.size()>0){
             AutoCompleteTextView tView=orderBinding.customerList;
             String[] customers = new String[CommonUtil.customers.size()];
             for (int i=0;i< CommonUtil.customers.size();i++)
