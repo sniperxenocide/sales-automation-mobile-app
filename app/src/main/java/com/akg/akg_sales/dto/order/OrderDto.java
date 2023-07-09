@@ -14,6 +14,7 @@ import lombok.ToString;
 public class OrderDto {
     private Long id;
     private String orderNumber;
+    private String oracleOrderNumber;
     private String creationTime;
     private Long customerId;
     private String customerNumber;
@@ -26,6 +27,8 @@ public class OrderDto {
     private String currentApproverUsername;
     private String currentStatus;
     private Double value;
+    private String bookedDate;
+    private Double bookedValue;
     private List<OrderLineDto> orderLines;
 
     public String getCreationTime(){
@@ -34,5 +37,24 @@ public class OrderDto {
             return (new SimpleDateFormat("dd-MMM-yyyy hh:mm a")).format(dt);
         }catch (Exception e){e.printStackTrace();}
         return creationTime;
+    }
+
+    public String getBookedDate(){
+        if(bookedDate==null || bookedDate.isEmpty()) return "--";
+        try {
+            Date dt=new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").parse(bookedDate);
+            return (new SimpleDateFormat("dd-MMM-yyyy hh:mm a")).format(dt);
+        }catch (Exception e){e.printStackTrace();}
+        return bookedDate;
+    }
+
+    public String getBookedValue(){
+        if(this.bookedValue==null) return "--";
+        return this.bookedValue.toString();
+    }
+
+    public String getOracleOrderNumber(){
+        if(this.oracleOrderNumber==null) return "--";
+        return this.oracleOrderNumber;
     }
 }

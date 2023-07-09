@@ -84,7 +84,7 @@ public class CartActivity extends AppCompatActivity {
         for(CartItemDto c: Objects.requireNonNull(cartMap.get(cSelectedCustomer.getId()))){
             value = value + c.getQuantity()*c.getItemDto().getUnitPrice();
         }
-        cartBinding.orderValue.setText("Approx Value:\n"+value+" Tk");
+        cartBinding.orderValue.setText("Gross Value:\n"+value+" Tk");
     }
 
 }

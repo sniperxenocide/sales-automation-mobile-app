@@ -145,7 +145,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="16dp"
                 android:background="@drawable/light_grey_background"
-                android:hint="Approx Value: \n120000 Tk"
+                android:hint="Gross Value: \n120000 Tk"
                 android:paddingStart="15dp"
                 android:paddingTop="5dp"
                 android:paddingEnd="15dp"

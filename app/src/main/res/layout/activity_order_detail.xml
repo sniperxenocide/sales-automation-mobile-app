@@ -71,13 +71,13 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:orientation="horizontal"
-                            android:weightSum="10">
-
+                            android:weightSum="10"
+                            >
                             <TextView
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="3"
-                                android:text="Date:"
+                                android:layout_weight="4"
+                                android:text="Submit Date:"
                                 android:textColor="@color/font_color_main"
                                 android:textSize="@dimen/text_size_1"
                                 android:textStyle="bold" />
@@ -85,8 +85,33 @@
                             <TextView
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="7"
+                                android:layout_weight="6"
                                 android:text="@{vm.creationTime}"
+                                android:textColor="@color/font_color_main"
+                                android:textSize="@dimen/text_size_1"
+                                android:hint="data"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:weightSum="10"
+                            >
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="4"
+                                android:text="Book Date:"
+                                android:textColor="@color/font_color_main"
+                                android:textSize="@dimen/text_size_1"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="6"
+                                android:text="@{vm.bookedDate}"
                                 android:textColor="@color/font_color_main"
                                 android:textSize="@dimen/text_size_1"
                                 android:hint="data"/>
@@ -101,8 +126,8 @@
                             <TextView
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="3"
-                                android:text="Order No:"
+                                android:layout_weight="4"
+                                android:text="Cust Ord No:"
                                 android:textColor="@color/font_color_main"
                                 android:textSize="@dimen/text_size_1"
                                 android:textStyle="bold" />
@@ -110,8 +135,33 @@
                             <TextView
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="7"
+                                android:layout_weight="6"
                                 android:text="@{vm.orderNumber}"
+                                android:textColor="@color/font_color_main"
+                                android:textSize="@dimen/text_size_1"
+                                android:hint="data"/>
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:weightSum="10">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="4"
+                                android:text="Syst Ord No:"
+                                android:textColor="@color/font_color_main"
+                                android:textSize="@dimen/text_size_1"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="6"
+                                android:text="@{vm.oracleOrderNumber}"
                                 android:textColor="@color/font_color_main"
                                 android:textSize="@dimen/text_size_1"
                                 android:hint="data"/>
@@ -231,7 +281,7 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="5"
-                                android:text="Approximate Value:"
+                                android:text="Gross Value:"
                                 android:textColor="@color/font_color_main"
                                 android:textSize="@dimen/text_size_1"
                                 android:textStyle="bold" />
@@ -240,9 +290,35 @@
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="5"
-                                android:hint="data"
+                                android:hint="230000"
                                 android:textAlignment="textEnd"
                                 android:text="@{vm.value.toString()+` Tk`}"
+                                android:textColor="@color/font_color_main"
+                                android:textSize="@dimen/text_size_1" />
+                        </LinearLayout>
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:orientation="horizontal"
+                            android:weightSum="10">
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="5"
+                                android:text="Booked Value:"
+                                android:textColor="@color/font_color_main"
+                                android:textSize="@dimen/text_size_1"
+                                android:textStyle="bold" />
+
+                            <TextView
+                                android:layout_width="0dp"
+                                android:layout_height="wrap_content"
+                                android:layout_weight="5"
+                                android:hint="215000"
+                                android:textAlignment="textEnd"
+                                android:text="@{vm.bookedValue.toString()+` Tk`}"
                                 android:textColor="@color/font_color_main"
                                 android:textSize="@dimen/text_size_1" />
                         </LinearLayout>

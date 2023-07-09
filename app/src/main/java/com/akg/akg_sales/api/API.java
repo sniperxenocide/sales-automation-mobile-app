@@ -17,11 +17,11 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class API {
-    //        public static String baseUrl = "http://10.10.144.31:5000";  // Dev
-    public static String baseUrl = "http://10.0.2.2:5000";  // Dev
+//    public static String baseUrl = "http://10.10.144.31:5000";  // Dev
 //    public static String baseUrl = "http://10.10.1.108:5000";  //Test Server
-//    public static String baseUrl = "http://sales.abulkhairgroup.com:5000";  //Test Server
-    private static Retrofit retrofit = null;
+    public static String baseUrl = "http://sales.abulkhairgroup.com:5000";  //Test Server
+//    public static String baseUrl = "http://10.0.2.2:5000";  // Dev
+
     public static Retrofit getClient() {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
@@ -34,10 +34,9 @@ public class API {
                             .addHeader("Authorization", token ).build();
                     return chain.proceed(newRequest);
                 }).retryOnConnectionFailure(false).build();
-        retrofit = new Retrofit.Builder()
+        return new Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client).build();
-        return retrofit;
     }
 }

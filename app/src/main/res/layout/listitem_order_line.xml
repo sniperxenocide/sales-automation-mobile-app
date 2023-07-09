@@ -43,7 +43,7 @@
         <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:orientation="vertical"
             android:paddingTop="10sp"
             android:paddingBottom="10sp"
             android:paddingStart="1sp"
@@ -53,34 +53,73 @@
             android:gravity="center"
             android:baselineAligned="false">
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_weight="6">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/font_color_main"
-                    android:textSize="18sp"
-                    android:paddingStart="1dp"
-                    android:paddingEnd="5dp"
-                    android:paddingBottom="10dp"
-                    android:text="@{vm.itemDescription}"
-                    android:textStyle="italic"
-                    android:hint="Marks FCMP 500gm"
-                    />
+                android:orientation="horizontal">
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:hint="Marks FCMP 500gm"
+                        android:paddingStart="1dp"
+                        android:paddingEnd="5dp"
+                        android:paddingBottom="5dp"
+                        android:text="@{vm.itemDescription}"
+                        android:textColor="@color/font_color_main"
+                        android:textSize="18sp"
+                        android:textStyle="italic"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toStartOf="@+id/delete_line_item"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/delete_line_item"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        app:layout_constraintTop_toTopOf="parent"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        android:padding="5dp">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:background="@drawable/delete"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                </androidx.constraintlayout.widget.ConstraintLayout>
+
 
             </LinearLayout>
             <LinearLayout
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:gravity="center"
-                android:layout_weight="4">
+                android:orientation="horizontal"
+                android:gravity="center_vertical">
+
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
+                    android:orientation="vertical"
+                    android:gravity="center">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:textAlignment="center"
+                        android:text="Requested"
+                        android:textSize="18sp"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/font_color_main"
+                        android:textStyle="bold"
+                        android:padding="5dp" />
+
                     <EditText
                         android:id="@+id/quantity"
                         android:inputType="none"
@@ -91,41 +130,58 @@
                         android:text="@{vm.quantity.toString()}"
                         android:textColor="@color/font_color_main"
                         android:textStyle="italic"
+                        android:textAlignment="center"
                         android:paddingTop="10dp"
                         android:paddingBottom="10dp"
                         android:paddingStart="15dp"
                         android:paddingEnd="15dp"
                         android:hint="5.0"/>
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:gravity="center"
+                    android:layout_marginStart="15dp">
                     <TextView
                         android:layout_width="wrap_content"
                         android:textAlignment="center"
-                        android:text="@{vm.uom}"
+                        android:text="Booked"
+                        android:textSize="18sp"
                         android:layout_height="wrap_content"
                         android:textColor="@color/font_color_main"
+                        android:textStyle="bold"
+                        android:padding="5dp" />
+                    <EditText
+                        android:id="@+id/bookedQuantity"
+                        android:inputType="none"
+                        android:focusable="false"
+                        android:layout_width="wrap_content"
+                        android:background="@drawable/white_background"
+                        android:layout_height="wrap_content"
+                        android:text="@{vm.bookedQuantity.toString()}"
+                        android:textColor="@color/font_color_main"
                         android:textStyle="italic"
-                        android:padding="5dp"
-                        android:hint="CTN" />
-
+                        android:textAlignment="center"
+                        android:paddingTop="10dp"
+                        android:paddingBottom="10dp"
+                        android:paddingStart="15dp"
+                        android:paddingEnd="15dp"
+                        android:hint="5.0"/>
                 </LinearLayout>
 
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/delete_line_item"
+                <TextView
                     android:layout_width="wrap_content"
+                    android:textAlignment="center"
+                    android:text="@{vm.uom}"
                     android:layout_height="wrap_content"
-                    android:layout_weight="3"
-                    android:padding="10dp">
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:background="@drawable/delete"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
+                    android:textColor="@color/font_color_main"
+                    android:textStyle="italic"
+                    android:padding="5dp"
+                    android:textSize="18sp"
+                    android:layout_marginStart="15dp"
+                    android:hint="CTN" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

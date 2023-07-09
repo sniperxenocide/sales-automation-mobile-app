@@ -27,6 +27,7 @@ public class PaymentDto {
     private String customerName;
     private Long createdByUserId;
     private String createdByUsername;
+    private String currentStatus;
 
     public String getPaymentDate(){
         try {

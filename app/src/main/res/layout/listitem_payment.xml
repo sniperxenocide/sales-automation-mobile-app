@@ -133,6 +133,28 @@
                     android:layout_weight="6"/>
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="10">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/font_color_main"
+                    android:textSize="@dimen/text_size_1"
+                    android:text="Status:"
+                    android:textStyle="bold"
+                    android:layout_weight="4"/>
+                <TextView
+                    android:layout_width="0dp"
+                    android:text="@{vm.currentStatus}"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/font_color_main"
+                    android:textSize="@dimen/text_size_1"
+                    android:layout_weight="6"/>
+            </LinearLayout>
+
         </LinearLayout>
     </LinearLayout>
 
