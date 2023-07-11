@@ -11,12 +11,16 @@ import android.widget.ImageView;
 
 import com.akg.akg_sales.api.API;
 import com.akg.akg_sales.databinding.DialogPaymentDetailBinding;
+import com.akg.akg_sales.dto.StatusFlow;
 import com.akg.akg_sales.dto.payment.PaymentDto;
 import com.akg.akg_sales.util.CommonUtil;
+import com.akg.akg_sales.view.activity.order.OrderDetailActivity;
 import com.akg.akg_sales.view.activity.payment.PaymentListActivity;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.model.LazyHeaders;
+
+import java.util.ArrayList;
 
 public class PaymentDetailDialog {
     DialogPaymentDetailBinding binding;
@@ -39,6 +43,7 @@ public class PaymentDetailDialog {
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.show();
         loadAttachment();
+        loadStatusFlowDialog();
     }
 
     public Spanned getPaymentInfo(){
@@ -78,5 +83,22 @@ public class PaymentDetailDialog {
                 .load(glideUrl)
                 .into(attachmentView);
 
+    }
+
+    private void loadStatusFlowDialog(){
+        try {
+            ArrayList<StatusFlow> statusFlows = new ArrayList<>();
+            statusFlows.add(new StatusFlow(1,false,"Submitted"));
+            statusFlows.add(new StatusFlow(2,false,"Confirmed"));
+            statusFlows.add(new StatusFlow(3,false,"Remitted"));
+            statusFlows.add(new StatusFlow(4,false,"Cleared"));
+            for (StatusFlow s:statusFlows){
+                s.setPassed(true);
+                if(s.getStatus().equals(paymentDto.getCurrentStatus())) break;
+            }
+            binding.statusLayout.setOnClickListener(v->{
+                new StatusFlowDialog(statusFlows, activity);
+            });
+        }catch (Exception e){e.printStackTrace();}
     }
 }

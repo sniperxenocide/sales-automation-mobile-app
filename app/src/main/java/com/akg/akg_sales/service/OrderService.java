@@ -7,8 +7,11 @@ import androidx.core.util.Consumer;
 
 import com.akg.akg_sales.api.API;
 import com.akg.akg_sales.api.ItemApi;
+import com.akg.akg_sales.api.OrderApi;
 import com.akg.akg_sales.dto.item.ItemDto;
 import com.akg.akg_sales.dto.item.ItemTypeDto;
+import com.akg.akg_sales.dto.order.OrderDto;
+import com.akg.akg_sales.dto.order.OrderRequest;
 import com.akg.akg_sales.util.CommonUtil;
 
 import java.util.List;
@@ -67,6 +70,85 @@ public class OrderService {
                     public void onFailure(Call<List<ItemTypeDto>> call, Throwable t) {
                         progressDialog.dismiss();
                         call.cancel();
+                    }
+                });
+    }
+
+
+    public static void fetchOrderDetailFromServer(String orderId,Context context,Consumer<OrderDto> callback){
+        ProgressDialog progressDialog = CommonUtil.showProgressDialog(context);
+        API.getClient().create(OrderApi.class).getOrderDetail(orderId)
+                .enqueue(new Callback<OrderDto>() {
+                    @Override
+                    public void onResponse(Call<OrderDto> call, Response<OrderDto> response) {
+                        progressDialog.dismiss();
+                        try {
+                            if(response.code()==200){
+                                callback.accept(response.body());
+                            }
+                            else throw new Exception(response.code()+"."+response.message());
+                        }catch (Exception e){
+                            CommonUtil.showToast(context,e.getMessage(),false);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<OrderDto> call, Throwable t) {
+                        progressDialog.dismiss();
+                        call.cancel();
+                    }
+                });
+    }
+
+    public static void approveOrder(OrderRequest body,Context context,Consumer<OrderDto> callback){
+        ProgressDialog progressDialog = CommonUtil.showProgressDialog(context);
+        API.getClient().create(OrderApi.class).approveOrder(body)
+                .enqueue(new Callback<OrderDto>() {
+                    @Override
+                    public void onResponse(Call<OrderDto> call, Response<OrderDto> response) {
+                        progressDialog.dismiss();
+                        try {
+                            if(response.code()==200){
+                                callback.accept(response.body());
+                            }
+                            else throw new Exception(response.code()+"."+response.message());
+                        }catch (Exception e){
+                            CommonUtil.showToast(context,e.getMessage(),false);
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<OrderDto> call, Throwable t) {
+                        progressDialog.dismiss();
+                        call.cancel();
+                        CommonUtil.showToast(context,t.getMessage(),false);
+                    }
+                });
+    }
+
+
+    public static void cancelOrder(String orderId,Context context,Consumer<OrderDto> callback) {
+        ProgressDialog progressDialog = CommonUtil.showProgressDialog(context);
+        API.getClient().create(OrderApi.class).cancelOrder(orderId)
+                .enqueue(new Callback<OrderDto>() {
+                    @Override
+                    public void onResponse(Call<OrderDto> call, Response<OrderDto> response) {
+                        progressDialog.dismiss();
+                        try {
+                            if(response.code()==200){
+                                callback.accept(response.body());
+                            }
+                            else throw new Exception(response.code()+"."+response.message());
+                        }catch (Exception e){
+                            CommonUtil.showToast(context,e.getMessage(),false);
+                        }
+                    }
+                    @Override
+                    public void onFailure(Call<OrderDto> call, Throwable t) {
+                        progressDialog.dismiss();
+                        t.printStackTrace();
+                        call.cancel();
+                        CommonUtil.showToast(context,t.getLocalizedMessage(),false);
                     }
                 });
     }

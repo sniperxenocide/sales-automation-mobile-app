@@ -104,7 +104,7 @@ public class OrderFilterDialog {
         Calendar cCal = Calendar.getInstance();
         CalendarConstraints.Builder constraintsBuilderRange = new CalendarConstraints.Builder();
         CalendarConstraints.DateValidator dateValidatorMax = DateValidatorPointBackward.before(cCal.getTimeInMillis());
-        cCal.add(Calendar.DATE,-30);
+        cCal.add(Calendar.DATE,-90);
         CalendarConstraints.DateValidator dateValidatorMin = DateValidatorPointForward.from(cCal.getTimeInMillis());
         ArrayList<CalendarConstraints.DateValidator> listValidators = new ArrayList<>();
         listValidators.add(dateValidatorMin);

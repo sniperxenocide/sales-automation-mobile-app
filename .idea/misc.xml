@@ -34,6 +34,7 @@
         <entry key="..\:/Project/AKGOrderSalesProject/akg_sales_mobile_app/app/src/main/res/layout/dialog_payment_detail.xml" value="0.1828125" />
         <entry key="..\:/Project/AKGOrderSalesProject/akg_sales_mobile_app/app/src/main/res/layout/dialog_payment_filter.xml" value="0.18177083333333333" />
         <entry key="..\:/Project/AKGOrderSalesProject/akg_sales_mobile_app/app/src/main/res/layout/dialog_searchable_text_list.xml" value="0.1828125" />
+        <entry key="..\:/Project/AKGOrderSalesProject/akg_sales_mobile_app/app/src/main/res/layout/dialog_status_flow.xml" value="0.1828125" />
         <entry key="..\:/Project/AKGOrderSalesProject/akg_sales_mobile_app/app/src/main/res/layout/list_item_order_booked.xml" value="0.20052083333333334" />
         <entry key="..\:/Project/AKGOrderSalesProject/akg_sales_mobile_app/app/src/main/res/layout/listitem_cart_item.xml" value="0.18177083333333333" />
         <entry key="..\:/Project/AKGOrderSalesProject/akg_sales_mobile_app/app/src/main/res/layout/listitem_delivery_confirmed.xml" value="0.1" />
@@ -45,6 +46,7 @@
         <entry key="..\:/Project/AKGOrderSalesProject/akg_sales_mobile_app/app/src/main/res/layout/listitem_payment.xml" value="0.18177083333333333" />
         <entry key="..\:/Project/AKGOrderSalesProject/akg_sales_mobile_app/app/src/main/res/layout/listitem_payment_cleared.xml" value="0.12664473684210525" />
         <entry key="..\:/Project/AKGOrderSalesProject/akg_sales_mobile_app/app/src/main/res/layout/listitem_pending_order.xml" value="0.18177083333333333" />
+        <entry key="..\:/Project/AKGOrderSalesProject/akg_sales_mobile_app/app/src/main/res/layout/listitem_status_flow_item.xml" value="0.18177083333333333" />
         <entry key="..\:/Project/AKGOrderSalesProject/akg_sales_mobile_app/app/src/main/res/layout/view_back_btn.xml" value="0.12664473684210525" />
       </map>
     </option>

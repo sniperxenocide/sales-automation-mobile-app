@@ -13,12 +13,15 @@ import com.akg.akg_sales.R;
 import com.akg.akg_sales.api.API;
 import com.akg.akg_sales.api.OrderApi;
 import com.akg.akg_sales.databinding.ActivityOrderDetailBinding;
+import com.akg.akg_sales.dto.StatusFlow;
 import com.akg.akg_sales.dto.order.OrderDto;
 import com.akg.akg_sales.dto.order.OrderLineDto;
 import com.akg.akg_sales.dto.order.OrderRequest;
+import com.akg.akg_sales.service.OrderService;
 import com.akg.akg_sales.util.CommonUtil;
 import com.akg.akg_sales.view.adapter.OrderLineAdapter;
 import com.akg.akg_sales.view.dialog.ConfirmationDialog;
+import com.akg.akg_sales.view.dialog.StatusFlowDialog;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -36,8 +39,7 @@ public class OrderDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        try {
-            fetchOrderDetailFromServer(getIntent().getStringExtra("orderId"));
+        try {fetchOrderDetailFromServer(getIntent().getStringExtra("orderId"));
         }catch (Exception e){finish();}
     }
 
@@ -49,23 +51,14 @@ public class OrderDetailActivity extends AppCompatActivity {
         binding.executePendingBindings();
         setOrderActionUi();
         loadOrderLines();
+        loadStatusFlowDialog();
     }
 
     private void fetchOrderDetailFromServer(String orderId){
-        API.getClient().create(OrderApi.class).getOrderDetail(orderId)
-                .enqueue(new Callback<OrderDto>() {
-                    @Override
-                    public void onResponse(Call<OrderDto> call, Response<OrderDto> response) {
-                        orderDto = response.body();
-                        loadPage();
-                    }
-
-                    @Override
-                    public void onFailure(Call<OrderDto> call, Throwable t) {
-                        call.cancel();
-                        finish();
-                    }
-                });
+        OrderService.fetchOrderDetailFromServer(orderId,this,res->{
+            orderDto = res;
+            loadPage();
+        });
     }
 
     public void loadOrderLines(){
@@ -86,52 +79,19 @@ public class OrderDetailActivity extends AppCompatActivity {
             for (OrderLineDto l : orderDto.getOrderLines()) {
                 body.addLine(l.getItemId(),l.getQuantity().intValue());
             }
-            API.getClient().create(OrderApi.class).approveOrder(body)
-                    .enqueue(new Callback<OrderDto>() {
-                        @Override
-                        public void onResponse(Call<OrderDto> call, Response<OrderDto> response) {
-                            progressDialog.dismiss();
-                            if(response.code()==200){
-                                CommonUtil.showToast(getApplicationContext(),"Order Approved",true);
-                                finish();
-                            }
-                            else CommonUtil.showToast(getApplicationContext(),response.code()+"."+response.message(),false);
-                        }
-
-                        @Override
-                        public void onFailure(Call<OrderDto> call, Throwable t) {
-                            progressDialog.dismiss();
-                            CommonUtil.showToast(getApplicationContext(),"Order Approve Failed",false);
-                        }
-                    });
+            OrderService.approveOrder(body,this,res->{
+                CommonUtil.showToast(getApplicationContext(),"Order Approved",true);
+                finish();
+            });
         });
     }
 
     public void onClickCancel(){
-        ProgressDialog progressDialog = CommonUtil.showProgressDialog(this);
         new ConfirmationDialog(this,"Cancel Order?",i->{
-            API.getClient().create(OrderApi.class).cancelOrder(orderDto.getId().toString())
-                    .enqueue(new Callback<OrderDto>() {
-                        @Override
-                        public void onResponse(Call<OrderDto> call, Response<OrderDto> response) {
-                            progressDialog.dismiss();
-                            try {
-                                if(response.code()==200){
-                                    CommonUtil.showToast(getApplicationContext(),"Order Canceled",true);
-                                    finish();
-                                }
-                                else throw new Exception(response.code()+"."+response.message());
-                            }catch (Exception e){
-                                CommonUtil.showToast(getApplicationContext(),e.getMessage(), false);
-                                e.printStackTrace();
-                            }
-                        }
-                        @Override
-                        public void onFailure(Call<OrderDto> call, Throwable t) {
-                            progressDialog.dismiss();
-                            t.printStackTrace();
-                            CommonUtil.showToast(getApplicationContext(),t.getLocalizedMessage(),false);
-                        }
+            OrderService.cancelOrder(orderDto.getId().toString(),getApplicationContext(),
+                    res->{
+                        CommonUtil.showToast(getApplicationContext(),"Order Canceled",true);
+                        finish();
                     });
         });
     }
@@ -146,6 +106,22 @@ public class OrderDetailActivity extends AppCompatActivity {
             binding.orderCancel.setOnClickListener(view -> onClickCancel());
         }
         else binding.orderAction.setVisibility(View.INVISIBLE);
+    }
+
+    private void loadStatusFlowDialog(){
+        try {
+            ArrayList<StatusFlow> statusFlows = new ArrayList<>();
+            statusFlows.add(new StatusFlow(1,false,"Awaiting Market Approval"));
+            statusFlows.add(new StatusFlow(2,false,"Awaiting Management Approval"));
+            statusFlows.add(new StatusFlow(3,false,"Order Confirmed"));
+            for (StatusFlow s:statusFlows){
+                s.setPassed(true);
+                if(s.getStatus().equals(orderDto.getCurrentStatus())) break;
+            }
+            binding.statusLayout.setOnClickListener(v->{
+                new StatusFlowDialog(statusFlows,OrderDetailActivity.this);
+            });
+        }catch (Exception e){e.printStackTrace();}
     }
 
 }
