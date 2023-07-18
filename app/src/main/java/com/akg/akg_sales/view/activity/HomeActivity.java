@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import com.akg.akg_sales.BuildConfig;
 import com.akg.akg_sales.R;
 import com.akg.akg_sales.api.API;
 import com.akg.akg_sales.api.CustomerApi;
@@ -16,6 +17,8 @@ import com.akg.akg_sales.databinding.ActivityHomeBinding;
 import com.akg.akg_sales.dto.CustomerDto;
 import com.akg.akg_sales.dto.order.CartItemDto;
 import com.akg.akg_sales.dto.order.OrderStatusDto;
+import com.akg.akg_sales.service.CustomerService;
+import com.akg.akg_sales.service.OrderService;
 import com.akg.akg_sales.util.CommonUtil;
 import com.akg.akg_sales.viewmodel.HomeViewModel;
 import com.google.gson.Gson;
@@ -25,6 +28,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -32,16 +36,18 @@ import retrofit2.Response;
 
 public class HomeActivity extends AppCompatActivity {
     Gson gson = new Gson();
+    ActivityHomeBinding homeBinding;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         fetchCustomerListForUser();
         fetchOrderStatusFromServer();
-        ActivityHomeBinding homeBinding = DataBindingUtil.setContentView(this,R.layout.activity_home);
+        homeBinding = DataBindingUtil.setContentView(this,R.layout.activity_home);
         homeBinding.setVm(new HomeViewModel(this));
         homeBinding.executePendingBindings();
-        loadCart();
+        setAppVersion();
+        //loadCart();
     }
 
     @Override
@@ -58,7 +64,21 @@ public class HomeActivity extends AppCompatActivity {
             CommonUtil.orderCart = gson.fromJson(sp.getString("cart",""), type);
             if(CommonUtil.orderCart==null) CommonUtil.orderCart = new HashMap<>();
             System.out.println("Cart Loaded... "+CommonUtil.orderCart);
+            updateCartForCurrentUser();
         }catch (Exception e){System.out.println(e.getMessage());}
+    }
+
+    private void updateCartForCurrentUser(){
+        Set<Long> customerIds = CommonUtil.orderCart.keySet();
+        for(Long id:customerIds){
+            boolean idFound = false;
+            for(CustomerDto c:CommonUtil.customers){
+                if(c.getId().longValue()==id) {
+                    idFound=true; break;
+                }
+            }
+            if(!idFound) CommonUtil.orderCart.remove(id);
+        }
     }
 
     private void storeCart(){
@@ -73,40 +93,20 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void fetchCustomerListForUser(){
-        ProgressDialog progressDialog = CommonUtil.showProgressDialog(this);
-        API.getClient().create(CustomerApi.class).getCustomersForUser()
-                .enqueue(new Callback<List<CustomerDto>>() {
-                    @Override
-                    public void onResponse(Call<List<CustomerDto>> call, Response<List<CustomerDto>> response) {
-                        progressDialog.dismiss();
-                        if(response.code()==200){
-                            CommonUtil.customers = response.body();
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<List<CustomerDto>> call, Throwable t) {
-                        call.cancel();
-                    }
-                });
+        CustomerService.fetchCustomerListForUser(this,customers->{
+            CommonUtil.customers = customers;
+            loadCart();
+        });
     }
 
     private void fetchOrderStatusFromServer(){
-        ProgressDialog progressDialog = CommonUtil.showProgressDialog(this);
-        API.getClient().create(OrderApi.class).getOrderStatus()
-                .enqueue(new Callback<List<OrderStatusDto>>() {
-                    @Override
-                    public void onResponse(Call<List<OrderStatusDto>> call, Response<List<OrderStatusDto>> response) {
-                        progressDialog.dismiss();
-                        if(response.code()==200){
-                            CommonUtil.statusList = (ArrayList<OrderStatusDto>) response.body();
-                        }
-                    }
-                    @Override
-                    public void onFailure(Call<List<OrderStatusDto>> call, Throwable t) {
-                        progressDialog.dismiss();
-                        call.cancel();
-                    }
-                });
+        OrderService.fetchOrderStatusFromServer(this,orderStatus ->
+                CommonUtil.statusList = (ArrayList<OrderStatusDto>)orderStatus);
+    }
+
+    private void setAppVersion(){
+        try {
+            homeBinding.appVersion.setText("v"+BuildConfig.VERSION_NAME);
+        }catch (Exception e){e.printStackTrace();}
     }
 }

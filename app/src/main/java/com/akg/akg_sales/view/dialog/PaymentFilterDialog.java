@@ -50,6 +50,7 @@ public class PaymentFilterDialog {
             assert sd != null; assert ed != null;
             binding.dateFrom.setText(sdf.format(sd));
             binding.dateTo.setText(sdf.format(ed));
+            binding.customerNumber.setText(tempFilter.get("customerNumber"));
         }catch (Exception e){e.printStackTrace();}
 
     }
@@ -91,6 +92,7 @@ public class PaymentFilterDialog {
     public void onClickApplyFilter(){
         dialog.dismiss();
         activity.payments.clear();
+        tempFilter.put("customerNumber",binding.customerNumber.getText().toString());
         activity.filter.putAll(tempFilter);
         activity.fetchPaymentsFromServer();
     }

@@ -1,6 +1,7 @@
 package com.akg.akg_sales.view.activity.order;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
@@ -19,6 +20,7 @@ import com.akg.akg_sales.dto.order.OrderLineDto;
 import com.akg.akg_sales.dto.order.OrderRequest;
 import com.akg.akg_sales.service.OrderService;
 import com.akg.akg_sales.util.CommonUtil;
+import com.akg.akg_sales.view.activity.payment.PaymentListActivity;
 import com.akg.akg_sales.view.adapter.OrderLineAdapter;
 import com.akg.akg_sales.view.dialog.ConfirmationDialog;
 import com.akg.akg_sales.view.dialog.StatusFlowDialog;
@@ -72,7 +74,6 @@ public class OrderDetailActivity extends AppCompatActivity {
     }
 
     public void onClickApprove(){
-        ProgressDialog progressDialog = CommonUtil.showProgressDialog(this);
         new ConfirmationDialog(this,"Approve Order?",i->{
             OrderRequest body = new OrderRequest();
             body.setOrderId(orderDto.getId()).setCustomerId(orderDto.getCustomerId());
@@ -96,20 +97,24 @@ public class OrderDetailActivity extends AppCompatActivity {
         });
     }
 
+    public void onClickViewPayments(){
+        try {
+            Intent payment = new Intent(this, PaymentListActivity.class);
+            payment.putExtra("customerNumber",orderDto.getCustomerNumber());
+            startActivity(payment);
+        }catch (Exception e){e.printStackTrace();}
+    }
+
     private void setOrderActionUi(){
         orderActionPermitted = Objects.equals(orderDto.getCurrentApproverUsername(),
                 CommonUtil.loggedInUser.getUsername());
-
-        if(orderActionPermitted){
-            binding.orderAction.setVisibility(View.VISIBLE);
-            binding.orderApprove.setOnClickListener(view -> onClickApprove());
-            binding.orderCancel.setOnClickListener(view -> onClickCancel());
-        }
-        else binding.orderAction.setVisibility(View.INVISIBLE);
+        if(orderActionPermitted) binding.orderAction.setVisibility(View.VISIBLE);
+        else binding.orderAction.setVisibility(View.GONE);
     }
 
     private void loadStatusFlowDialog(){
         try {
+            if(orderDto.getCurrentStatus().toUpperCase().contains("CANCELED")) return;
             ArrayList<StatusFlow> statusFlows = new ArrayList<>();
             statusFlows.add(new StatusFlow(1,false,"Awaiting Market Approval"));
             statusFlows.add(new StatusFlow(2,false,"Awaiting Management Approval"));
@@ -118,9 +123,8 @@ public class OrderDetailActivity extends AppCompatActivity {
                 s.setPassed(true);
                 if(s.getStatus().equals(orderDto.getCurrentStatus())) break;
             }
-            binding.statusLayout.setOnClickListener(v->{
-                new StatusFlowDialog(statusFlows,OrderDetailActivity.this);
-            });
+            binding.statusLayout.setOnClickListener(v->
+                    new StatusFlowDialog(statusFlows,OrderDetailActivity.this));
         }catch (Exception e){e.printStackTrace();}
     }
 

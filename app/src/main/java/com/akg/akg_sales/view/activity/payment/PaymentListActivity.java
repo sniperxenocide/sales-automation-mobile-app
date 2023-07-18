@@ -97,7 +97,11 @@ public class PaymentListActivity extends AppCompatActivity {
         filter.put("endDate",s.format(calendar.getTime()));
         calendar.add(Calendar.DATE,-30);
         filter.put("startDate",s.format(calendar.getTime()));
-        filter.put("statusId","%");
+
+        try {  // Checking for CustomerNumber passed from parent activity
+            filter.put("customerNumber",getIntent().getExtras().getString("customerNumber"));
+        }catch (Exception ignored){System.out.println("Customer Number not present");}
+        System.out.println("Filters "+filter.toString());
     }
 
     private void handleLoadMoreData(){

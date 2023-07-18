@@ -12,8 +12,10 @@ import com.akg.akg_sales.dto.item.ItemDto;
 import com.akg.akg_sales.dto.item.ItemTypeDto;
 import com.akg.akg_sales.dto.order.OrderDto;
 import com.akg.akg_sales.dto.order.OrderRequest;
+import com.akg.akg_sales.dto.order.OrderStatusDto;
 import com.akg.akg_sales.util.CommonUtil;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import retrofit2.Call;
@@ -149,6 +151,28 @@ public class OrderService {
                         t.printStackTrace();
                         call.cancel();
                         CommonUtil.showToast(context,t.getLocalizedMessage(),false);
+                    }
+                });
+    }
+
+    public static void fetchOrderStatusFromServer(Context context,Consumer<List<OrderStatusDto>> callback){
+        ProgressDialog progressDialog = CommonUtil.showProgressDialog(context);
+        API.getClient().create(OrderApi.class).getOrderStatus()
+                .enqueue(new Callback<List<OrderStatusDto>>() {
+                    @Override
+                    public void onResponse(Call<List<OrderStatusDto>> call, Response<List<OrderStatusDto>> response) {
+                        progressDialog.dismiss();
+                        try {
+                            if(response.code()==200){
+                                callback.accept(response.body());
+                            }
+                        }catch (Exception e){e.printStackTrace();}
+                    }
+                    @Override
+                    public void onFailure(Call<List<OrderStatusDto>> call, Throwable t) {
+                        progressDialog.dismiss();
+                        call.cancel();
+                        t.printStackTrace();
                     }
                 });
     }
