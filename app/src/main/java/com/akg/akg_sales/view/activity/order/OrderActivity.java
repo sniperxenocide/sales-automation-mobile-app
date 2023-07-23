@@ -1,16 +1,13 @@
 package com.akg.akg_sales.view.activity.order;
 
 import android.content.Intent;
-import android.os.Build;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.EditText;
 
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -21,10 +18,9 @@ import com.akg.akg_sales.dto.item.ItemDto;
 import com.akg.akg_sales.dto.order.CartItemDto;
 import com.akg.akg_sales.service.OrderService;
 import com.akg.akg_sales.util.CommonUtil;
-import com.akg.akg_sales.view.adapter.OrderItemAdapter;
+import com.akg.akg_sales.view.adapter.order.OrderItemAdapter;
 import com.akg.akg_sales.view.dialog.ItemFilterDialog;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 public class OrderActivity extends AppCompatActivity {
     public ActivityOrderBinding orderBinding;

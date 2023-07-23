@@ -1,10 +1,9 @@
-package com.akg.akg_sales.view.adapter;
+package com.akg.akg_sales.view.adapter.notification;
 
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;

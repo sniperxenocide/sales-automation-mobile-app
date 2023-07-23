@@ -15,8 +15,7 @@ import com.akg.akg_sales.databinding.ActivityOrderBookedBinding;
 import com.akg.akg_sales.dto.notification.OrderBookedHeaderDto;
 import com.akg.akg_sales.dto.notification.OrderBookedLineDto;
 import com.akg.akg_sales.util.CommonUtil;
-import com.akg.akg_sales.view.adapter.OrderBookedAdapter;
-import com.akg.akg_sales.view.adapter.OrderBookedLineAdapter;
+import com.akg.akg_sales.view.adapter.notification.OrderBookedLineAdapter;
 
 import java.util.ArrayList;
 

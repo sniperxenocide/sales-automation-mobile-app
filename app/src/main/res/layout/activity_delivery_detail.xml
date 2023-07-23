@@ -1,0 +1,265 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout>
+    <data>
+        <variable
+            name="activity"
+            type="com.akg.akg_sales.view.activity.delivery.DeliveryDetailActivity" />
+    </data>
+
+    <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        tools:context=".view.activity.delivery.DeliveryDetailActivity">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/header_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="16dp"
+                android:text="Delivery Detail"
+                android:textColor="@color/font_color_main"
+                android:textSize="@dimen/text_size_3"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <ScrollView
+            android:id="@+id/scrollView"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:paddingTop="20dp"
+            android:paddingBottom="20dp"
+            android:nestedScrollingEnabled="true"
+            app:layout_constraintBottom_toTopOf="@id/back_btn_layout"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/header_container">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="15dp"
+                android:padding="10sp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="10">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/font_color_main"
+                            android:textSize="@dimen/text_size_1"
+                            android:text="Move No:"
+                            android:textStyle="bold"
+                            android:layout_weight="4"/>
+                        <TextView
+                            android:layout_width="0dp"
+                            android:text="@{activity.moveConfirmedHeaderDto.movOrderNo}"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/font_color_main"
+                            android:textSize="@dimen/text_size_1"
+                            android:layout_weight="6"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="10">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/font_color_main"
+                            android:textSize="@dimen/text_size_1"
+                            android:text="Date:"
+                            android:textStyle="bold"
+                            android:layout_weight="4"/>
+                        <TextView
+                            android:layout_width="0dp"
+                            android:text="@{activity.moveConfirmedHeaderDto.moveConfirmedDate}"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/font_color_main"
+                            android:textSize="@dimen/text_size_1"
+                            android:layout_weight="6"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="10">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/font_color_main"
+                            android:textSize="@dimen/text_size_1"
+                            android:text="Vehicle:"
+                            android:textStyle="bold"
+                            android:layout_weight="4"/>
+                        <TextView
+                            android:layout_width="0dp"
+                            android:text="@{activity.moveConfirmedHeaderDto.vehicleNo}"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/font_color_main"
+                            android:textSize="@dimen/text_size_1"
+                            android:layout_weight="6"/>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="horizontal"
+                        android:weightSum="10">
+                        <TextView
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/font_color_main"
+                            android:textSize="@dimen/text_size_1"
+                            android:text="Driver:"
+                            android:textStyle="bold"
+                            android:layout_weight="4"/>
+                        <TextView
+                            android:layout_width="0dp"
+                            android:text="@{activity.moveConfirmedHeaderDto.driverName+` `+activity.moveConfirmedHeaderDto.driverMobile}"
+                            android:layout_height="wrap_content"
+                            android:textColor="@color/font_color_main"
+                            android:textSize="@dimen/text_size_1"
+                            android:layout_weight="6"/>
+                    </LinearLayout>
+
+                </LinearLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/customer_list_layout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:hint="Customers">
+
+                    <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                        android:id="@+id/customer_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:focusable="false"
+                        android:textColor="@color/font_color_main"
+                        android:textSize="@dimen/text_size_1"
+                        tools:ignore="KeyboardInaccessibleWidget" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/order_list_layout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:hint="Order Numbers">
+
+                    <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                        android:id="@+id/order_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:focusable="false"
+                        android:textColor="@color/font_color_main"
+                        android:textSize="@dimen/text_size_1"
+                        tools:ignore="KeyboardInaccessibleWidget" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/do_list_layout"
+                    style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:hint="DO Numbers"
+                    android:layout_marginTop="10dp">
+
+                    <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                        android:id="@+id/do_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:clickable="true"
+                        android:focusable="false"
+                        android:textColor="@color/font_color_main"
+                        android:textSize="@dimen/text_size_1"
+                        tools:ignore="KeyboardInaccessibleWidget" />
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:id="@+id/item_list_header"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:layout_marginBottom="8dp"
+                            android:textStyle="bold"
+                            android:text="Items"
+                            android:textColor="@color/font_color_main"
+                            android:textSize="@dimen/text_size_2"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/delivery_lines_list"
+                        android:layout_width="match_parent"
+                        android:layout_height="300dp"
+                        android:scrollbars="vertical">
+
+                    </androidx.recyclerview.widget.RecyclerView>
+                </LinearLayout>
+
+            </LinearLayout>
+
+
+
+        </ScrollView>
+
+
+        <LinearLayout
+            android:id="@+id/back_btn_layout"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:background="@color/light_grey"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent">
+
+            <include
+                layout="@layout/view_back_btn"
+                app:activity="@{activity}" />
+        </LinearLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</layout>

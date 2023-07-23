@@ -1,6 +1,5 @@
 package com.akg.akg_sales.view.activity.order;
 
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -11,8 +10,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.akg.akg_sales.R;
-import com.akg.akg_sales.api.API;
-import com.akg.akg_sales.api.OrderApi;
 import com.akg.akg_sales.databinding.ActivityOrderDetailBinding;
 import com.akg.akg_sales.dto.StatusFlow;
 import com.akg.akg_sales.dto.order.OrderDto;
@@ -21,16 +18,12 @@ import com.akg.akg_sales.dto.order.OrderRequest;
 import com.akg.akg_sales.service.OrderService;
 import com.akg.akg_sales.util.CommonUtil;
 import com.akg.akg_sales.view.activity.payment.PaymentListActivity;
-import com.akg.akg_sales.view.adapter.OrderLineAdapter;
+import com.akg.akg_sales.view.adapter.order.OrderLineAdapter;
 import com.akg.akg_sales.view.dialog.ConfirmationDialog;
 import com.akg.akg_sales.view.dialog.StatusFlowDialog;
 
 import java.util.ArrayList;
 import java.util.Objects;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class OrderDetailActivity extends AppCompatActivity {
     public boolean orderActionPermitted=false;

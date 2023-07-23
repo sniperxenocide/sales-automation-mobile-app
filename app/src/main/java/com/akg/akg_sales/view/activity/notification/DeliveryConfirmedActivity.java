@@ -14,11 +14,8 @@ import com.akg.akg_sales.api.NotificationApi;
 import com.akg.akg_sales.databinding.ActivityDeliveryConfirmedBinding;
 import com.akg.akg_sales.dto.notification.DeliveryConfirmedHeaderDto;
 import com.akg.akg_sales.dto.notification.DeliveryConfirmedLineDto;
-import com.akg.akg_sales.dto.notification.OrderBookedHeaderDto;
-import com.akg.akg_sales.dto.notification.OrderBookedLineDto;
 import com.akg.akg_sales.util.CommonUtil;
-import com.akg.akg_sales.view.adapter.DeliveryConfirmedLineAdapter;
-import com.akg.akg_sales.view.adapter.OrderBookedLineAdapter;
+import com.akg.akg_sales.view.adapter.notification.DeliveryConfirmedLineAdapter;
 
 import java.util.ArrayList;
 

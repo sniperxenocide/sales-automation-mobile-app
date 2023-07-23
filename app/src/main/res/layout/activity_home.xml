@@ -5,8 +5,8 @@
 
     <data>
         <variable
-            name="vm"
-            type="com.akg.akg_sales.viewmodel.HomeViewModel" />
+            name="activity"
+            type="com.akg.akg_sales.view.activity.HomeActivity" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -90,7 +90,7 @@
                         android:layout_margin="10sp"
                         android:layout_weight="1"
                         android:background="@drawable/light_grey_background"
-                        android:onClick="@{()->vm.onClickOrderBtn()}"
+                        android:onClick="@{()->activity.onClickOrderBtn()}"
                         android:padding="15sp">
 
                         <androidx.constraintlayout.widget.ConstraintLayout
@@ -127,7 +127,7 @@
                         android:layout_margin="10sp"
                         android:layout_weight="1"
                         android:background="@drawable/light_grey_background"
-                        android:onClick="@{()->vm.onClickDeliveryBtn()}"
+                        android:onClick="@{()->activity.onClickDeliveryBtn()}"
                         android:padding="15sp">
 
                         <androidx.constraintlayout.widget.ConstraintLayout
@@ -172,7 +172,7 @@
                         android:layout_margin="10sp"
                         android:layout_weight="1"
                         android:background="@drawable/light_grey_background"
-                        android:onClick="@{()->vm.onClickPaymentBtn()}"
+                        android:onClick="@{()->activity.onClickPaymentBtn()}"
                         android:padding="15sp">
 
                         <androidx.constraintlayout.widget.ConstraintLayout
@@ -209,7 +209,7 @@
                         android:layout_margin="10sp"
                         android:layout_weight="1"
                         android:background="@drawable/light_grey_background"
-                        android:onClick="@{()->vm.onClickNotificationBtn()}"
+                        android:onClick="@{()->activity.onClickNotificationBtn()}"
                         android:padding="15sp">
 
                         <androidx.constraintlayout.widget.ConstraintLayout

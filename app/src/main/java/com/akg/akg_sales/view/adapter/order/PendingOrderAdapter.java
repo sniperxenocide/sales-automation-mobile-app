@@ -1,9 +1,8 @@
-package com.akg.akg_sales.view.adapter;
+package com.akg.akg_sales.view.adapter.order;
 
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
-import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;

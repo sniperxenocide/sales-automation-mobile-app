@@ -14,7 +14,7 @@ import com.akg.akg_sales.databinding.ActivityCartBinding;
 import com.akg.akg_sales.dto.CustomerDto;
 import com.akg.akg_sales.dto.order.CartItemDto;
 import com.akg.akg_sales.util.CommonUtil;
-import com.akg.akg_sales.view.adapter.CartItemAdapter;
+import com.akg.akg_sales.view.adapter.order.CartItemAdapter;
 import com.akg.akg_sales.viewmodel.order.CartViewModel;
 
 import java.util.ArrayList;

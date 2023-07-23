@@ -15,9 +15,9 @@ import com.akg.akg_sales.dto.notification.OrderBookedHeaderDto;
 import com.akg.akg_sales.dto.notification.PaymentDto;
 import com.akg.akg_sales.util.CommonUtil;
 import com.akg.akg_sales.view.activity.notification.NotificationActivity;
-import com.akg.akg_sales.view.adapter.DeliveryConfirmedAdapter;
-import com.akg.akg_sales.view.adapter.OrderBookedAdapter;
-import com.akg.akg_sales.view.adapter.PaymentClearedAdapter;
+import com.akg.akg_sales.view.adapter.notification.DeliveryConfirmedAdapter;
+import com.akg.akg_sales.view.adapter.notification.OrderBookedAdapter;
+import com.akg.akg_sales.view.adapter.notification.PaymentClearedAdapter;
 
 import java.util.ArrayList;
 import java.util.Arrays;

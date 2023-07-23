@@ -16,9 +16,7 @@ import com.akg.akg_sales.dto.PageResponse;
 import com.akg.akg_sales.dto.payment.PaymentDto;
 import com.akg.akg_sales.service.PaymentService;
 import com.akg.akg_sales.util.CommonUtil;
-import com.akg.akg_sales.view.activity.order.OrderActivity;
-import com.akg.akg_sales.view.adapter.PaymentListAdapter;
-import com.akg.akg_sales.view.adapter.PendingOrderAdapter;
+import com.akg.akg_sales.view.adapter.payment.PaymentListAdapter;
 import com.akg.akg_sales.view.dialog.PaymentFilterDialog;
 
 import java.text.SimpleDateFormat;

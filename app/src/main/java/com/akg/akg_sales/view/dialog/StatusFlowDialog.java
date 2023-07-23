@@ -7,11 +7,9 @@ import android.view.LayoutInflater;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.akg.akg_sales.databinding.DialogOrderFilterBinding;
 import com.akg.akg_sales.databinding.DialogStatusFlowBinding;
 import com.akg.akg_sales.dto.StatusFlow;
 import com.akg.akg_sales.util.CommonUtil;
-import com.akg.akg_sales.view.adapter.OrderItemAdapter;
 import com.akg.akg_sales.view.adapter.StatusFlowListAdapter;
 
 import java.util.ArrayList;

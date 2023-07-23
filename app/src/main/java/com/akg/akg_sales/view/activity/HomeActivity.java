@@ -1,18 +1,15 @@
 package com.akg.akg_sales.view.activity;
 
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.DataBindingUtil;
-
-import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
+
 import com.akg.akg_sales.BuildConfig;
 import com.akg.akg_sales.R;
-import com.akg.akg_sales.api.API;
-import com.akg.akg_sales.api.CustomerApi;
-import com.akg.akg_sales.api.OrderApi;
 import com.akg.akg_sales.databinding.ActivityHomeBinding;
 import com.akg.akg_sales.dto.CustomerDto;
 import com.akg.akg_sales.dto.order.CartItemDto;
@@ -20,23 +17,22 @@ import com.akg.akg_sales.dto.order.OrderStatusDto;
 import com.akg.akg_sales.service.CustomerService;
 import com.akg.akg_sales.service.OrderService;
 import com.akg.akg_sales.util.CommonUtil;
-import com.akg.akg_sales.viewmodel.HomeViewModel;
+import com.akg.akg_sales.view.activity.delivery.DeliveryListActivity;
+import com.akg.akg_sales.view.activity.order.PendingOrderActivity;
+import com.akg.akg_sales.view.activity.payment.PaymentListActivity;
+import com.akg.akg_sales.view.dialog.GeneralDialog;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Set;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class HomeActivity extends AppCompatActivity {
     Gson gson = new Gson();
     ActivityHomeBinding homeBinding;
+    private String defaultMsg = "Service not Available";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,7 +40,7 @@ public class HomeActivity extends AppCompatActivity {
         fetchCustomerListForUser();
         fetchOrderStatusFromServer();
         homeBinding = DataBindingUtil.setContentView(this,R.layout.activity_home);
-        homeBinding.setVm(new HomeViewModel(this));
+        homeBinding.setActivity(this);
         homeBinding.executePendingBindings();
         setAppVersion();
         //loadCart();
@@ -108,5 +104,27 @@ public class HomeActivity extends AppCompatActivity {
         try {
             homeBinding.appVersion.setText("v"+BuildConfig.VERSION_NAME);
         }catch (Exception e){e.printStackTrace();}
+    }
+
+
+    public void onClickNotificationBtn(){
+//        Intent notificationIntent = new Intent(activity, NotificationActivity.class);
+//        activity.startActivity(notificationIntent);
+        new GeneralDialog(this,defaultMsg);
+    }
+
+    public void onClickOrderBtn(){
+        Intent pendingOrderIntent = new Intent(this, PendingOrderActivity.class);
+        this.startActivity(pendingOrderIntent);
+    }
+
+    public void onClickDeliveryBtn(){
+        Intent intent = new Intent(this, DeliveryListActivity.class);
+        this.startActivity(intent);
+    }
+
+    public void onClickPaymentBtn(){
+        Intent intent = new Intent(this, PaymentListActivity.class);
+        this.startActivity(intent);
     }
 }

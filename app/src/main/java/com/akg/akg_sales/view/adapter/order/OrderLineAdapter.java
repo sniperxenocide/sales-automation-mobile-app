@@ -1,4 +1,4 @@
-package com.akg.akg_sales.view.adapter;
+package com.akg.akg_sales.view.adapter.order;
 
 import android.view.LayoutInflater;
 import android.view.View;

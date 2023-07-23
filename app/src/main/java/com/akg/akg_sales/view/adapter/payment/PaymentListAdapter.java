@@ -1,6 +1,5 @@
-package com.akg.akg_sales.view.adapter;
+package com.akg.akg_sales.view.adapter.payment;
 
-import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 

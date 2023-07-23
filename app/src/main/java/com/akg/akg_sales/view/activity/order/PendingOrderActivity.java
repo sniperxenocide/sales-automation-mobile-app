@@ -17,7 +17,7 @@ import com.akg.akg_sales.databinding.ActivityPendingOrderBinding;
 import com.akg.akg_sales.dto.PageResponse;
 import com.akg.akg_sales.dto.order.OrderDto;
 import com.akg.akg_sales.util.CommonUtil;
-import com.akg.akg_sales.view.adapter.PendingOrderAdapter;
+import com.akg.akg_sales.view.adapter.order.PendingOrderAdapter;
 import com.akg.akg_sales.view.dialog.OrderFilterDialog;
 
 import java.text.SimpleDateFormat;

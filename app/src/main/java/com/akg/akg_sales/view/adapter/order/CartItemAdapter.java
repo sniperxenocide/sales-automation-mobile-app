@@ -1,4 +1,4 @@
-package com.akg.akg_sales.view.adapter;
+package com.akg.akg_sales.view.adapter.order;
 
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
@@ -11,7 +11,6 @@ import com.akg.akg_sales.BR;
 import com.akg.akg_sales.R;
 import com.akg.akg_sales.databinding.ListitemCartItemBinding;
 import com.akg.akg_sales.dto.order.CartItemDto;
-import com.akg.akg_sales.util.CommonUtil;
 import com.akg.akg_sales.view.activity.order.CartActivity;
 import com.akg.akg_sales.view.dialog.ConfirmationDialog;
 import com.akg.akg_sales.view.dialog.ItemQuantityDialog;

@@ -1,4 +1,4 @@
-package com.akg.akg_sales.view.adapter;
+package com.akg.akg_sales.view.adapter.notification;
 
 import android.content.Context;
 import android.content.Intent;

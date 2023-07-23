@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <data>
+        <variable
+            name="vm"
+            type="com.akg.akg_sales.dto.delivery.MoveOrderConfirmedLineDto" />
+        <variable
+            name="index"
+            type="String" />
+    </data>
+
+    <LinearLayout
+        android:id="@+id/card_item"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="10"
+        android:layout_marginTop="5sp"
+        android:layout_marginBottom="5sp"
+        android:background="@drawable/light_grey_background"
+        android:baselineAligned="false">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_gravity="center_vertical"
+            android:gravity="center"
+            android:layout_weight="1">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/font_color_main"
+                android:textSize="@dimen/text_size_1"
+                android:textStyle="bold"
+                android:text="@{index+`.`}"
+                android:hint="1."
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingTop="10sp"
+            android:paddingBottom="10sp"
+            android:paddingStart="1sp"
+            android:paddingEnd="10sp"
+            android:layout_weight="9"
+            android:weightSum="10"
+            android:gravity="center_vertical"
+            android:baselineAligned="false">
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_weight="6">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/font_color_main"
+                    android:paddingStart="1dp"
+                    android:paddingEnd="5dp"
+                    android:textSize="18sp"
+                    android:text="@{vm.itemDescription}"
+                    android:textStyle="italic"
+                    android:hint="Marks FCMP 500gm"
+                    />
+
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:layout_weight="4">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:textAlignment="center"
+                    android:text="@{vm.lineQuantity+` `+vm.uomCode}"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/font_color_main"
+                    android:textStyle="italic"
+                    android:padding="5dp"
+                    android:textSize="18sp"
+                    android:hint="5 CTN"
+                    />
+
+            </LinearLayout>
+        </LinearLayout>
+    </LinearLayout>
+
+</layout>
