@@ -21,10 +21,13 @@ import com.akg.akg_sales.util.CommonUtil;
 import com.akg.akg_sales.view.adapter.order.OrderItemAdapter;
 import com.akg.akg_sales.view.dialog.ItemFilterDialog;
 import java.util.ArrayList;
+import java.util.Hashtable;
 
 public class OrderActivity extends AppCompatActivity {
     public ActivityOrderBinding orderBinding;
     ArrayList<ItemDto> itemList = new ArrayList<>();
+
+    public Hashtable<Long,Integer> itemListQty = new Hashtable<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,8 +52,8 @@ public class OrderActivity extends AppCompatActivity {
     private void updateItemList(ArrayList<ItemDto> list){
         if(list.isEmpty())
             CommonUtil.showToast(getApplicationContext(),"No Matching Items Found",false);
-
         RecyclerView recyclerView = orderBinding.itemListview;
+        recyclerView.setItemViewCacheSize(list.size());
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);

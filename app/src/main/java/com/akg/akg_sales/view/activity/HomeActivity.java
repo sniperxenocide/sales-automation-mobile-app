@@ -107,7 +107,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
 
-    public void onClickNotificationBtn(){
+    public void onClickReportBtn(){
 //        Intent notificationIntent = new Intent(activity, NotificationActivity.class);
 //        activity.startActivity(notificationIntent);
         new GeneralDialog(this,defaultMsg);

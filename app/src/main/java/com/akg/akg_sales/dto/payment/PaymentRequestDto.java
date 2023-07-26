@@ -33,7 +33,7 @@ public class PaymentRequestDto {
         this.paymentAccountId = Long.parseLong(Objects.requireNonNull(vm.getPaymentAccountId().get()));
         this.paymentAmount = Double.parseDouble(Objects.requireNonNull(vm.getPaymentAmount().get()));
         this.paymentTypeId = Long.parseLong(Objects.requireNonNull(vm.getPaymentTypeId().get()));
-        this.paymentDate = vm.getPaymentDate().get();
+        this.paymentDate = Objects.requireNonNull(vm.getPaymentDate().get());
         this.receiptNumber = Objects.requireNonNull(vm.getReceiptNumber().get()).trim();
         if(this.receiptNumber.length()<=0) throw new Exception();
 

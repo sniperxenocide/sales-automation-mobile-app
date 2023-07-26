@@ -96,7 +96,7 @@ public class LoginViewModel extends BaseObservable {
                                 }
                                 else CommonUtil.showToast(activity,"Login Failed",false);
                             }
-                            else throw new Exception(response.code()+"."+response.message());
+                            else throw new Exception("Login Failed. Incorrect Username or Password.");
                         }catch (Exception e){
                             CommonUtil.showToast(activity,e.getMessage(),false);
                         }

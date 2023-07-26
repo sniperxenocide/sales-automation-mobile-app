@@ -209,7 +209,7 @@
                         android:layout_margin="10sp"
                         android:layout_weight="1"
                         android:background="@drawable/light_grey_background"
-                        android:onClick="@{()->activity.onClickNotificationBtn()}"
+                        android:onClick="@{()->activity.onClickReportBtn()}"
                         android:padding="15sp">
 
                         <androidx.constraintlayout.widget.ConstraintLayout
@@ -217,7 +217,7 @@
                             android:layout_width="0dp"
                             android:layout_height="0dp"
                             android:layout_marginBottom="10dp"
-                            android:background="@drawable/notification"
+                            android:background="@drawable/report"
                             app:layout_constraintBottom_toTopOf="@+id/notification_btn_label"
                             app:layout_constraintDimensionRatio="1:1"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -231,7 +231,7 @@
                             android:id="@+id/notification_btn_label"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Notification"
+                            android:text="Report"
                             android:textColor="@color/font_color_main"
                             android:textSize="@dimen/text_size_1"
                             app:layout_constraintBottom_toBottomOf="parent"

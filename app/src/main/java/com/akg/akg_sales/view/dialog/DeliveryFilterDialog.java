@@ -3,9 +3,11 @@ package com.akg.akg_sales.view.dialog;
 import android.app.Dialog;
 import android.view.LayoutInflater;
 
-import com.akg.akg_sales.databinding.DialogPaymentFilterBinding;
+import com.akg.akg_sales.databinding.DialogDeliveryFilterBinding;
+import com.akg.akg_sales.databinding.DialogOrderFilterBinding;
 import com.akg.akg_sales.util.CommonUtil;
-import com.akg.akg_sales.view.activity.payment.PaymentListActivity;
+import com.akg.akg_sales.view.activity.delivery.DeliveryListActivity;
+import com.akg.akg_sales.view.activity.order.PendingOrderActivity;
 import com.google.android.material.datepicker.CalendarConstraints;
 import com.google.android.material.datepicker.CompositeDateValidator;
 import com.google.android.material.datepicker.DateValidatorPointBackward;
@@ -20,18 +22,18 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.Objects;
 
-public class PaymentFilterDialog {
-    DialogPaymentFilterBinding binding;
-    PaymentListActivity activity;
+public class DeliveryFilterDialog {
+    DialogDeliveryFilterBinding binding;
+    DeliveryListActivity activity;
     Dialog dialog;
     Calendar calendar = Calendar.getInstance();
     SimpleDateFormat sdf = new SimpleDateFormat();
     HashMap<String,String> tempFilter = new HashMap<>();
 
-    public PaymentFilterDialog(PaymentListActivity activity){
+    public DeliveryFilterDialog(DeliveryListActivity activity){
         this.activity=activity;
         dialog=new Dialog(activity);
-        binding = DialogPaymentFilterBinding.inflate(LayoutInflater.from(activity));
+        binding = DialogDeliveryFilterBinding.inflate(LayoutInflater.from(activity));
         binding.setVm(this);
         dialog.setContentView(binding.getRoot());
         CommonUtil.setDialogWindowParams(this.activity,this.dialog);
@@ -50,7 +52,10 @@ public class PaymentFilterDialog {
             assert sd != null; assert ed != null;
             binding.dateFrom.setText(sdf.format(sd));
             binding.dateTo.setText(sdf.format(ed));
-            binding.customerNumber.setText(tempFilter.get("customerNumber"));
+
+            binding.moveOrderNumber.setText(tempFilter.get("movOrderNo"));
+            binding.orderNumber.setText(tempFilter.get("orderNumber"));
+            binding.doNumber.setText(tempFilter.get("doNumber"));
         }catch (Exception e){e.printStackTrace();}
 
     }
@@ -68,7 +73,7 @@ public class PaymentFilterDialog {
         Calendar cCal = Calendar.getInstance();
         CalendarConstraints.Builder constraintsBuilderRange = new CalendarConstraints.Builder();
         CalendarConstraints.DateValidator dateValidatorMax = DateValidatorPointBackward.before(cCal.getTimeInMillis());
-        cCal.add(Calendar.DATE,-30);
+        cCal.add(Calendar.DATE,-90);
         CalendarConstraints.DateValidator dateValidatorMin = DateValidatorPointForward.from(cCal.getTimeInMillis());
         ArrayList<CalendarConstraints.DateValidator> listValidators = new ArrayList<>();
         listValidators.add(dateValidatorMin);
@@ -91,13 +96,19 @@ public class PaymentFilterDialog {
 
     public void onClickApplyFilter(){
         dialog.dismiss();
-        activity.payments.clear();
+        activity.deliveries.clear();
         activity.filter.putAll(tempFilter);
 
-        if(binding.customerNumber.getText()!=null && binding.customerNumber.getText().length()>0)
-            activity.filter.put("customerNumber",binding.customerNumber.getText().toString());
-        else activity.filter.remove("customerNumber");
+        if(binding.moveOrderNumber.getText()!=null && binding.moveOrderNumber.getText().length()>0)
+            activity.filter.put("movOrderNo",binding.moveOrderNumber.getText().toString());
+        else activity.filter.remove("movOrderNo");
+        if(binding.orderNumber.getText()!=null && binding.orderNumber.getText().length()>0)
+            activity.filter.put("orderNumber",binding.orderNumber.getText().toString());
+        else activity.filter.remove("orderNumber");
+        if(binding.doNumber.getText()!=null && binding.doNumber.getText().length()>0)
+            activity.filter.put("doNumber",binding.doNumber.getText().toString());
+        else activity.filter.remove("doNumber");
 
-        activity.fetchPaymentsFromServer();
+        activity.fetchDeliveryData();
     }
 }
