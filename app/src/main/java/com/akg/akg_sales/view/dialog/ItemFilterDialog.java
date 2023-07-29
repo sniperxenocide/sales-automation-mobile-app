@@ -61,7 +61,7 @@ public class ItemFilterDialog {
 
     private void fetchData(){
         OrderService.fetchItemTypeSubTypeFromServer(activity,
-                CommonUtil.selectedCustomer.getId(), list->{
+                activity.customerList.get(activity.selectedCustomerIdx).getId(), list->{
                     itemTypes = list;
                     loadItemType();
                 });

@@ -25,10 +25,10 @@ import retrofit2.Response;
 public class OrderService {
     public OrderService(){}
 
-    public static void fetchItemFromServer(Context context,Long subTypeId, Consumer<List<ItemDto>> callback){
+    public static void fetchItemFromServer(Long customerId,Context context,Long subTypeId, Consumer<List<ItemDto>> callback){
         ProgressDialog progressDialog = CommonUtil.showProgressDialog(context);
         API.getClient().create(ItemApi.class)
-                .getOrderItems(CommonUtil.selectedCustomer.getId(),subTypeId)
+                .getOrderItems(customerId,subTypeId)
                 .enqueue(new Callback<List<ItemDto>>() {
                     @Override
                     public void onResponse(Call<List<ItemDto>> call, Response<List<ItemDto>> response) {

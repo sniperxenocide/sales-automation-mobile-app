@@ -1,9 +1,10 @@
 package com.akg.akg_sales.view.adapter.order;
 
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
@@ -16,7 +17,6 @@ import com.akg.akg_sales.dto.item.ItemDto;
 import com.akg.akg_sales.dto.order.CartItemDto;
 import com.akg.akg_sales.util.CommonUtil;
 import com.akg.akg_sales.view.activity.order.OrderActivity;
-import com.akg.akg_sales.view.dialog.ItemQuantityDialog;
 
 import java.util.ArrayList;
 
@@ -42,7 +42,6 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.View
     public void onBindViewHolder(@NonNull OrderItemAdapter.ViewHolder holder, int position) {
         ItemDto header = headers.get(position);
         holder.bind(header,Integer.toString(position+1));
-        holder.itemBinding.cardItem.setOnClickListener((v)->onItemSelect(header));
     }
 
     @Override
@@ -64,55 +63,64 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.View
         }
     }
 
-    private void onItemSelect(ItemDto itemDto){
-        if(itemExistInCart(itemDto)){
-            CommonUtil.showToast(activity,"Item Already Exist in Cart",false);
-        }
-        else {
-            ItemQuantityDialog dialog = new ItemQuantityDialog(activity, itemDto.getItemDescription(),
-                    itemDto.getPrimaryUom(),0,"Add to Cart",
-                    qty->{
-                        ArrayList<CartItemDto> cartItems = CommonUtil.orderCart.get(CommonUtil.selectedCustomer.getId());
-                        if(cartItems==null) cartItems = new ArrayList<>();
-                        cartItems.add(new CartItemDto(CommonUtil.selectedCustomer,itemDto,qty));
-                        CommonUtil.orderCart.put(CommonUtil.selectedCustomer.getId(), cartItems);
 
-                        CommonUtil.showToast(activity, "Item Added to Cart",true);
-                        activity.updateCartBtnLabel();
-            });
-        }
-    }
-
-    private boolean itemExistInCart(ItemDto itemDto){
-        ArrayList<CartItemDto> cartItems = CommonUtil.orderCart.get(CommonUtil.selectedCustomer.getId());
-        if(cartItems==null || cartItems.isEmpty()) return false;
+    private CartItemDto itemExistInCart(ItemDto itemDto){
+        ArrayList<CartItemDto> cartItems = CommonUtil.orderCart
+                .get(activity.customerList.get(activity.selectedCustomerIdx).getId());
+        if(cartItems==null || cartItems.isEmpty()) return null;
         for(CartItemDto c:cartItems){
-            if(c.getItemDto().getId().intValue()==itemDto.getId().intValue()) return true;
+            if(c.getItemDto().getId().longValue()==itemDto.getId().longValue()) return c;
         }
-        return false;
+        return null;
     }
 
-    private void handleItemQuantityChange(ItemDto header,ListitemOrderSkuBinding itemBinding){
+    private void handleItemQuantityChange(ItemDto itemDto,ListitemOrderSkuBinding itemBinding){
+        EditText editTextQuantity = itemBinding.quantity;
         try {
-//            if(activity.itemListQty.get(header.getId())==null) {
-//                activity.itemListQty.put(header.getId(),0);
-//            }
-//            itemBinding.quantity.setText(String.valueOf(activity.itemListQty.get(header.getId())));
-            itemBinding.quantity.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-                @Override
-                public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {}
-                @Override
-                public void afterTextChanged(Editable editable) {
+            CartItemDto existingItem = itemExistInCart(itemDto);
+            if(existingItem!=null) {
+                editTextQuantity.setText(String.valueOf(existingItem.getQuantity()));
+                editTextQuantity.setBackgroundResource(R.drawable.deep_green_background);
+            }
+        }catch (Exception e){e.printStackTrace();}
+        try {
+            editTextQuantity.setOnKeyListener((v, keyCode, event) -> {
+                if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
                     try {
-                        System.out.println(header.getId()+" "+header.getItemDescription()+" "+editable.toString());
-                        //activity.itemListQty.put(header.getId(),Integer.parseInt(editable.toString()));
-                        //System.out.println(activity.itemListQty);
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
+                        if(editTextQuantity.getText().length()<=0 ||
+                                Integer.parseInt(String.valueOf(editTextQuantity.getText()))<=0){
+                            CartItemDto cartItemDto = itemExistInCart(itemDto);
+                            ArrayList<CartItemDto> cList = CommonUtil.orderCart
+                                    .get(activity.customerList.get(activity.selectedCustomerIdx).getId());
+                            if(cartItemDto!=null && cList!=null) {
+                                cList.remove(cartItemDto);
+                                editTextQuantity.setBackgroundResource(R.drawable.white_background);
+                                activity.updateCartBtnLabel();
+
+                                System.out.println("Item Removed from Cart "+itemDto.getItemDescription());
+                                CommonUtil.printCart();
+                            }
+                            editTextQuantity.getText().clear();
+                            return false;
+                        }
+                        Integer qty = Integer.parseInt(String.valueOf(editTextQuantity.getText()));
+                        ArrayList<CartItemDto> cartItems = CommonUtil.orderCart
+                                .get(activity.customerList.get(activity.selectedCustomerIdx).getId());
+                        if(cartItems==null) cartItems = new ArrayList<>();
+                        CartItemDto existingItem = itemExistInCart(itemDto);
+                        if(existingItem==null) cartItems.add(new CartItemDto(activity.customerList.get(activity.selectedCustomerIdx),itemDto,qty));
+                        else existingItem.setQuantity(qty);
+                        CommonUtil.orderCart.put(activity.customerList.get(activity.selectedCustomerIdx).getId(), cartItems);
+                        editTextQuantity.setBackgroundResource(R.drawable.deep_green_background);
+                        CommonUtil.showToast(activity, "Item Added to Cart. "+
+                                itemDto.getItemDescription()+" "+qty+" "+itemDto.getPrimaryUom(),true);
+                        activity.updateCartBtnLabel();
+                        CommonUtil.printCart();
+                    }catch (Exception e){e.printStackTrace();}
+
+                    return true;
                 }
+                return false;
             });
         }catch (Exception e){e.printStackTrace();}
     }

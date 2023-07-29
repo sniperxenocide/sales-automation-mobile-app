@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import com.akg.akg_sales.R;
 import com.akg.akg_sales.databinding.ActivityOrderBinding;
+import com.akg.akg_sales.dto.CustomerDto;
 import com.akg.akg_sales.dto.item.ItemDto;
 import com.akg.akg_sales.dto.order.CartItemDto;
 import com.akg.akg_sales.service.OrderService;
@@ -22,12 +23,13 @@ import com.akg.akg_sales.view.adapter.order.OrderItemAdapter;
 import com.akg.akg_sales.view.dialog.ItemFilterDialog;
 import java.util.ArrayList;
 import java.util.Hashtable;
+import java.util.List;
 
 public class OrderActivity extends AppCompatActivity {
     public ActivityOrderBinding orderBinding;
     ArrayList<ItemDto> itemList = new ArrayList<>();
-
-    public Hashtable<Long,Integer> itemListQty = new Hashtable<>();
+    public int selectedCustomerIdx = -1;
+    public List<CustomerDto> customerList = CommonUtil.customers;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -101,7 +103,8 @@ public class OrderActivity extends AppCompatActivity {
     }
 
     public void fetchItemFromServer(Long subTypeId){
-        OrderService.fetchItemFromServer(this,subTypeId,list->{
+        OrderService.fetchItemFromServer(customerList.get(selectedCustomerIdx).getId(),
+                this,subTypeId,list->{
             itemList = (ArrayList<ItemDto>) list;
             updateItemList(itemList);
             if(itemList.isEmpty()) disableSearchField();
@@ -110,11 +113,11 @@ public class OrderActivity extends AppCompatActivity {
     }
 
     private void setCustomer(){
-        if(CommonUtil.customers!=null && CommonUtil.customers.size()>0){
+        if(customerList!=null && customerList.size()>0){
             AutoCompleteTextView tView=orderBinding.customerList;
-            String[] customers = new String[CommonUtil.customers.size()];
-            for (int i=0;i< CommonUtil.customers.size();i++)
-                customers[i]=CommonUtil.customers.get(i).getCustomerName();
+            String[] customers = new String[customerList.size()];
+            for (int i=0;i< customerList.size();i++)
+                customers[i]=customerList.get(i).getCustomerName();
             ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, customers);
             tView.setAdapter(adapter);
             tView.setOnItemClickListener((adapterView, view, i, l) -> onCustomerSelect(tView,i));
@@ -123,11 +126,14 @@ public class OrderActivity extends AppCompatActivity {
     }
 
     private void onCustomerSelect(AutoCompleteTextView tView,int idx){
-        tView.setText(CommonUtil.customers.get(idx).getCustomerName(),false);
-        CommonUtil.selectedCustomer = CommonUtil.customers.get(idx);
-        updateCartBtnLabel();
+        tView.setText(customerList.get(idx).getCustomerName(),false);
+
+        selectedCustomerIdx = idx;
+
         itemList.clear();
         updateItemList(itemList);
+
+        updateCartBtnLabel();
         disableSearchField();
     }
 
@@ -136,8 +142,7 @@ public class OrderActivity extends AppCompatActivity {
     }
 
     public void onClickCart(){
-        ArrayList<CartItemDto> cartItems = CommonUtil.orderCart.get(CommonUtil.selectedCustomer.getId());
-        if(cartItems==null || cartItems.isEmpty()){
+        if(CommonUtil.orderCart.isEmpty()){
             CommonUtil.showToast(this,"Please add Items to Cart First",false);
             return;
         }
@@ -146,7 +151,7 @@ public class OrderActivity extends AppCompatActivity {
     }
 
     public void updateCartBtnLabel(){
-        ArrayList<CartItemDto> cartItems = CommonUtil.orderCart.get(CommonUtil.selectedCustomer.getId());
+        ArrayList<CartItemDto> cartItems = CommonUtil.orderCart.get(customerList.get(selectedCustomerIdx).getId());
         int size = cartItems==null?0:cartItems.size();
         orderBinding.cartBtnLabel.setText("("+size+")");
     }

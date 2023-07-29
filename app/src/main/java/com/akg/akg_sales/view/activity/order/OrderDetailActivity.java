@@ -17,6 +17,7 @@ import com.akg.akg_sales.dto.order.OrderLineDto;
 import com.akg.akg_sales.dto.order.OrderRequest;
 import com.akg.akg_sales.service.OrderService;
 import com.akg.akg_sales.util.CommonUtil;
+import com.akg.akg_sales.view.activity.delivery.DeliveryListActivity;
 import com.akg.akg_sales.view.activity.payment.PaymentListActivity;
 import com.akg.akg_sales.view.adapter.order.OrderLineAdapter;
 import com.akg.akg_sales.view.dialog.ConfirmationDialog;
@@ -118,6 +119,14 @@ public class OrderDetailActivity extends AppCompatActivity {
             }
             binding.statusLayout.setOnClickListener(v->
                     new StatusFlowDialog(statusFlows,OrderDetailActivity.this));
+        }catch (Exception e){e.printStackTrace();}
+    }
+
+    public void showDeliveryList(){
+        try {
+            Intent intent = new Intent(this, DeliveryListActivity.class);
+            intent.putExtra("orderNumber",orderDto.getOrderNumber());
+            startActivity(intent);
         }catch (Exception e){e.printStackTrace();}
     }
 

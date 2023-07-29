@@ -10,9 +10,10 @@
         <entry key="..\:/Project/AKGOrderSalesProject/akg_sales_mobile_app/app/src/main/res/drawable/light_green_background.xml" value="0.1205" />
         <entry key="..\:/Project/AKGOrderSalesProject/akg_sales_mobile_app/app/src/main/res/drawable/light_grey_background.xml" value="0.127" />
         <entry key="..\:/Project/AKGOrderSalesProject/akg_sales_mobile_app/app/src/main/res/drawable/red_background.xml" value="0.127" />
+        <entry key="..\:/Project/AKGOrderSalesProject/akg_sales_mobile_app/app/src/main/res/drawable/white_background.xml" value="0.131" />
         <entry key="..\:/Project/AKGOrderSalesProject/akg_sales_mobile_app/app/src/main/res/layout/activity_cart.xml" value="0.1828125" />
         <entry key="..\:/Project/AKGOrderSalesProject/akg_sales_mobile_app/app/src/main/res/layout/activity_delivery_confirmed.xml" value="0.12664473684210525" />
-        <entry key="..\:/Project/AKGOrderSalesProject/akg_sales_mobile_app/app/src/main/res/layout/activity_delivery_detail.xml" value="0.1828125" />
+        <entry key="..\:/Project/AKGOrderSalesProject/akg_sales_mobile_app/app/src/main/res/layout/activity_delivery_detail.xml" value="0.16666666666666666" />
         <entry key="..\:/Project/AKGOrderSalesProject/akg_sales_mobile_app/app/src/main/res/layout/activity_delivery_list.xml" value="0.14666666666666667" />
         <entry key="..\:/Project/AKGOrderSalesProject/akg_sales_mobile_app/app/src/main/res/layout/activity_home.xml" value="0.16666666666666666" />
         <entry key="..\:/Project/AKGOrderSalesProject/akg_sales_mobile_app/app/src/main/res/layout/activity_login.xml" value="0.14666666666666667" />

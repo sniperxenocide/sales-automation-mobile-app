@@ -53,21 +53,23 @@ public class DeliveryListActivity extends AppCompatActivity {
         filter.put("endDate",s.format(calendar.getTime()));
         calendar.add(Calendar.DATE,-30);
         filter.put("startDate",s.format(calendar.getTime()));
-        filter.put("customerNumbers","196034,189912,191260,198700,204349,195023,213100,198150");
 
-        //,189912,191260,198700,204349,195023,213100,198150
+        filter.put("customerNumbers","196034,189912,191260,198700,204349,195023,213100,198150");
 //        filter.put("customerNumbers",getCustomerNumbers());
 //        try {filter.put("orderNumber",getIntent().getExtras().getString("orderNumber"));
 //        }catch (Exception e){e.printStackTrace();}
     }
 
     private String getCustomerNumbers(){
-        StringBuilder sb=new StringBuilder();
-        for(CustomerDto c:CommonUtil.customers){
-            sb.append(c.getOracleCustomerCode());
-            if(CommonUtil.customers.indexOf(c)<CommonUtil.customers.size()-1) sb.append(",");
-        }
-        return sb.toString();
+        try {
+            StringBuilder sb=new StringBuilder();
+            for(CustomerDto c:CommonUtil.customers){
+                sb.append(c.getOracleCustomerCode());
+                if(CommonUtil.customers.indexOf(c)<CommonUtil.customers.size()-1) sb.append(",");
+            }
+            return sb.toString();
+        }catch (Exception e){e.printStackTrace();}
+        return null;
     }
 
     private void initRecycleView(){

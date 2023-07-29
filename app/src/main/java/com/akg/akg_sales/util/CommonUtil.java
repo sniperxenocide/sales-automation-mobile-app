@@ -23,9 +23,17 @@ public class CommonUtil {
 
     public static User loggedInUser = null;
     public static List<CustomerDto> customers;
-    public static CustomerDto selectedCustomer;
     public static ArrayList<OrderStatusDto> statusList;
     public static HashMap<Long,ArrayList<CartItemDto>> orderCart = new HashMap<>();
+
+    public static void printCart(){
+        for (Long k: orderCart.keySet()){
+            System.out.println(k+" "+orderCart.get(k).get(0).getCustomerDto().getCustomerName());
+            for (CartItemDto c: orderCart.get(k)){
+                System.out.println("***["+c.getItemDto().getItemDescription()+" = "+c.getQuantity()+"],");
+            }
+        }
+    }
 
     public static void showToast(Context context, String msg, boolean isSuccess){
         try{
