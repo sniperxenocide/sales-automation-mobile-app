@@ -124,8 +124,10 @@ public class OrderDetailActivity extends AppCompatActivity {
 
     public void showDeliveryList(){
         try {
+            if(orderDto.getOracleOrderNumber()==null || orderDto.getOracleOrderNumber().isEmpty() )
+                return;
             Intent intent = new Intent(this, DeliveryListActivity.class);
-            intent.putExtra("orderNumber",orderDto.getOrderNumber());
+            intent.putExtra("orderNumber",orderDto.getOracleOrderNumber());
             startActivity(intent);
         }catch (Exception e){e.printStackTrace();}
     }

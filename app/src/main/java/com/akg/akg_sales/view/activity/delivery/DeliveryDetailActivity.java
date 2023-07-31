@@ -98,6 +98,7 @@ public class DeliveryDetailActivity extends AppCompatActivity {
                 else dataFrequency.put(customer,dataFrequency.get(customer)+1);
                 if(dataFrequency.get(order.toString()) == null) dataFrequency.put(order.toString(),1);
                 else dataFrequency.put(order.toString(),dataFrequency.get(order.toString())+1);
+                doNumber = order+doNumber;  // Multiple Order can be in One DO
                 if(dataFrequency.get(doNumber) == null) dataFrequency.put(doNumber,1);
                 else dataFrequency.put(doNumber,dataFrequency.get(doNumber)+1);
             }catch (Exception e){e.printStackTrace();}

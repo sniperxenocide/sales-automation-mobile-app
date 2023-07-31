@@ -22,6 +22,8 @@ public class API {
     public static String baseUrl = "http://sales.abulkhairgroup.com:5000";  //Test Server
 //    public static String baseUrl = "http://10.0.2.2:5000";  // Dev
 
+    //TSO Karnafully 01926670951
+
     public static Retrofit getClient() {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
