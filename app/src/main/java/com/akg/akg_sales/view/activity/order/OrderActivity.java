@@ -41,6 +41,8 @@ public class OrderActivity extends AppCompatActivity {
     protected void onRestart() {
         super.onRestart();
         updateCartBtnLabel();
+        orderBinding.itemSearchBox.getText().clear();
+        updateItemList(itemList);
     }
 
     private void loadPage(){
@@ -69,8 +71,8 @@ public class OrderActivity extends AppCompatActivity {
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                ArrayList<ItemDto> tmpItemList = new ArrayList<>();
-                if(s==null || s.length()==0) tmpItemList = itemList;
+                ArrayList<ItemDto> searchItemList = new ArrayList<>();
+                if(s==null || s.length()==0) searchItemList = itemList;
                 else if(s.length()<=10){
                     for(ItemDto i:itemList){
                         String dataText = (i.getItemCode()+" "+i.getItemDescription()).toUpperCase();
@@ -81,10 +83,10 @@ public class OrderActivity extends AppCompatActivity {
                                 break;
                             }
                         }
-                        if(match) tmpItemList.add(i);
+                        if(match) searchItemList.add(i);
                     }
                 }
-                updateItemList(tmpItemList);
+                updateItemList(searchItemList);
             }
             @Override
             public void afterTextChanged(Editable s) {}

@@ -279,12 +279,10 @@
 
                             </LinearLayout>
 
-
-
                             <TextView
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
-                                android:layout_weight="7"
+                                android:layout_weight="6"
                                 android:text="@{vm.currentStatus}"
                                 android:textColor="@color/font_color_main"
                                 android:textSize="@dimen/text_size_1"
@@ -380,20 +378,95 @@
                             android:orientation="vertical">
                             <LinearLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="50dp"
-                                android:orientation="horizontal"
+                                android:layout_height="wrap_content"
+                                android:orientation="vertical"
                                 android:gravity="end">
-                                <Button
-                                    android:layout_width="wrap_content"
+                                <androidx.constraintlayout.widget.ConstraintLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content">
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Last Payment"
+                                        android:textSize="@dimen/text_size_1"
+                                        android:textStyle="bold"
+                                        android:textColor="@color/font_color_main"
+                                        app:layout_constraintStart_toStartOf="parent"
+                                        app:layout_constraintTop_toTopOf="parent"
+                                        app:layout_constraintBottom_toBottomOf="parent"/>
+
+                                    <androidx.constraintlayout.widget.ConstraintLayout
+                                        android:id="@+id/paymentHistBtn"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_marginEnd="16dp"
+                                        android:onClick="@{()->activity.onClickViewPayments()}"
+                                        app:layout_constraintBottom_toBottomOf="parent"
+                                        app:layout_constraintEnd_toEndOf="parent"
+                                        app:layout_constraintTop_toTopOf="parent">
+
+                                        <androidx.constraintlayout.widget.ConstraintLayout
+                                            android:id="@+id/paymentIcon"
+                                            android:layout_width="40dp"
+                                            android:layout_height="40dp"
+                                            android:layout_margin="5sp"
+                                            android:background="@drawable/payment"
+                                            app:layout_constraintBottom_toBottomOf="parent"
+                                            app:layout_constraintEnd_toEndOf="parent"
+                                            app:layout_constraintStart_toStartOf="parent"
+                                            app:layout_constraintTop_toTopOf="parent" />
+
+                                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                                <LinearLayout
+                                    android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:text="Recent Payments  "
-                                    android:drawableEnd="@drawable/eye"
-                                    android:onClick="@{()->activity.onClickViewPayments()}"
-                                    android:textColor="@color/white"
-                                    android:textStyle="bold"
-                                    android:paddingTop="10dp"
-                                    android:paddingBottom="10dp"
-                                    android:backgroundTint="@android:color/holo_green_dark" />
+                                    android:orientation="horizontal">
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="Value: "
+                                        android:textStyle="bold"
+                                        android:textColor="@color/font_color_main"
+                                        android:textSize="18sp"/>
+                                    <TextView
+                                        android:id="@+id/payment_value"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textColor="@color/font_color_main"
+                                        android:textSize="18sp"/>
+
+                                    <TextView
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:text="     Date: "
+                                        android:textStyle="bold"
+                                        android:textColor="@color/font_color_main"
+                                        android:textSize="18sp"/>
+                                    <TextView
+                                        android:id="@+id/payment_date"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textAlignment="textEnd"
+                                        android:textColor="@color/font_color_main"
+                                        android:textSize="18sp" />
+                                </LinearLayout>
+
+<!--                                <Button-->
+<!--                                    android:layout_width="wrap_content"-->
+<!--                                    android:layout_height="wrap_content"-->
+<!--                                    android:text="Recent Payments  "-->
+<!--                                    android:drawableEnd="@drawable/eye"-->
+<!--                                    android:onClick="@{()->activity.onClickViewPayments()}"-->
+<!--                                    android:textColor="@color/white"-->
+<!--                                    android:textStyle="bold"-->
+<!--                                    android:paddingTop="10dp"-->
+<!--                                    android:paddingBottom="10dp"-->
+<!--                                    android:backgroundTint="@android:color/holo_green_dark" />-->
+<!--                                -->
                             </LinearLayout>
                             <LinearLayout
                                 android:layout_width="match_parent"

@@ -3,6 +3,7 @@ package com.akg.akg_sales.view.activity.order;
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -58,6 +59,13 @@ public class PendingOrderActivity extends AppCompatActivity {
         binding= DataBindingUtil.setContentView(this,R.layout.activity_pending_order);
         binding.setActivity(this);
         initRecycleView();
+        newOrderControl();
+    }
+
+    private void newOrderControl(){
+        if(CommonUtil.loggedInUser.getCategory().equals("Customer"))
+            binding.newOrderBtn.setVisibility(View.VISIBLE);
+        else binding.newOrderBtn.setVisibility(View.GONE);
     }
 
     private void initRecycleView(){

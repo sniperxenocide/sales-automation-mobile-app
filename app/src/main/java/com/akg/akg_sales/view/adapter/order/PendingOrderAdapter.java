@@ -2,7 +2,9 @@ package com.akg.akg_sales.view.adapter.order;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
@@ -13,6 +15,7 @@ import com.akg.akg_sales.BR;
 import com.akg.akg_sales.R;
 import com.akg.akg_sales.databinding.ListitemPendingOrderBinding;
 import com.akg.akg_sales.dto.order.OrderDto;
+import com.akg.akg_sales.util.CommonUtil;
 import com.akg.akg_sales.view.activity.order.OrderDetailActivity;
 
 import java.util.ArrayList;
@@ -60,8 +63,16 @@ public class PendingOrderAdapter extends RecyclerView.Adapter<PendingOrderAdapte
         public void bind(Object obj,String idx) {
             itemBinding.setVariable(BR.vm, obj);
             itemBinding.setVariable(BR.index, idx);
+            notifyActionRequired((OrderDto)obj,itemBinding );
             itemBinding.executePendingBindings();
         }
+    }
+
+    private void notifyActionRequired(OrderDto orderDto,ListitemPendingOrderBinding itemBinding){
+        if(CommonUtil.loggedInUser.getUsername().equals(orderDto.getCurrentApproverUsername())){
+            itemBinding.actionDot.setVisibility(View.VISIBLE);
+        }
+        else itemBinding.actionDot.setVisibility(View.INVISIBLE);
     }
 
 

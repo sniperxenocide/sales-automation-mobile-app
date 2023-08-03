@@ -49,7 +49,7 @@ public class DeliveryDetailReportDialog {
                 "<h3>Loading Date: <span style='font-weight:normal'>"+mov.getMoveConfirmedDate() +"</span></h3>" +
                 "<h3>Gate-Out Date: <span style='font-weight:normal'>"+" " +"</span></h3>" +
                 "<h3>Vehicle No: <span style='font-weight:normal'>"+mov.getVehicleNo() +"</span></h3>" +
-                "<h3>Driver: <span style='font-weight:normal'>"+mov.getDriverName()+" "+mov.getDriverMobile() +"</span></h3>";
+                "<h3>Driver: <span style='font-weight:normal'>"+mov.getDriverName()+" , "+mov.getDriverMobile() +"</span></h3>";
 
         String style = "<style>" +
                 "@media print { " +
@@ -64,8 +64,8 @@ public class DeliveryDetailReportDialog {
                 "  border-collapse:collapse;" +
                 "  width:100%;" +
                 "}</style>";
-        String header = "<tr><th>Customer</th><th>Order</th>" +
-                "<th>DO</th><th>Item</th><th>Quantity</th></tr>";
+        String header = "<tr><th>Customer</th><th>Order Number</th>" +
+                "<th>DO Number</th><th>Item</th><th>Quantity</th></tr>";
         StringBuilder bb = new StringBuilder();
         String customer="";String order="";String doN="";
         for(MoveOrderConfirmedLineDto l:activity.deliveryLines){

@@ -15,7 +15,9 @@ import com.akg.akg_sales.dto.StatusFlow;
 import com.akg.akg_sales.dto.order.OrderDto;
 import com.akg.akg_sales.dto.order.OrderLineDto;
 import com.akg.akg_sales.dto.order.OrderRequest;
+import com.akg.akg_sales.dto.payment.PaymentDto;
 import com.akg.akg_sales.service.OrderService;
+import com.akg.akg_sales.service.PaymentService;
 import com.akg.akg_sales.util.CommonUtil;
 import com.akg.akg_sales.view.activity.delivery.DeliveryListActivity;
 import com.akg.akg_sales.view.activity.payment.PaymentListActivity;
@@ -24,6 +26,7 @@ import com.akg.akg_sales.view.dialog.ConfirmationDialog;
 import com.akg.akg_sales.view.dialog.StatusFlowDialog;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Objects;
 
 public class OrderDetailActivity extends AppCompatActivity {
@@ -31,6 +34,7 @@ public class OrderDetailActivity extends AppCompatActivity {
     public RecyclerView recyclerView;
     public ActivityOrderDetailBinding binding;
     public OrderDto orderDto;
+    public PaymentDto paymentDto;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +58,19 @@ public class OrderDetailActivity extends AppCompatActivity {
         OrderService.fetchOrderDetailFromServer(orderId,this,res->{
             orderDto = res;
             loadPage();
+        });
+    }
+
+    private void fetchLastPaymentFromServer(){
+        HashMap<String,String> filter = new HashMap<>();
+        filter.put("page","1");
+        filter.put("customerNumber",orderDto.getCustomerNumber());
+        PaymentService.getPayments(this,filter,res->{
+            if(res!=null && res.getData().size()>0){
+                paymentDto = res.getData().get(0);
+                binding.paymentValue.setText(String.valueOf(paymentDto.getPaymentAmount()));
+                binding.paymentDate.setText(paymentDto.getPaymentDate());
+            }
         });
     }
 
@@ -102,7 +119,10 @@ public class OrderDetailActivity extends AppCompatActivity {
     private void setOrderActionUi(){
         orderActionPermitted = Objects.equals(orderDto.getCurrentApproverUsername(),
                 CommonUtil.loggedInUser.getUsername());
-        if(orderActionPermitted) binding.orderAction.setVisibility(View.VISIBLE);
+        if(orderActionPermitted) {
+            binding.orderAction.setVisibility(View.VISIBLE);
+            fetchLastPaymentFromServer();
+        }
         else binding.orderAction.setVisibility(View.GONE);
     }
 
