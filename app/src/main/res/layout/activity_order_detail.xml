@@ -371,6 +371,23 @@
                                 android:textSize="@dimen/text_size_1" />
                         </LinearLayout>
 
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Notes"
+                            android:layout_marginBottom="10dp">
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:enabled="false"
+                                android:focusable="false"
+                                android:text="@{activity.notes}"
+                                android:textColor="@color/font_color_main"
+                                 />
+                        </com.google.android.material.textfield.TextInputLayout>
+
+
                         <LinearLayout
                             android:id="@+id/order_action"
                             android:layout_width="match_parent"
@@ -454,20 +471,27 @@
                                         android:textColor="@color/font_color_main"
                                         android:textSize="18sp" />
                                 </LinearLayout>
-
-<!--                                <Button-->
-<!--                                    android:layout_width="wrap_content"-->
-<!--                                    android:layout_height="wrap_content"-->
-<!--                                    android:text="Recent Payments  "-->
-<!--                                    android:drawableEnd="@drawable/eye"-->
-<!--                                    android:onClick="@{()->activity.onClickViewPayments()}"-->
-<!--                                    android:textColor="@color/white"-->
-<!--                                    android:textStyle="bold"-->
-<!--                                    android:paddingTop="10dp"-->
-<!--                                    android:paddingBottom="10dp"-->
-<!--                                    android:backgroundTint="@android:color/holo_green_dark" />-->
-<!--                                -->
                             </LinearLayout>
+
+
+                            <com.google.android.material.textfield.TextInputLayout
+                                android:id="@+id/note_container"
+                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_marginTop="10dp"
+                                android:hint="Add Note">
+
+                                <com.google.android.material.textfield.TextInputEditText
+                                    android:id="@+id/note_field"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+                                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789., "
+                                    android:maxLength="250"
+                                    />
+                            </com.google.android.material.textfield.TextInputLayout>
+
+
                             <LinearLayout
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"

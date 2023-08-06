@@ -136,6 +136,7 @@ public class NewPaymentActivity extends AppCompatActivity {
                     = new PaymentRequestDto(paymentViewModel,selectedCustomer.getId());
             PaymentService.createPayment(this,paymentRequestDto, res-> finish());
         }catch (Exception e){
+            e.printStackTrace();
             CommonUtil.showToast(this,"Please Fill up Mandatory Fields ",false);
         }
 

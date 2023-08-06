@@ -34,15 +34,14 @@ public class PaymentRequestDto {
         this.paymentAmount = Double.parseDouble(Objects.requireNonNull(vm.getPaymentAmount().get()));
         this.paymentTypeId = Long.parseLong(Objects.requireNonNull(vm.getPaymentTypeId().get()));
         this.paymentDate = Objects.requireNonNull(vm.getPaymentDate().get());
-        this.receiptNumber = Objects.requireNonNull(vm.getReceiptNumber().get()).trim();
-        if(this.receiptNumber.length()<=0) throw new Exception();
+        this.receiptNumber = Objects.requireNonNull(vm.getReceiptNumber().get());
+        if(this.receiptNumber.trim().length()<=0) throw new Exception();
 
-        try {
-            this.customerBankId = Long.parseLong(Objects.requireNonNull(vm.getCustomerBankId().get()));
-        }catch (Exception e){
-            System.out.println("Customer Bank not Selected");
-        }
-        this.customerBankBranch = vm.getCustomerBankBranch().get();
+        this.customerBankId = Long.parseLong(Objects.requireNonNull(vm.getCustomerBankId().get()));
+
+        this.customerBankBranch = Objects.requireNonNull(vm.getCustomerBankBranch().get());
+        if(this.customerBankBranch.trim().length()<=0) throw new Exception();
+
         this.customerAccountNumber = vm.getCustomerAccountNumber().get();
         this.comment = vm.getComment().get();
 

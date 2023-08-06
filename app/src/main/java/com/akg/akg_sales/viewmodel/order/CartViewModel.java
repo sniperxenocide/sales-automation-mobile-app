@@ -1,6 +1,8 @@
 package com.akg.akg_sales.viewmodel.order;
 
 import android.app.ProgressDialog;
+import android.text.Editable;
+import android.text.TextWatcher;
 
 import androidx.databinding.BaseObservable;
 
@@ -12,6 +14,8 @@ import com.akg.akg_sales.dto.order.OrderRequest;
 import com.akg.akg_sales.util.CommonUtil;
 import com.akg.akg_sales.view.activity.order.CartActivity;
 import com.akg.akg_sales.view.dialog.ConfirmationDialog;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Objects;
@@ -79,7 +83,20 @@ public class CartViewModel extends BaseObservable {
         for(CartItemDto i: items){
             postBody.addLine(i.getItemDto().getId(),i.getQuantity());
         }
+        postBody.setNote(getNote());
         return postBody;
+    }
+
+    private String getNote(){
+        try {
+            JSONObject noteObject = new JSONObject();
+            String note = Objects.requireNonNull(activity.cartBinding.noteField.getText()).toString();
+            if(note.trim().length()==0) return null;
+            noteObject.put(activity.cSelectedCustomer.getCustomerName()+" ("
+                            +activity.cSelectedCustomer.getOracleCustomerCode()+")",note);
+            return noteObject.toString();
+        }catch (Exception e){e.printStackTrace();}
+        return null;
     }
 
 }

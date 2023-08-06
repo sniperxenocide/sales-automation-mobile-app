@@ -25,11 +25,13 @@ public class OrderDto {
     private String operatingUnit;
     private Long currentApproverUserId;
     private String currentApproverUsername;
+    private String currentApproverSalesDesk;
     private String currentStatus;
     private Double value;
     private String bookedDate;
     private Double bookedValue;
     private List<OrderLineDto> orderLines;
+    private String note;
 
     public String getCreationTime(){
         try {

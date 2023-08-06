@@ -2,6 +2,9 @@ package com.akg.akg_sales.view.activity.order;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
+import android.text.SpannableStringBuilder;
+import android.text.Spanned;
 import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,8 +28,11 @@ import com.akg.akg_sales.view.adapter.order.OrderLineAdapter;
 import com.akg.akg_sales.view.dialog.ConfirmationDialog;
 import com.akg.akg_sales.view.dialog.StatusFlowDialog;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Objects;
 
 public class OrderDetailActivity extends AppCompatActivity {
@@ -91,11 +97,26 @@ public class OrderDetailActivity extends AppCompatActivity {
             for (OrderLineDto l : orderDto.getOrderLines()) {
                 body.addLine(l.getItemId(),l.getQuantity().intValue());
             }
+            body.setNote(addNote());
             OrderService.approveOrder(body,this,res->{
                 CommonUtil.showToast(getApplicationContext(),"Order Approved",true);
                 finish();
             });
         });
+    }
+
+    private String addNote(){
+        try {
+            JSONObject noteObject =null;
+            try {noteObject = new JSONObject(orderDto.getNote());
+            }catch (Exception e){}
+            if(noteObject==null) noteObject = new JSONObject();
+            String note = Objects.requireNonNull(binding.noteField.getText()).toString();
+            if(note.length()>0) noteObject.put(orderDto.getCurrentApproverSalesDesk()+
+                    " ("+orderDto.getCurrentApproverUsername()+")", note);
+            return noteObject.toString();
+        }catch (Exception e){e.printStackTrace();}
+        return orderDto.getNote();
     }
 
     public void onClickCancel(){
@@ -140,6 +161,20 @@ public class OrderDetailActivity extends AppCompatActivity {
             binding.statusLayout.setOnClickListener(v->
                     new StatusFlowDialog(statusFlows,OrderDetailActivity.this));
         }catch (Exception e){e.printStackTrace();}
+    }
+
+    public Spanned getNotes(){
+        StringBuilder htmlBuilder = new StringBuilder();
+        try {
+            JSONObject note = new JSONObject(orderDto.getNote());
+            for (Iterator<String> it = note.keys(); it.hasNext(); ) {
+                String k = it.next();
+                htmlBuilder.append("<b>").append(k).append(" : </b><br>")
+                        .append(note.getString(k));
+                if(it.hasNext()) htmlBuilder.append("<br><br>");
+            }
+        }catch (Exception e){e.printStackTrace();}
+        return Html.fromHtml(htmlBuilder.toString());
     }
 
     public void showDeliveryList(){

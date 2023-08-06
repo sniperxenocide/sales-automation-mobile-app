@@ -111,18 +111,41 @@
                 android:layout_height="0dp"
                 android:layout_marginTop="8dp"
                 android:layout_marginBottom="8dp"
-                app:layout_constraintBottom_toTopOf="@+id/button"
+                app:layout_constraintBottom_toTopOf="@+id/note_container"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/selected_item_label"
                 app:layout_constraintWidth_percent="0.9" />
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/note_container"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:hint="Note"
+                app:layout_constraintBottom_toTopOf="@id/order_value"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/selected_item_listview"
+                app:layout_constraintWidth_percent="0.9">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/note_field"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789., "
+                    android:maxLength="250"
+                    />
+            </com.google.android.material.textfield.TextInputLayout>
+
 
             <Button
                 android:id="@+id/button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginEnd="24dp"
-                android:layout_marginBottom="8dp"
                 android:backgroundTint="#e6e3dc"
                 android:onClick="@{()->vm.onClickSubmitBtn()}"
                 android:paddingStart="20dp"
@@ -135,15 +158,14 @@
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/selected_item_listview" />
+                app:layout_constraintTop_toBottomOf="@+id/note_container" />
 
             <TextView
                 android:id="@+id/order_value"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="24dp"
-                android:layout_marginTop="8dp"
-                android:layout_marginBottom="16dp"
+                android:layout_marginBottom="8dp"
                 android:background="@drawable/light_grey_background"
                 android:hint="Gross Value: \n120000 Tk"
                 android:paddingStart="15dp"
@@ -155,7 +177,7 @@
                 android:textSize="@dimen/text_size_1"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/selected_item_listview" />
+                app:layout_constraintTop_toBottomOf="@+id/note_container" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>

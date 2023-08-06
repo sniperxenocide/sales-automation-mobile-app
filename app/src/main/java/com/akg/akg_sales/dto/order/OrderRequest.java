@@ -14,6 +14,7 @@ public class OrderRequest {
     private Long orderId;
     private Long customerId;
     private List<OrderLineRequest> lines = new ArrayList<>();
+    private String note;
 
     public void addLine(Long itemId,Integer quantity){
         lines.add(new OrderLineRequest(itemId,quantity));
