@@ -12,4 +12,5 @@ public class User {
     private String password;
     private String token;
     private String category;
+    private String fcmToken;
 }

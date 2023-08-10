@@ -8,6 +8,7 @@ import androidx.core.util.Consumer;
 import com.akg.akg_sales.api.API;
 import com.akg.akg_sales.api.CustomerApi;
 import com.akg.akg_sales.dto.CustomerDto;
+import com.akg.akg_sales.dto.CustomerSiteDto;
 import com.akg.akg_sales.util.CommonUtil;
 
 import java.util.List;
@@ -39,5 +40,29 @@ public class CustomerService {
                         t.printStackTrace();
                     }
                 });
+    }
+
+    public static void fetchCustomerSites(Context context,Long customerId, Consumer<List<CustomerSiteDto>> callback) {
+        ProgressDialog progressDialog = CommonUtil.showProgressDialog(context);
+        API.getClient().create(CustomerApi.class).getCustomerSites(customerId,"SHIP_TO")
+                .enqueue(new Callback<List<CustomerSiteDto>>() {
+                    @Override
+                    public void onResponse(Call<List<CustomerSiteDto>> call, Response<List<CustomerSiteDto>> response) {
+                        progressDialog.dismiss();
+                        try {
+                            if(response.code()==200){
+                                callback.accept(response.body());
+                            }
+                        }catch (Exception e){e.printStackTrace();}
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<CustomerSiteDto>> call, Throwable t) {
+                        progressDialog.dismiss();
+                        call.cancel();
+                        t.printStackTrace();
+                    }
+                });
+
     }
 }

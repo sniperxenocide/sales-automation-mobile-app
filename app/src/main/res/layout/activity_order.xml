@@ -27,11 +27,17 @@
             <ScrollView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:nestedScrollingEnabled="true">
+                android:nestedScrollingEnabled="true"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
+
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/customer_list_layout"
                         style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
@@ -48,10 +54,10 @@
                             android:layout_height="wrap_content"
                             android:clickable="true"
                             android:focusable="false"
+                            android:inputType="textNoSuggestions"
                             android:textColor="@color/font_color_main"
                             android:textSize="@dimen/text_size_1"
                             android:textStyle="bold"
-                            android:inputType="textNoSuggestions"
                             tools:ignore="KeyboardInaccessibleWidget" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -193,7 +199,7 @@
                             app:layout_constraintBottom_toBottomOf="parent"
                             app:layout_constraintEnd_toEndOf="parent"
                             app:layout_constraintStart_toEndOf="@+id/select_item_label"
-                            app:layout_constraintTop_toTopOf="parent"/>
+                            app:layout_constraintTop_toTopOf="parent" />
 
 
                     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -203,9 +209,9 @@
                         android:id="@+id/item_listview"
                         android:layout_width="match_parent"
                         android:layout_height="500dp"
-                        android:layout_marginBottom="8dp"
                         android:layout_marginStart="10dp"
                         android:layout_marginEnd="10dp"
+                        android:layout_marginBottom="8dp"
                         app:layout_constraintWidth_percent="0.95" />
 
                 </LinearLayout>

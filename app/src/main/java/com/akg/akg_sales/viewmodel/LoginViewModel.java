@@ -12,6 +12,7 @@ import com.akg.akg_sales.BR;
 import com.akg.akg_sales.api.API;
 import com.akg.akg_sales.api.LoginApi;
 import com.akg.akg_sales.dto.User;
+import com.akg.akg_sales.firebase.MyFirebaseMessagingService;
 import com.akg.akg_sales.util.CommonUtil;
 import com.akg.akg_sales.view.activity.HomeActivity;
 import com.akg.akg_sales.view.activity.LoginActivity;
@@ -93,6 +94,7 @@ public class LoginViewModel extends BaseObservable {
                                     CommonUtil.loggedInUser = validUser;
                                     Intent homeIntent = new Intent(activity, HomeActivity.class);
                                     activity.startActivity(homeIntent);
+                                    MyFirebaseMessagingService.fetchFirebaseToken();
                                 }
                                 else CommonUtil.showToast(activity,"Login Failed",false);
                             }

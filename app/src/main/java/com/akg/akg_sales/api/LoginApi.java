@@ -16,4 +16,7 @@ public interface LoginApi {
     @GET("/version-check")
     Call<AppVersion> getLatestVersion();
 
+    @POST("/auth-service/api/fcm/token/update")
+    Call<User> submitNewFcmToken(@Body String fcmToken);
+
 }

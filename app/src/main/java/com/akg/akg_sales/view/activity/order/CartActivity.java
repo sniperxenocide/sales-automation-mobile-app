@@ -12,23 +12,30 @@ import android.widget.AutoCompleteTextView;
 import com.akg.akg_sales.R;
 import com.akg.akg_sales.databinding.ActivityCartBinding;
 import com.akg.akg_sales.dto.CustomerDto;
+import com.akg.akg_sales.dto.CustomerSiteDto;
 import com.akg.akg_sales.dto.order.CartItemDto;
+import com.akg.akg_sales.service.CustomerService;
 import com.akg.akg_sales.util.CommonUtil;
 import com.akg.akg_sales.view.adapter.order.CartItemAdapter;
 import com.akg.akg_sales.viewmodel.order.CartViewModel;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Objects;
 
 public class CartActivity extends AppCompatActivity {
     public ActivityCartBinding cartBinding;
     public RecyclerView recyclerView;
     public CustomerDto cSelectedCustomer;
+    public CustomerSiteDto cSelectedSite;
     public HashMap<Long,ArrayList<CartItemDto>> cartMap = CommonUtil.orderCart;
+    public List<CustomerSiteDto> customerSites = new ArrayList<>();
 
     String[] customers;
     Long[] customerIds;
+    String[] custSites;
+//    Long[] siteIds;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -79,6 +86,36 @@ public class CartActivity extends AppCompatActivity {
         tView.setText(cSelectedCustomer.getCustomerName(),false);
         loadCartListView();
         calculateOrderValue();
+
+        customerSites = new ArrayList<>();
+        loadSiteList();
+        CustomerService.fetchCustomerSites(this,cSelectedCustomer.getId(),res->{
+            customerSites = res;
+            loadSiteList();
+        });
+    }
+
+    private void loadSiteList(){
+        try {
+            cSelectedSite = null;
+            AutoCompleteTextView tView=cartBinding.customerSiteList;
+            custSites = new String[customerSites.size()];
+            for (CustomerSiteDto s: customerSites){
+                int idx = customerSites.indexOf(s);
+                custSites[idx]=s.getAddress();
+            }
+            ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, custSites);
+            tView.setAdapter(adapter);
+            tView.setOnItemClickListener((adapterView, view, i, l) -> onClickSite(tView,i));
+            onClickSite(tView,0);
+        }catch (Exception e){}
+    }
+
+    private void onClickSite(AutoCompleteTextView tView,int idx){
+        try {
+            cSelectedSite = customerSites.get(idx);
+            tView.setText(cSelectedSite.getAddress(), false);
+        }catch (Exception e){}
     }
 
     public void calculateOrderValue(){

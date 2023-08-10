@@ -80,6 +80,9 @@ public class CartViewModel extends BaseObservable {
             return null;
         }
         postBody.setCustomerId(activity.cSelectedCustomer.getId());
+        if(activity.cSelectedSite!=null){
+            postBody.setSiteId(activity.cSelectedSite.getId());
+        }
         for(CartItemDto i: items){
             postBody.addLine(i.getItemDto().getId(),i.getQuantity());
         }
