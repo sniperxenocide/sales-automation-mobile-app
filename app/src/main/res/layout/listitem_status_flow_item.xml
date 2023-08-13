@@ -24,7 +24,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
-                android:visibility="@{vm.passed?View.VISIBLE:View.GONE}">
+                android:visibility="@{vm.passed==1?View.VISIBLE:View.GONE}">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="30dp"
@@ -40,7 +40,23 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="10dp"
-                android:visibility="@{vm.passed?View.GONE:View.VISIBLE}">
+                android:visibility="@{vm.passed==0?View.VISIBLE:View.GONE}">
+
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="30dp"
+                    android:layout_height="30dp"
+                    android:background="@drawable/yellow_loading"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="10dp"
+                android:visibility="@{vm.passed==-1?View.VISIBLE:View.GONE}">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="30dp"

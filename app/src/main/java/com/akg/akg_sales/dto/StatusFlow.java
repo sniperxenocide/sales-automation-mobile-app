@@ -8,6 +8,10 @@ import lombok.ToString;
 @Data @NoArgsConstructor @AllArgsConstructor @ToString
 public class StatusFlow {
     private Integer sequence;
-    private Boolean passed;
+    private Integer passed;
     private String status;
+
+    // -1 = Yet to Pass
+    // 0 = Currently Pending in this Status
+    // 1 = Passed
 }

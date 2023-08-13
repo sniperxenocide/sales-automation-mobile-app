@@ -54,6 +54,7 @@ public class CartActivity extends AppCompatActivity {
     public void loadCartListView(){
         ArrayList<CartItemDto> list = cartMap.get(cSelectedCustomer.getId());
         if(list==null) return;
+        cartBinding.selectedItemLabel.setText("Selected Items ("+list.size()+"):");
         recyclerView = cartBinding.selectedItemListview;
         recyclerView.setItemViewCacheSize(list.size());
         recyclerView.setHasFixedSize(true);

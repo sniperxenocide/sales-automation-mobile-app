@@ -88,12 +88,12 @@ public class PaymentDetailDialog {
     private void loadStatusFlowDialog(){
         try {
             ArrayList<StatusFlow> statusFlows = new ArrayList<>();
-            statusFlows.add(new StatusFlow(1,false,"Submitted"));
-            statusFlows.add(new StatusFlow(2,false,"Confirmed"));
-            statusFlows.add(new StatusFlow(3,false,"Remitted"));
-            statusFlows.add(new StatusFlow(4,false,"Cleared"));
+            statusFlows.add(new StatusFlow(1,-1,"Submitted"));
+            statusFlows.add(new StatusFlow(2,-1,"Confirmed"));
+            statusFlows.add(new StatusFlow(3,-1,"Remitted"));
+            statusFlows.add(new StatusFlow(4,-1,"Cleared"));
             for (StatusFlow s:statusFlows){
-                s.setPassed(true);
+                s.setPassed(1);
                 if(s.getStatus().equals(paymentDto.getCurrentStatus())) break;
             }
             binding.statusLayout.setOnClickListener(v->{

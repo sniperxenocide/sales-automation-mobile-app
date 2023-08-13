@@ -97,6 +97,7 @@
                             android:layout_height="wrap_content"
                             android:clickable="true"
                             android:focusable="false"
+                            android:inputType="textNoSuggestions"
                             tools:ignore="KeyboardInaccessibleWidget" />
                     </com.google.android.material.textfield.TextInputLayout>
 
@@ -114,6 +115,7 @@
                             android:layout_height="wrap_content"
                             android:clickable="true"
                             android:focusable="false"
+                            android:inputType="textNoSuggestions"
                             tools:ignore="KeyboardInaccessibleWidget" />
                     </com.google.android.material.textfield.TextInputLayout>
 

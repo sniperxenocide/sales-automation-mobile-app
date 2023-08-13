@@ -32,6 +32,7 @@ public class OrderDto {
     private Double bookedValue;
     private List<OrderLineDto> orderLines;
     private String note;
+    private String siteAddress;
 
     public String getCreationTime(){
         try {
@@ -58,5 +59,10 @@ public class OrderDto {
     public String getOracleOrderNumber(){
         if(this.oracleOrderNumber==null) return "--";
         return this.oracleOrderNumber;
+    }
+
+    public String getCustomerName(){
+        return this.customerName.replace("."," ")
+                .replace("-"," ").replace(","," ");
     }
 }

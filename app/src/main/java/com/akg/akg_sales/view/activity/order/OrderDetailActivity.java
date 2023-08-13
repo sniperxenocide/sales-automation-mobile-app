@@ -18,6 +18,7 @@ import com.akg.akg_sales.dto.StatusFlow;
 import com.akg.akg_sales.dto.order.OrderDto;
 import com.akg.akg_sales.dto.order.OrderLineDto;
 import com.akg.akg_sales.dto.order.OrderRequest;
+import com.akg.akg_sales.dto.order.OrderStatusDto;
 import com.akg.akg_sales.dto.payment.PaymentDto;
 import com.akg.akg_sales.service.OrderService;
 import com.akg.akg_sales.service.PaymentService;
@@ -91,7 +92,7 @@ public class OrderDetailActivity extends AppCompatActivity {
     }
 
     public void onClickApprove(){
-        new ConfirmationDialog(this,"Approve Order?",i->{
+        new ConfirmationDialog(this,"Order Approval",i->{
             OrderRequest body = new OrderRequest();
             body.setOrderId(orderDto.getId()).setCustomerId(orderDto.getCustomerId());
             for (OrderLineDto l : orderDto.getOrderLines()) {
@@ -151,13 +152,21 @@ public class OrderDetailActivity extends AppCompatActivity {
         try {
             if(orderDto.getCurrentStatus().toUpperCase().contains("CANCELED")) return;
             ArrayList<StatusFlow> statusFlows = new ArrayList<>();
-            statusFlows.add(new StatusFlow(1,false,"Awaiting Market Approval"));
-            statusFlows.add(new StatusFlow(2,false,"Awaiting Management Approval"));
-            statusFlows.add(new StatusFlow(3,false,"Order Confirmed"));
-            for (StatusFlow s:statusFlows){
-                s.setPassed(true);
-                if(s.getStatus().equals(orderDto.getCurrentStatus())) break;
+            boolean beforeCurrentStatus = true;
+            for(OrderStatusDto sd:CommonUtil.statusList){
+                if(sd.getSequence()!=null){
+                    int passed = 1;
+                    if(!beforeCurrentStatus) passed = -1;
+                    if(sd.getStatus().equals(orderDto.getCurrentStatus())){
+                        beforeCurrentStatus = false;
+                        passed = 0;
+                        if(CommonUtil.statusList.indexOf(sd)==CommonUtil.statusList.size()-1)
+                            passed=1;
+                    }
+                    statusFlows.add(new StatusFlow(sd.getSequence(),passed,sd.getStatus()));
+                }
             }
+
             binding.statusLayout.setOnClickListener(v->
                     new StatusFlowDialog(statusFlows,OrderDetailActivity.this));
         }catch (Exception e){e.printStackTrace();}

@@ -8,4 +8,5 @@ import lombok.NoArgsConstructor;
 public class OrderStatusDto {
     private Long id;
     private String status;
+    private Integer sequence;
 }
