@@ -10,6 +10,7 @@ public class ItemDto {
     private Long id;
     private String itemCode;
     private String itemDescription;
+    private String sellingUom;
     private String primaryUom;
     private String secondaryUom;
     private Double unitPrice;

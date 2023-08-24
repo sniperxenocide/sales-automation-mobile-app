@@ -99,7 +99,7 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:textAlignment="center"
-                        android:text="@{vm.itemDto.primaryUom}"
+                        android:text="@{vm.itemDto.sellingUom}"
                         android:layout_height="wrap_content"
                         android:textColor="@color/font_color_main"
                         android:textStyle="italic"

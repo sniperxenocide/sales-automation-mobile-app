@@ -127,4 +127,9 @@ public class HomeActivity extends AppCompatActivity {
         Intent intent = new Intent(this, PaymentListActivity.class);
         this.startActivity(intent);
     }
+
+    public void onClickResetPasswordBtn(){
+        Intent intent = new Intent(this, ResetPasswordActivity.class);
+        this.startActivity(intent);
+    }
 }

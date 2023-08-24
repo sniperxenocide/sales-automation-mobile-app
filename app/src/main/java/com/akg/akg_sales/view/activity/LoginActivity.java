@@ -46,7 +46,7 @@ public class LoginActivity extends AppCompatActivity {
         fetchAppUpdateInfo(v->{
             if(v.getVersionCode()>BuildConfig.VERSION_CODE){
                 new ConfirmationDialog(this,
-                        "New Version Available. Download Now?", i->{
+                        "New Version (v"+v.getVersionName()+") Available. Download Now?", i->{
                     try {startActivity(new Intent(Intent.ACTION_VIEW,
                                 Uri.parse(v.getDownloadUrl())));
                     }catch (Exception e){e.printStackTrace();}

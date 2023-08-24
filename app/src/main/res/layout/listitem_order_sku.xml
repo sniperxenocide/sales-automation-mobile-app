@@ -95,7 +95,7 @@
                         android:layout_height="wrap_content"
                         android:hint="CTN"
                         android:padding="5dp"
-                        android:text="@{vm.primaryUom}"
+                        android:text="@{vm.sellingUom}"
                         android:textAlignment="center"
                         android:textColor="@color/font_color_main"
                         android:textStyle="italic" />
