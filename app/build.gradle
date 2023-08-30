@@ -10,8 +10,8 @@ android {
         applicationId "com.akg.akg_sales"
         minSdk 23
         targetSdk 32
-        versionCode 7
-        versionName "2.4-test"
+        versionCode 8
+        versionName "2.5.0-test"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
