@@ -43,7 +43,8 @@ public class HomeActivity extends AppCompatActivity {
         homeBinding.setActivity(this);
         homeBinding.executePendingBindings();
         setAppVersion();
-        //loadCart();
+
+        if(CommonUtil.loggedInUser.getLoginCount()<=1) onClickResetPasswordBtn();
     }
 
     @Override

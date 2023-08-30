@@ -13,4 +13,6 @@ public class User {
     private String token;
     private String category;
     private String fcmToken;
+    private String lastLoginTime;
+    private Long loginCount;
 }
