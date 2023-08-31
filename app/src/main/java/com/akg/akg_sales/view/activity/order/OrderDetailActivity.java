@@ -82,6 +82,7 @@ public class OrderDetailActivity extends AppCompatActivity {
     }
 
     public void loadOrderLines(){
+        binding.orderLinesLabel.setText("Order Lines ("+orderDto.getOrderLines().size()+")");
         recyclerView = binding.orderLinesList;
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);

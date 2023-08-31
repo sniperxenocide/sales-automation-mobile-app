@@ -11,8 +11,8 @@ android {
         minSdk 23
         targetSdk 32
         versionCode 9
-//        versionName "2.5.0-test"    // Test Release Version
-        versionName "1.0.0"    // Production Release Version
+        versionName "2.5.0-test"    // Test Release Version
+//        versionName "1.0.0"    // Production Release Version
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

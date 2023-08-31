@@ -13,7 +13,7 @@ public interface ItemApi {
 
     @GET("/access-control-service/api/item/order-creation")
     Call<List<ItemDto>> getOrderItems(
-            @Query("customerId") Long customerId,@Query("subTypeId") Long subTypeId);
+            @Query("customerId") Long customerId,@Query("typeId") Long typeId);
 
     @GET("/access-control-service/api/item/order-item-type")
     Call<List<ItemTypeDto>> getItemTypes(@Query("customerId") Long customerId);

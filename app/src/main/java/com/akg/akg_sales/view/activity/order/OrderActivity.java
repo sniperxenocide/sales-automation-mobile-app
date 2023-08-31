@@ -16,6 +16,7 @@ import com.akg.akg_sales.R;
 import com.akg.akg_sales.databinding.ActivityOrderBinding;
 import com.akg.akg_sales.dto.CustomerDto;
 import com.akg.akg_sales.dto.item.ItemDto;
+import com.akg.akg_sales.dto.item.ItemTypeDto;
 import com.akg.akg_sales.dto.order.CartItemDto;
 import com.akg.akg_sales.service.OrderService;
 import com.akg.akg_sales.util.CommonUtil;
@@ -30,6 +31,7 @@ public class OrderActivity extends AppCompatActivity {
     ArrayList<ItemDto> itemList = new ArrayList<>();
     public int selectedCustomerIdx = -1;
     public List<CustomerDto> customerList = CommonUtil.customers;
+    public List<ItemTypeDto> itemTypes;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,11 +53,14 @@ public class OrderActivity extends AppCompatActivity {
         orderBinding.executePendingBindings();
         setCustomer();
         enableItemSearch();
+        fetchItemTypeSubType();
     }
 
     private void updateItemList(ArrayList<ItemDto> list){
         if(list.isEmpty())
             CommonUtil.showToast(getApplicationContext(),"No Matching Items Found",false);
+
+        orderBinding.selectItemLabel.setText("Select Item ("+list.size()+"):");
         RecyclerView recyclerView = orderBinding.itemListview;
         recyclerView.setItemViewCacheSize(list.size());
         recyclerView.setHasFixedSize(true);
@@ -104,9 +109,14 @@ public class OrderActivity extends AppCompatActivity {
         orderBinding.applyFilterMsgText.setVisibility(View.GONE);
     }
 
-    public void fetchItemFromServer(Long subTypeId){
+    private void fetchItemTypeSubType(){
+        OrderService.fetchItemTypeSubTypeFromServer(this,
+                customerList.get(selectedCustomerIdx).getId(), list-> itemTypes = list);
+    }
+
+    public void fetchItemFromServer(Long typeId){
         OrderService.fetchItemFromServer(customerList.get(selectedCustomerIdx).getId(),
-                this,subTypeId,list->{
+                this,typeId,list->{
             itemList = (ArrayList<ItemDto>) list;
             updateItemList(itemList);
             if(itemList.isEmpty()) disableSearchField();

@@ -24,8 +24,9 @@ public class ItemFilterDialog {
     DialogItemFilterBinding binding;
     private OrderActivity activity;
     private Dialog dialog;
-    private List<ItemTypeDto> itemTypes;
+    private Long selectedTypeId;
     private Long selectedSubTypeId;
+    List<ItemTypeDto> itemTypes;
 
     public ItemFilterDialog(OrderActivity activity){
         this.activity=activity;
@@ -34,17 +35,19 @@ public class ItemFilterDialog {
         dialog.setContentView(binding.getRoot());
         CommonUtil.setDialogWindowParams(this.activity,this.dialog);
         binding.applyBtn.setOnClickListener(view -> onClickApply());
-        fetchData();
+        loadItemType();
     }
 
     private void loadItemType(){
+        itemTypes = activity.itemTypes;
         AutoCompleteTextView tView=binding.productTypeDropdown;
         String[] productTypes = new String[itemTypes.size()];
         for (int i=0;i< itemTypes.size();i++) productTypes[i]=itemTypes.get(i).getType();
         ArrayAdapter<String> ptAdapter = new ArrayAdapter<>(activity, android.R.layout.simple_spinner_item, productTypes);
         tView.setAdapter(ptAdapter);
         tView.setOnItemClickListener((adapterView, view, i, l) -> {
-            loadItemSubType(i);
+            selectedTypeId = itemTypes.get(i).getId();
+            //loadItemSubType(i);
         });
     }
 
@@ -59,20 +62,13 @@ public class ItemFilterDialog {
         tView.setOnItemClickListener((adapterView, view, j, l) -> selectedSubTypeId=subTypes.get(j).getId());
     }
 
-    private void fetchData(){
-        OrderService.fetchItemTypeSubTypeFromServer(activity,
-                activity.customerList.get(activity.selectedCustomerIdx).getId(), list->{
-                    itemTypes = list;
-                    loadItemType();
-                });
-    }
 
     private void onClickApply(){
-        if(selectedSubTypeId==null){
+        if(selectedTypeId==null){
             CommonUtil.showToast(activity,"Must Select all options",false);
             return;
         }
-        activity.fetchItemFromServer(selectedSubTypeId);
+        activity.fetchItemFromServer(selectedTypeId);
         dialog.dismiss();
     }
 
