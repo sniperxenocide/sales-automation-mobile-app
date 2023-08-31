@@ -47,6 +47,7 @@ public class ItemFilterDialog {
         tView.setAdapter(ptAdapter);
         tView.setOnItemClickListener((adapterView, view, i, l) -> {
             selectedTypeId = itemTypes.get(i).getId();
+            onClickApply();
             //loadItemSubType(i);
         });
     }
