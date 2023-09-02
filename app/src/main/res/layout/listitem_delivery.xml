@@ -84,7 +84,7 @@
                     android:layout_weight="4"/>
                 <TextView
                     android:layout_width="0dp"
-                    android:text="--"
+                    android:text="@{vm.gateOutDate}"
                     android:layout_height="wrap_content"
                     android:textColor="@color/font_color_main"
                     android:textSize="@dimen/text_size_1"

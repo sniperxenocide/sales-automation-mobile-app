@@ -1,6 +1,7 @@
 package com.akg.akg_sales.viewmodel.order;
 
 import android.app.ProgressDialog;
+import android.content.Intent;
 import android.text.Editable;
 import android.text.TextWatcher;
 
@@ -12,7 +13,9 @@ import com.akg.akg_sales.dto.order.CartItemDto;
 import com.akg.akg_sales.dto.order.OrderDto;
 import com.akg.akg_sales.dto.order.OrderRequest;
 import com.akg.akg_sales.util.CommonUtil;
+import com.akg.akg_sales.view.activity.LoginActivity;
 import com.akg.akg_sales.view.activity.order.CartActivity;
+import com.akg.akg_sales.view.activity.order.PendingOrderActivity;
 import com.akg.akg_sales.view.dialog.ConfirmationDialog;
 
 import org.json.JSONObject;
@@ -50,6 +53,12 @@ public class CartViewModel extends BaseObservable {
                                 System.out.println(orderDto);
                                 CommonUtil.showToast(activity,"Order Created Successfully",true);
                                 removeCartItems();
+
+                                // Returning to Order List Page
+                                Intent intent = new Intent(activity, PendingOrderActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                                        | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                activity.startActivity(intent);
                                 activity.finish();
                             }
                             else {

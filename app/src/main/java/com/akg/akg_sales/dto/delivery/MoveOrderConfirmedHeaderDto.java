@@ -24,6 +24,7 @@ public class MoveOrderConfirmedHeaderDto implements Serializable {
     private String movOrderStatus;
     private String moveWarehouseOrgName;
     private String moveConfirmedDate;
+    private String gateOutDate;
     private String transporterName;
     private String rowCreationTime;
 
@@ -33,5 +34,13 @@ public class MoveOrderConfirmedHeaderDto implements Serializable {
             return (new SimpleDateFormat("dd-MMM-yyyy hh:mm a")).format(dt);
         }catch (Exception e){e.printStackTrace();}
         return moveConfirmedDate;
+    }
+
+    public String getGateOutDate(){
+        try {
+            Date dt=new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").parse(gateOutDate);
+            return (new SimpleDateFormat("dd-MMM-yyyy hh:mm a")).format(dt);
+        }catch (Exception e){e.printStackTrace();}
+        return gateOutDate;
     }
 }

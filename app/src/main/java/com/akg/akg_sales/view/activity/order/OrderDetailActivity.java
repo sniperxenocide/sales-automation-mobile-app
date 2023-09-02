@@ -123,9 +123,9 @@ public class OrderDetailActivity extends AppCompatActivity {
 
     public void onClickCancel(){
         new ConfirmationDialog(this,"Cancel Order?",i->{
-            OrderService.cancelOrder(orderDto.getId().toString(),getApplicationContext(),
+            OrderService.cancelOrder(orderDto.getId().toString(),OrderDetailActivity.this,
                     res->{
-                        CommonUtil.showToast(getApplicationContext(),"Order Canceled",true);
+                        CommonUtil.showToast(OrderDetailActivity.this,"Order Canceled",true);
                         finish();
                     });
         });
