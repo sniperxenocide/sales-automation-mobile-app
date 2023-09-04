@@ -17,15 +17,15 @@ public class OrderRequest {
     private String note;
     private Long siteId;
 
-    public void addLine(Long itemId,Integer quantity){
+    public void addLine(Long itemId,Double quantity){
         lines.add(new OrderLineRequest(itemId,quantity));
     }
 
     private class OrderLineRequest{
         private Long itemId;
-        private Integer quantity;
+        private Double quantity;
 
-        public OrderLineRequest(Long itemId, Integer quantity) {
+        public OrderLineRequest(Long itemId, Double quantity) {
             this.itemId = itemId;
             this.quantity = quantity;
         }

@@ -85,10 +85,10 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
 
     private void onQuantityUpdate(OrderLineDto line){
         if(!activity.orderActionPermitted) return;
-        new ItemQuantityDialog(activity, line.getItemDescription(), line.getUom(),  line.getQuantity().intValue(),"Update Quantity?",
+        new ItemQuantityDialog(activity, line.getItemDescription(), line.getUom(),  line.getQuantity(),"Update Quantity?",
             qty->{
             if(qty<= line.getQuantity()){
-                line.setQuantity(qty.doubleValue());
+                line.setQuantity(qty);
                 Objects.requireNonNull(activity.recyclerView.getAdapter())
                         .notifyItemChanged(lines.indexOf(line));
             }

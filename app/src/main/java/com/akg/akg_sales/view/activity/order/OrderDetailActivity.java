@@ -97,7 +97,7 @@ public class OrderDetailActivity extends AppCompatActivity {
             OrderRequest body = new OrderRequest();
             body.setOrderId(orderDto.getId()).setCustomerId(orderDto.getCustomerId());
             for (OrderLineDto l : orderDto.getOrderLines()) {
-                body.addLine(l.getItemId(),l.getQuantity().intValue());
+                body.addLine(l.getItemId(),l.getQuantity());
             }
             body.setNote(addNote());
             OrderService.approveOrder(body,this,res->{

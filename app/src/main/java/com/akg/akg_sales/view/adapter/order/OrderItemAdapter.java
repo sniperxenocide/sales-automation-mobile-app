@@ -88,7 +88,7 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.View
                 if ((event.getAction() == KeyEvent.ACTION_DOWN) && (keyCode == KeyEvent.KEYCODE_ENTER)) {
                     try {
                         if(editTextQuantity.getText().length()<=0 ||
-                                Integer.parseInt(String.valueOf(editTextQuantity.getText()))<=0){
+                                Double.parseDouble(String.valueOf(editTextQuantity.getText()))<=0){
                             CartItemDto cartItemDto = itemExistInCart(itemDto);
                             ArrayList<CartItemDto> cList = CommonUtil.orderCart
                                     .get(activity.customerList.get(activity.selectedCustomerIdx).getId());
@@ -103,7 +103,7 @@ public class OrderItemAdapter extends RecyclerView.Adapter<OrderItemAdapter.View
                             editTextQuantity.getText().clear();
                             return false;
                         }
-                        Integer qty = Integer.parseInt(String.valueOf(editTextQuantity.getText()));
+                        Double qty = Double.parseDouble(String.valueOf(editTextQuantity.getText()));
                         ArrayList<CartItemDto> cartItems = CommonUtil.orderCart
                                 .get(activity.customerList.get(activity.selectedCustomerIdx).getId());
                         if(cartItems==null) cartItems = new ArrayList<>();

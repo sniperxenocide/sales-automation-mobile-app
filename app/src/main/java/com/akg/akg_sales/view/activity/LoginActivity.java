@@ -1,14 +1,13 @@
 package com.akg.akg_sales.view.activity;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.util.Consumer;
-import androidx.databinding.DataBindingUtil;
-
 import android.app.ProgressDialog;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.util.Consumer;
+import androidx.databinding.DataBindingUtil;
 
 import com.akg.akg_sales.BuildConfig;
 import com.akg.akg_sales.R;
@@ -19,9 +18,6 @@ import com.akg.akg_sales.dto.AppVersion;
 import com.akg.akg_sales.util.CommonUtil;
 import com.akg.akg_sales.view.dialog.ConfirmationDialog;
 import com.akg.akg_sales.viewmodel.LoginViewModel;
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
-import com.google.firebase.messaging.FirebaseMessaging;
 
 import retrofit2.Call;
 import retrofit2.Callback;

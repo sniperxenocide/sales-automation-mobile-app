@@ -192,6 +192,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="text"
+                        android:maxLength="30"
                         android:drawableTint="@color/font_color_red"
                         android:drawableEnd="@android:drawable/star_off"
                         android:backgroundTint="#dbebd5"
@@ -247,6 +248,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="text"
+                        android:maxLength="100"
                         android:drawableTint="@color/font_color_red"
                         android:drawableEnd="@android:drawable/star_off"
                         android:backgroundTint="#dbebd5"
@@ -281,6 +283,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="text"
+                        android:maxLength="500"
                         android:text="@={vm.comment}"
                         android:textColor="@color/font_color_main"
                         android:textSize="@dimen/text_size_1" />

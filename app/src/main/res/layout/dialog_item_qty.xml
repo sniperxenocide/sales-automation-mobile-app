@@ -49,7 +49,7 @@
                 android:layout_height="wrap_content"
                 android:id="@+id/quantity"
                 android:text="@{vm.quantity.toString()}"
-                android:inputType="number"
+                android:inputType="numberDecimal"
                 android:textColor="@color/font_color_main"
                 android:textSize="@dimen/text_size_1"
                 android:padding="10dp"

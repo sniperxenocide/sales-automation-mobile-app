@@ -1,11 +1,20 @@
 package com.akg.akg_sales.view.activity;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
+import android.net.wifi.WifiInfo;
+import android.net.wifi.WifiManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.telephony.TelephonyManager;
+import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.databinding.DataBindingUtil;
 
 import com.akg.akg_sales.BuildConfig;
@@ -105,12 +114,15 @@ public class HomeActivity extends AppCompatActivity {
         try {
             homeBinding.appVersion.setText("v"+BuildConfig.VERSION_NAME);
         }catch (Exception e){e.printStackTrace();}
+
+        try {
+            System.out.println(Build.MANUFACTURER+" "+Build.MODEL);
+        }catch (Exception e){e.printStackTrace();}
+
     }
 
 
     public void onClickReportBtn(){
-//        Intent notificationIntent = new Intent(activity, NotificationActivity.class);
-//        activity.startActivity(notificationIntent);
         new GeneralDialog(this,defaultMsg);
     }
 
