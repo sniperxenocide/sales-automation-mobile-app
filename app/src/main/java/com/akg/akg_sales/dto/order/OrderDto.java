@@ -31,6 +31,7 @@ public class OrderDto {
     private String bookedDate;
     private Double bookedValue;
     private List<OrderLineDto> orderLines;
+    private List<OrderApprovalDto> approvals;
     private String note;
     private String siteAddress;
 

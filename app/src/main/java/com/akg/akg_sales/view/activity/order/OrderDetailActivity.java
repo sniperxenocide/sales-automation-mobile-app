@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.akg.akg_sales.R;
 import com.akg.akg_sales.databinding.ActivityOrderDetailBinding;
 import com.akg.akg_sales.dto.StatusFlow;
+import com.akg.akg_sales.dto.order.OrderApprovalDto;
 import com.akg.akg_sales.dto.order.OrderDto;
 import com.akg.akg_sales.dto.order.OrderLineDto;
 import com.akg.akg_sales.dto.order.OrderRequest;
@@ -171,6 +172,22 @@ public class OrderDetailActivity extends AppCompatActivity {
             binding.statusLayout.setOnClickListener(v->
                     new StatusFlowDialog(statusFlows,OrderDetailActivity.this));
         }catch (Exception e){e.printStackTrace();}
+    }
+
+    public Spanned getApprovalHistory(){
+        StringBuilder htmlBuilder = new StringBuilder();
+        try {
+            for(OrderApprovalDto a:orderDto.getApprovals()){
+                htmlBuilder.append("<b>").append(a.getSequenceNo()).append(". ")
+                        .append(a.getSalesDeskName())
+                        .append(" (").append(a.getApproverUsername())
+                        .append(")</b><br>").append("Approval Time: ")
+                        .append(a.getApprovalTime());
+                if(orderDto.getApprovals().indexOf(a) < orderDto.getApprovals().size()-1)
+                    htmlBuilder.append("<br><br>");
+            }
+        }catch (Exception e){e.printStackTrace();}
+        return Html.fromHtml(htmlBuilder.toString());
     }
 
     public Spanned getNotes(){

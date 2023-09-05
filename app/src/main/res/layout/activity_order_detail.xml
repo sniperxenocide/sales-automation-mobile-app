@@ -316,6 +316,22 @@
                         </LinearLayout>
 
 
+                        <com.google.android.material.textfield.TextInputLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:hint="Market Approval Hostory"
+                            android:layout_marginTop="10dp"
+                            >
+
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:enabled="false"
+                                android:focusable="false"
+                                android:text="@{activity.approvalHistory}"
+                                android:textColor="@color/font_color_main"
+                                />
+                        </com.google.android.material.textfield.TextInputLayout>
 
 
 
@@ -396,6 +412,7 @@
                                 android:textColor="@color/font_color_main"
                                 android:textSize="@dimen/text_size_1" />
                         </LinearLayout>
+
 
                         <com.google.android.material.textfield.TextInputLayout
                             android:layout_width="match_parent"

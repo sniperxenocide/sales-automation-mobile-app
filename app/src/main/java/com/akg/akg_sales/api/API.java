@@ -19,11 +19,11 @@ import retrofit2.converter.gson.GsonConverterFactory;
 public class API {
 //    public static String baseUrl = "http://10.10.144.31:5000";  // Dev
 //    public static String baseUrl = "http://10.0.2.2:5000";      // Dev
-//    public static String baseUrl = "http://10.10.1.108:5000";  //Test Server
+    public static String baseUrl = "http://10.10.1.108:5000";  //Test Server
 //    public static String baseUrl = "http://10.10.1.112:5000";  //Production Server
 
     //Test Server
-    public static String baseUrl = "http://salesapp.test.abulkhairgroup.com:1111";
+//    public static String baseUrl = "http://salesapp.test.abulkhairgroup.com:1111";
 
     //Production Server
 //    public static String baseUrl = "http://salesapp.live.abulkhairgroup.com:1000";
