@@ -77,6 +77,8 @@ public class LoginViewModel extends BaseObservable {
             CommonUtil.showToast(activity,"Username Cannot be Empty",false);
         else {
             try {
+                user.setDeviceModel(CommonUtil.deviceModel).setDeviceId(CommonUtil.deviceId)
+                        .setDevicePhone(CommonUtil.devicePhone);
                 ProgressDialog progressDialog=CommonUtil.showProgressDialog(activity);
                 API.getClient().create(LoginApi.class).authenticate(user)
                 .enqueue(new Callback<User>() {

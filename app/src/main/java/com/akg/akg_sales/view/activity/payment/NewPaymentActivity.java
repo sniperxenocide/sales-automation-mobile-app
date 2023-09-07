@@ -25,6 +25,7 @@ import com.akg.akg_sales.dto.payment.PaymentRequestDto;
 import com.akg.akg_sales.dto.payment.PaymentTypeDto;
 import com.akg.akg_sales.service.PaymentService;
 import com.akg.akg_sales.util.CommonUtil;
+import com.akg.akg_sales.view.activity.order.PendingOrderActivity;
 import com.akg.akg_sales.view.dialog.ConfirmationDialog;
 import com.akg.akg_sales.view.dialog.SearchableTextListDialog;
 import com.akg.akg_sales.viewmodel.PaymentViewModel;
@@ -131,15 +132,22 @@ public class NewPaymentActivity extends AppCompatActivity {
     }
 
     public void onClickSubmit(){
-        try {
-            PaymentRequestDto paymentRequestDto
-                    = new PaymentRequestDto(paymentViewModel,selectedCustomer.getId());
-            PaymentService.createPayment(this,paymentRequestDto, res-> finish());
-        }catch (Exception e){
-            e.printStackTrace();
-            CommonUtil.showToast(this,"Please Fill up Mandatory Fields ",false);
-        }
-
+        new ConfirmationDialog(this,"Payment Confirmation.",i->{
+            try {
+                PaymentRequestDto paymentRequestDto
+                        = new PaymentRequestDto(paymentViewModel,selectedCustomer.getId());
+                PaymentService.createPayment(this,paymentRequestDto, res-> {
+                    Intent intent = new Intent(this, PaymentListActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                            | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                    startActivity(intent);
+                    finish();
+                });
+            }catch (Exception e){
+                e.printStackTrace();
+                CommonUtil.showToast(this,"Please Fill up Mandatory Fields ",false);
+            }
+        });
     }
 
     @Override

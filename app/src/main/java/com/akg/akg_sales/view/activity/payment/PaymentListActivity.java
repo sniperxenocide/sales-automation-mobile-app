@@ -40,14 +40,14 @@ public class PaymentListActivity extends AppCompatActivity {
         fetchPaymentsFromServer();
     }
 
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        System.out.println("Inside onRestart***********************");
-        initFilter();
-        payments.clear();
-        fetchPaymentsFromServer();
-    }
+//    @Override
+//    protected void onRestart() {
+//        super.onRestart();
+//        System.out.println("Inside onRestart***********************");
+//        initFilter();
+//        payments.clear();
+//        fetchPaymentsFromServer();
+//    }
 
     private void loadPage(){
         binding = DataBindingUtil.setContentView(this,R.layout.activity_payment_list);
@@ -74,6 +74,7 @@ public class PaymentListActivity extends AppCompatActivity {
     private void loadPaymentsInRecycleView(){
         if(pageResponse!=null) payments.addAll(pageResponse.getData());
         if(payments.isEmpty()) CommonUtil.showToast(this,"No Payments Available",false);
+        binding.paymentCountLabel.setText("("+pageResponse.getRecordCount()+")");
         PaymentListAdapter adapter = new PaymentListAdapter(this,payments);
         recyclerView.setAdapter(adapter);
         if(payments.size()>pageResponse.getPageSize()){

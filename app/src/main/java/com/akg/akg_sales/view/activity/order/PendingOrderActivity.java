@@ -46,14 +46,14 @@ public class PendingOrderActivity extends AppCompatActivity {
         fetchOrderFromServer();
     }
 
-    @Override
-    protected void onRestart() {
-        super.onRestart();
-        System.out.println("Inside onRestart***********************");
-        initFilter();
-        orders.clear();
-        fetchOrderFromServer();
-    }
+//    @Override
+//    protected void onRestart() {
+//        super.onRestart();
+//        System.out.println("Inside onRestart***********************");
+//        initFilter();
+//        orders.clear();
+//        fetchOrderFromServer();
+//    }
 
     private void loadPage(){
         binding= DataBindingUtil.setContentView(this,R.layout.activity_pending_order);
@@ -78,6 +78,7 @@ public class PendingOrderActivity extends AppCompatActivity {
 
     private void loadOrdersInRecycleView(){
         orders.addAll(pageResponse.getData());
+        binding.orderFetchCount.setText("("+pageResponse.getRecordCount()+")");
         if(orders.isEmpty()) CommonUtil.showToast(this,"No Orders Available",false);
         PendingOrderAdapter adapter = new PendingOrderAdapter(this,orders);
         recyclerView.setAdapter(adapter);

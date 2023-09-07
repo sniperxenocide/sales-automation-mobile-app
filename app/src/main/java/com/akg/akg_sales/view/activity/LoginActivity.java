@@ -1,11 +1,21 @@
 package com.akg.akg_sales.view.activity;
 
+import static android.Manifest.permission.READ_PHONE_NUMBERS;
+import static android.Manifest.permission.READ_PHONE_STATE;
+import static android.Manifest.permission.READ_SMS;
+
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
+import android.telephony.TelephonyManager;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.core.util.Consumer;
 import androidx.databinding.DataBindingUtil;
 
@@ -30,12 +40,16 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        getDeviceInfo();
+        checkForUpdate();
+        loadPage();
+    }
+
+    private void loadPage(){
         loginViewModel = new LoginViewModel(this);
         loginBinding = DataBindingUtil.setContentView(this,R.layout.activity_login);
         loginBinding.setVm(loginViewModel);
         loginBinding.executePendingBindings();
-
-        checkForUpdate();
     }
 
     private void checkForUpdate(){
@@ -76,4 +90,49 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
     }
+
+    private void getDeviceInfo(){
+        try {
+            CommonUtil.deviceModel = Build.MANUFACTURER+" "+Build.MODEL;
+        }catch (Exception e){e.printStackTrace();}
+        try {
+            CommonUtil.deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        }catch (Exception e){e.printStackTrace();}
+
+        getPhoneNumber();
+    }
+
+    public void getPhoneNumber() {
+        if (ActivityCompat.checkSelfPermission(this, READ_SMS) == PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, READ_PHONE_NUMBERS) == PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED)
+        {
+            TelephonyManager telephonyManager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
+            CommonUtil.devicePhone = telephonyManager.getLine1Number();
+        }
+        else {
+            String[] permissions = new String[]{READ_SMS, READ_PHONE_STATE};
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                permissions = new String[]{READ_PHONE_NUMBERS,READ_SMS, READ_PHONE_STATE};
+            }
+            requestPermissions(permissions, 100);
+        }
+
+    }
+
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (requestCode==100) {
+            if (ActivityCompat.checkSelfPermission(this, READ_SMS) !=
+                    PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
+                    READ_PHONE_NUMBERS) != PackageManager.PERMISSION_GRANTED &&
+                    ActivityCompat.checkSelfPermission(this, READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
+                return;
+            }
+            TelephonyManager telephonyManager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
+            CommonUtil.devicePhone = telephonyManager.getLine1Number();
+        }
+        else System.out.println("Permission Failed");
+    }
+
 }

@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.concurrent.TimeUnit;
 
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
@@ -18,7 +19,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class API {
 //    public static String baseUrl = "http://10.10.144.31:5000";  // Dev
-//    public static String baseUrl = "http://10.0.2.2:5000";      // Dev
+    public static String baseUrl = "http://10.0.2.2:5000";      // Dev
 //    public static String baseUrl = "http://10.10.1.108:5000";  //Test Server
 //    public static String baseUrl = "http://10.10.1.112:5000";  //Production Server
 
@@ -26,7 +27,7 @@ public class API {
 //    public static String baseUrl = "http://salesapp.test.abulkhairgroup.com:1111";
 
     //Production Server
-    public static String baseUrl = "http://salesapp.live.abulkhairgroup.com:1000";
+//    public static String baseUrl = "http://salesapp.live.abulkhairgroup.com:1000";
 
 
     //DMO Chittagong 01926670808
@@ -37,7 +38,11 @@ public class API {
     public static Retrofit getClient() {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-        OkHttpClient client = new OkHttpClient.Builder().addInterceptor(interceptor)
+        OkHttpClient client = new OkHttpClient.Builder()
+                .connectTimeout(5, TimeUnit.SECONDS)
+                .writeTimeout(15, TimeUnit.SECONDS)
+                .readTimeout(30, TimeUnit.SECONDS)
+                .addInterceptor(interceptor)
                 .addInterceptor(chain -> {
                     String token = "";
                     if(CommonUtil.loggedInUser!=null && !CommonUtil.loggedInUser.getToken().isEmpty())

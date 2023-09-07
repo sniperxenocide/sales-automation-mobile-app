@@ -1,5 +1,9 @@
 package com.akg.akg_sales.view.activity;
 
+import static android.Manifest.permission.READ_PHONE_NUMBERS;
+import static android.Manifest.permission.READ_PHONE_STATE;
+import static android.Manifest.permission.READ_SMS;
+
 import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
@@ -9,6 +13,7 @@ import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.telephony.TelephonyManager;
 import android.widget.Toast;
 
@@ -114,11 +119,6 @@ public class HomeActivity extends AppCompatActivity {
         try {
             homeBinding.appVersion.setText("v"+BuildConfig.VERSION_NAME);
         }catch (Exception e){e.printStackTrace();}
-
-        try {
-            System.out.println(Build.MANUFACTURER+" "+Build.MODEL);
-        }catch (Exception e){e.printStackTrace();}
-
     }
 
 

@@ -26,6 +26,10 @@ public class CommonUtil {
     public static ArrayList<OrderStatusDto> statusList;
     public static HashMap<Long,ArrayList<CartItemDto>> orderCart = new HashMap<>();
 
+    public static String deviceModel;
+    public static String deviceId;
+    public static String devicePhone;
+
     public static void printCart(){
         for (Long k: orderCart.keySet()){
             System.out.println(k+" "+orderCart.get(k).get(0).getCustomerDto().getCustomerName());

@@ -85,7 +85,7 @@ public class OrderFilterDialog {
             assert sd != null; assert ed != null;
             binding.dateFrom.setText(sdf.format(sd));
             binding.dateTo.setText(sdf.format(ed));
-
+            binding.customerNumber.setText(tempFilter.get("customerNumber"));
             updateStatusUI();
         }catch (Exception e){e.printStackTrace();}
 
@@ -129,6 +129,9 @@ public class OrderFilterDialog {
         dialog.dismiss();
         activity.orders.clear();
         activity.filter.putAll(tempFilter);
+        if(binding.customerNumber.getText()!=null && binding.customerNumber.getText().length()>0)
+            activity.filter.put("customerNumber",binding.customerNumber.getText().toString());
+        else activity.filter.remove("customerNumber");
         activity.fetchOrderFromServer();
     }
 

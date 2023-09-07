@@ -15,4 +15,8 @@ public class User {
     private String fcmToken;
     private String lastLoginTime;
     private Long loginCount;
+
+    private String deviceModel;
+    private String deviceId;
+    private String devicePhone;
 }
