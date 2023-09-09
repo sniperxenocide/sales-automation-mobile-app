@@ -1,5 +1,7 @@
 package com.akg.akg_sales.view.activity;
 
+import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
+import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.Manifest.permission.READ_PHONE_NUMBERS;
 import static android.Manifest.permission.READ_PHONE_STATE;
 import static android.Manifest.permission.READ_SMS;
@@ -28,6 +30,8 @@ import com.akg.akg_sales.dto.AppVersion;
 import com.akg.akg_sales.util.CommonUtil;
 import com.akg.akg_sales.view.dialog.ConfirmationDialog;
 import com.akg.akg_sales.viewmodel.LoginViewModel;
+import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationServices;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -96,9 +100,13 @@ public class LoginActivity extends AppCompatActivity {
             CommonUtil.deviceModel = Build.MANUFACTURER+" "+Build.MODEL;
         }catch (Exception e){e.printStackTrace();}
         try {
+            CommonUtil.appVersion = BuildConfig.VERSION_CODE+":"+BuildConfig.VERSION_NAME;
+        }catch (Exception e){e.printStackTrace();}
+        try {
             CommonUtil.deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
         }catch (Exception e){e.printStackTrace();}
 
+        getGpsLocation();
         getPhoneNumber();
     }
 
@@ -107,8 +115,7 @@ public class LoginActivity extends AppCompatActivity {
                 && ActivityCompat.checkSelfPermission(this, READ_PHONE_NUMBERS) == PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this, READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED)
         {
-            TelephonyManager telephonyManager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
-            CommonUtil.devicePhone = telephonyManager.getLine1Number();
+            setPhone();
         }
         else {
             String[] permissions = new String[]{READ_SMS, READ_PHONE_STATE};
@@ -120,6 +127,18 @@ public class LoginActivity extends AppCompatActivity {
 
     }
 
+    private void getGpsLocation(){
+        if (ActivityCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+        {
+            setLocation();
+        }
+        else {
+            String[] permissions = new String[]{ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION};
+            requestPermissions(permissions, 101);
+        }
+    }
+
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode==100) {
@@ -129,10 +148,39 @@ public class LoginActivity extends AppCompatActivity {
                     ActivityCompat.checkSelfPermission(this, READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
                 return;
             }
-            TelephonyManager telephonyManager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
-            CommonUtil.devicePhone = telephonyManager.getLine1Number();
+            setPhone();
+        }
+        else if(requestCode==101){
+            if (ActivityCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                    && ActivityCompat.checkSelfPermission(this, ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+            {
+                return;
+            }
+            setLocation();
         }
         else System.out.println("Permission Failed");
+    }
+
+    private void setLocation(){
+        FusedLocationProviderClient client = LocationServices.getFusedLocationProviderClient(this);
+        client.getLastLocation().addOnSuccessListener(location ->{
+            try {
+                if(location!=null){
+                    CommonUtil.gpsLocation = location;
+                    System.out.println(CommonUtil.gpsLocation.toString());
+                }
+                else System.out.println("################### Location Null");
+            }catch (Exception e){e.printStackTrace();}
+
+        });
+    }
+
+    private void setPhone(){
+        try {
+            TelephonyManager telephonyManager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
+            CommonUtil.devicePhone = telephonyManager.getLine1Number();
+            System.out.println("Device Phone "+CommonUtil.devicePhone);
+        }catch (Exception e){e.printStackTrace();}
     }
 
 }

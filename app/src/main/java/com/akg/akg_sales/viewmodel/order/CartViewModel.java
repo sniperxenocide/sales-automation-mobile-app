@@ -96,6 +96,9 @@ public class CartViewModel extends BaseObservable {
             postBody.addLine(i.getItemDto().getId(),i.getQuantity());
         }
         postBody.setNote(getNote());
+        try {
+            postBody.setDeviceInfo(CommonUtil.getDeviceInfoJson().toString());
+        }catch (Exception e){e.printStackTrace();}
         return postBody;
     }
 

@@ -78,7 +78,10 @@ public class LoginViewModel extends BaseObservable {
         else {
             try {
                 user.setDeviceModel(CommonUtil.deviceModel).setDeviceId(CommonUtil.deviceId)
-                        .setDevicePhone(CommonUtil.devicePhone);
+                        .setDevicePhone(CommonUtil.devicePhone).setAppVersion(CommonUtil.appVersion);
+                if(CommonUtil.gpsLocation !=null){
+                    user.setGpsLocation(CommonUtil.gpsLocation.getLatitude()+","+CommonUtil.gpsLocation.getLongitude());
+                }
                 ProgressDialog progressDialog=CommonUtil.showProgressDialog(activity);
                 API.getClient().create(LoginApi.class).authenticate(user)
                 .enqueue(new Callback<User>() {

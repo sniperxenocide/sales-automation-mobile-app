@@ -1,5 +1,6 @@
 package com.akg.akg_sales.dto.payment;
 
+import com.akg.akg_sales.util.CommonUtil;
 import com.akg.akg_sales.viewmodel.PaymentViewModel;
 
 import java.io.File;
@@ -24,6 +25,7 @@ public class PaymentRequestDto {
     private String customerBankBranch;
     private String customerAccountNumber;
     private String comment;
+    private String deviceInfo;
 
     private File attachment;
 
@@ -46,6 +48,10 @@ public class PaymentRequestDto {
         this.comment = vm.getComment().get();
 
         attachment = new File(Objects.requireNonNull(vm.getAttachment().get()));
+
+        try {
+            this.deviceInfo = CommonUtil.getDeviceInfoJson().toString();
+        }catch (Exception e){e.printStackTrace();}
         System.out.println(this);
     }
 

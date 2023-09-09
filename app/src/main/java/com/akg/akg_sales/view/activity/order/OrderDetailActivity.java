@@ -28,6 +28,7 @@ import com.akg.akg_sales.view.activity.delivery.DeliveryListActivity;
 import com.akg.akg_sales.view.activity.payment.PaymentListActivity;
 import com.akg.akg_sales.view.adapter.order.OrderLineAdapter;
 import com.akg.akg_sales.view.dialog.ConfirmationDialog;
+import com.akg.akg_sales.view.dialog.OrderItemDialog;
 import com.akg.akg_sales.view.dialog.StatusFlowDialog;
 
 import org.json.JSONObject;
@@ -43,6 +44,7 @@ public class OrderDetailActivity extends AppCompatActivity {
     public ActivityOrderDetailBinding binding;
     public OrderDto orderDto;
     public PaymentDto paymentDto;
+    public OrderItemDialog orderItemDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,6 +62,7 @@ public class OrderDetailActivity extends AppCompatActivity {
         setOrderActionUi();
         loadOrderLines();
         loadStatusFlowDialog();
+        orderItemDialog = new OrderItemDialog(this);
     }
 
     private void fetchOrderDetailFromServer(String orderId){

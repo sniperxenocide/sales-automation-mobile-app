@@ -19,4 +19,6 @@ public class User {
     private String deviceModel;
     private String deviceId;
     private String devicePhone;
+    private String appVersion;
+    private String gpsLocation;
 }

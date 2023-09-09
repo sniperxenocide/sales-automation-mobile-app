@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.location.Location;
 import android.text.Html;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
@@ -14,6 +15,8 @@ import com.akg.akg_sales.dto.order.CartItemDto;
 import com.akg.akg_sales.dto.CustomerDto;
 import com.akg.akg_sales.dto.User;
 import com.akg.akg_sales.dto.order.OrderStatusDto;
+
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,6 +32,8 @@ public class CommonUtil {
     public static String deviceModel;
     public static String deviceId;
     public static String devicePhone;
+    public static Location gpsLocation;
+    public static String appVersion;
 
     public static void printCart(){
         for (Long k: orderCart.keySet()){
@@ -37,6 +42,19 @@ public class CommonUtil {
                 System.out.println("***["+c.getItemDto().getItemDescription()+" = "+c.getQuantity()+"],");
             }
         }
+    }
+
+    public static JSONObject getDeviceInfoJson(){
+        JSONObject deviceInfo = new JSONObject();
+        try {
+            deviceInfo.put("deviceModel",CommonUtil.deviceModel);
+            deviceInfo.put("deviceId",CommonUtil.deviceId);
+            deviceInfo.put("devicePhone",CommonUtil.devicePhone);
+            if(gpsLocation !=null){
+                deviceInfo.put("gpsLocation", gpsLocation.getLatitude()+","+gpsLocation.getLongitude());
+            }
+        }catch (Exception e){e.printStackTrace();}
+        return deviceInfo;
     }
 
     public static void showToast(Context context, String msg, boolean isSuccess){

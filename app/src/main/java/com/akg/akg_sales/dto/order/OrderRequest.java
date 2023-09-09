@@ -16,6 +16,7 @@ public class OrderRequest {
     private List<OrderLineRequest> lines = new ArrayList<>();
     private String note;
     private Long siteId;
+    private String deviceInfo;
 
     public void addLine(Long itemId,Double quantity){
         lines.add(new OrderLineRequest(itemId,quantity));
