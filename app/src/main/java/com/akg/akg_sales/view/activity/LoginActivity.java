@@ -10,6 +10,9 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.location.Address;
+import android.location.Geocoder;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -32,6 +35,9 @@ import com.akg.akg_sales.view.dialog.ConfirmationDialog;
 import com.akg.akg_sales.viewmodel.LoginViewModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+
+import java.util.List;
+import java.util.Locale;
 
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -167,7 +173,9 @@ public class LoginActivity extends AppCompatActivity {
             try {
                 if(location!=null){
                     CommonUtil.gpsLocation = location;
+                    CommonUtil.gpsAddress = getGpsAddress(location);
                     System.out.println(CommonUtil.gpsLocation.toString());
+                    System.out.println(CommonUtil.gpsAddress);
                 }
                 else System.out.println("################### Location Null");
             }catch (Exception e){e.printStackTrace();}
@@ -181,6 +189,29 @@ public class LoginActivity extends AppCompatActivity {
             CommonUtil.devicePhone = telephonyManager.getLine1Number();
             System.out.println("Device Phone "+CommonUtil.devicePhone);
         }catch (Exception e){e.printStackTrace();}
+    }
+
+    private String getGpsAddress(Location location){
+        try {
+            Geocoder geocoder = new Geocoder(this, Locale.getDefault());
+            List<Address> addressList = geocoder.getFromLocation(
+                    location.getLatitude(), location.getLongitude(), 1);
+            if (addressList != null && addressList.size() > 0) {
+                Address address = addressList.get(0);
+                StringBuilder sb = new StringBuilder();
+                for (int i = 0; i < address.getMaxAddressLineIndex(); i++) {
+                    sb.append(address.getAddressLine(i)).append(",");
+                }
+                sb.append(address.getFeatureName()).append(",")
+                        .append(address.getSubLocality()).append(",")
+                        .append(address.getLocality()).append(",")
+                        .append(address.getCountryName());
+                String addr = sb.toString();
+                if(addr.length()>200) addr = addr.substring(0,200);
+                return addr;
+            }
+        }catch (Exception e){e.printStackTrace();}
+        return null;
     }
 
 }

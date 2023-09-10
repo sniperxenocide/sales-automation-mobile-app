@@ -33,6 +33,7 @@ public class CommonUtil {
     public static String deviceId;
     public static String devicePhone;
     public static Location gpsLocation;
+    public static String gpsAddress;
     public static String appVersion;
 
     public static void printCart(){
@@ -52,6 +53,7 @@ public class CommonUtil {
             deviceInfo.put("devicePhone",CommonUtil.devicePhone);
             if(gpsLocation !=null){
                 deviceInfo.put("gpsLocation", gpsLocation.getLatitude()+","+gpsLocation.getLongitude());
+                deviceInfo.put("gpsAddress",gpsAddress);
             }
         }catch (Exception e){e.printStackTrace();}
         return deviceInfo;

@@ -17,6 +17,8 @@ import com.akg.akg_sales.util.CommonUtil;
 import com.akg.akg_sales.view.activity.HomeActivity;
 import com.akg.akg_sales.view.activity.LoginActivity;
 
+import org.json.JSONObject;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -80,7 +82,13 @@ public class LoginViewModel extends BaseObservable {
                 user.setDeviceModel(CommonUtil.deviceModel).setDeviceId(CommonUtil.deviceId)
                         .setDevicePhone(CommonUtil.devicePhone).setAppVersion(CommonUtil.appVersion);
                 if(CommonUtil.gpsLocation !=null){
-                    user.setGpsLocation(CommonUtil.gpsLocation.getLatitude()+","+CommonUtil.gpsLocation.getLongitude());
+                    try {
+                        JSONObject gps = new JSONObject();
+                        gps.put("gpsLocation",CommonUtil.gpsLocation.getLatitude()+","+CommonUtil.gpsLocation.getLongitude());
+                        gps.put("gpsAddress",CommonUtil.gpsAddress);
+                        user.setGpsLocation(gps.toString());
+                    }catch (Exception e){}
+                    //user.setGpsLocation(CommonUtil.gpsLocation.getLatitude()+","+CommonUtil.gpsLocation.getLongitude());
                 }
                 ProgressDialog progressDialog=CommonUtil.showProgressDialog(activity);
                 API.getClient().create(LoginApi.class).authenticate(user)

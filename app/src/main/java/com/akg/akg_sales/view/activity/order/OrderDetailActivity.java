@@ -106,6 +106,11 @@ public class OrderDetailActivity extends AppCompatActivity {
             body.setNote(addNote());
             OrderService.approveOrder(body,this,res->{
                 CommonUtil.showToast(getApplicationContext(),"Order Approved",true);
+                // Returning to Order List Page
+                Intent intent = new Intent(this, PendingOrderActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
+                        | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                startActivity(intent);
                 finish();
             });
         });
@@ -130,6 +135,10 @@ public class OrderDetailActivity extends AppCompatActivity {
             OrderService.cancelOrder(orderDto.getId().toString(),OrderDetailActivity.this,
                     res->{
                         CommonUtil.showToast(OrderDetailActivity.this,"Order Canceled",true);
+                        // Returning to Order List Page
+                        Intent intent = new Intent(this, PendingOrderActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                        startActivity(intent);
                         finish();
                     });
         });
