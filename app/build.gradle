@@ -10,9 +10,9 @@ android {
         applicationId "com.akg.akg_sales"
         minSdk 23
         targetSdk 32
-        versionCode 16
-        versionName "2.5.2-test"    // Test Release Version
-//        versionName "1.0.5"    // Production Release Version
+        versionCode 17
+//        versionName "2.5.2-test"    // Test Release Version
+        versionName "1.0.6"    // Production Release Version
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
