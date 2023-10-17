@@ -37,6 +37,7 @@ public class PendingOrderActivity extends AppCompatActivity {
     PageResponse<OrderDto> pageResponse;
     public ArrayList<OrderDto> orders = new ArrayList<>();
     RecyclerView recyclerView ;
+    public String userCategory = CommonUtil.loggedInUser.getCategory();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,7 +64,7 @@ public class PendingOrderActivity extends AppCompatActivity {
     }
 
     private void newOrderControl(){
-        if(CommonUtil.loggedInUser.getCategory().equals("Customer"))
+        if(this.userCategory.equals("Customer"))
             binding.newOrderBtn.setVisibility(View.VISIBLE);
         else binding.newOrderBtn.setVisibility(View.GONE);
     }
@@ -95,6 +96,13 @@ public class PendingOrderActivity extends AppCompatActivity {
         calendar.add(Calendar.DATE,-30);
         filter.put("startDate",s.format(calendar.getTime()));
         filter.put("statusId","%");
+        filter.put("sortDir","desc");
+        filter.put("customerNumber","%");
+
+        if(this.userCategory.equals("Customer"))
+            filter.put("awaitingMyApprovalOnly","false");
+        else filter.put("awaitingMyApprovalOnly","true");
+
     }
 
     public void fetchOrderFromServer(){

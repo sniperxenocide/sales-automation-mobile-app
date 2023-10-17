@@ -3,12 +3,14 @@ package com.akg.akg_sales.view.dialog;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.view.LayoutInflater;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 
 import com.akg.akg_sales.api.API;
 import com.akg.akg_sales.api.OrderApi;
 import com.akg.akg_sales.databinding.DialogOrderFilterBinding;
+import com.akg.akg_sales.dto.CustomerDto;
 import com.akg.akg_sales.dto.order.OrderStatusDto;
 import com.akg.akg_sales.util.CommonUtil;
 import com.akg.akg_sales.view.activity.order.PendingOrderActivity;
@@ -73,10 +75,102 @@ public class OrderFilterDialog {
         }
     }
 
+    private void setSortDropdownUI(){
+        AutoCompleteTextView tView = binding.sortDirDropdown;
+        String[] sortCode = {"desc","asc"};
+        String[] sortText = {"Newest Orders First","Oldest Orders First"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(activity, android.R.layout.simple_spinner_item, sortText);
+        tView.setAdapter(adapter);
+        tView.setOnItemClickListener((adapterView, view, i, l) -> {
+            tempFilter.put("sortDir",sortCode[i]) ;
+            tView.setText(sortText[i],false);
+        });
+        for(int i=0;i< sortCode.length;i++){
+            if(Objects.equals(sortCode[i], tempFilter.get("sortDir")))
+                tView.setText(sortText[i],false);
+        }
+    }
+
+    private void setCustomerUI(){
+        List<CustomerDto> customerList = CommonUtil.customers;
+        if(customerList==null || customerList.isEmpty()) {
+            binding.customerNumber.setText(tempFilter.get("customerNumber"));
+            binding.customerDropdownContainer.setVisibility(View.GONE);
+            binding.customerNumberContainer.setVisibility(View.VISIBLE);
+            return;
+        }
+
+        binding.customerDropdownContainer.setVisibility(View.VISIBLE);
+        binding.customerNumberContainer.setVisibility(View.GONE);
+        int arrLen = customerList.size()+1;
+        AutoCompleteTextView tView=binding.customerDropdown;
+        String[] customerNumbers = new String[arrLen];
+        String[] customerNames = new String[arrLen];
+        customerNumbers[0]="%";customerNames[0]="All";
+        for (int i=0;i< customerList.size();i++) {
+            CustomerDto c = customerList.get(i);
+            customerNumbers[i+1]=c.getOracleCustomerCode();
+            customerNames[i+1]=c.getCustomerName()+" "+c.getOracleCustomerCode();
+        }
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(activity, android.R.layout.simple_spinner_item, customerNames);
+        tView.setAdapter(adapter);
+        tView.setOnItemClickListener((adapterView, view, i, l) -> {
+            tempFilter.put("customerNumber",customerNumbers[i]) ;
+        });
+        for(int i=0;i<arrLen;i++){
+            if(Objects.equals(customerNumbers[i], tempFilter.get("customerNumber")))
+                tView.setText(customerNames[i],false);
+        }
+    }
+
+    private void setApprovalToggleBtn(){
+        try {
+            if(activity.userCategory.equals("Customer"))
+                binding.approvalSwitchContainer.setVisibility(View.GONE);
+            else {
+                binding.approvalSwitch.setChecked(Boolean.parseBoolean(tempFilter.get("awaitingMyApprovalOnly")));
+                binding.approvalSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                    if (isChecked) tempFilter.put("awaitingMyApprovalOnly","true");
+                    else tempFilter.put("awaitingMyApprovalOnly","false");
+                    handleAdditionalFilter();
+                });
+            }
+        }catch (Exception ignored){}
+    }
+
+    private void handleAdditionalFilter(){
+        if(tempFilter.get("awaitingMyApprovalOnly").equals("true")){
+            binding.additionalFilters.setVisibility(View.GONE);
+            binding.approvalSwitchMsg.setVisibility(View.VISIBLE);
+
+            binding.orderNumber.setText("");
+
+            tempFilter.put("statusId","%");
+            binding.statusDropdown.setText("All",false);
+
+            if(CommonUtil.customers==null || CommonUtil.customers.isEmpty()) {
+                tempFilter.put("customerNumber","");
+                binding.customerNumber.setText("");
+            }
+            else {
+                tempFilter.put("customerNumber","%");
+                binding.customerDropdown.setText("All",false);
+            }
+        }
+        else {
+            binding.additionalFilters.setVisibility(View.VISIBLE);
+            binding.approvalSwitchMsg.setVisibility(View.GONE);
+        }
+
+    }
+
     private void initFields(){
         try {
             tempFilter.putAll(activity.filter);
             tempFilter.put("page","1");
+
+            setSortDropdownUI();
+            setApprovalToggleBtn();
 
             sdf.applyPattern("yyyy-MM-dd");
             Date sd = sdf.parse(Objects.requireNonNull(tempFilter.get("startDate")));
@@ -85,8 +179,13 @@ public class OrderFilterDialog {
             assert sd != null; assert ed != null;
             binding.dateFrom.setText(sdf.format(sd));
             binding.dateTo.setText(sdf.format(ed));
-            binding.customerNumber.setText(tempFilter.get("customerNumber"));
+
+            setCustomerUI();
+            binding.orderNumber.setText(tempFilter.get("orderNumber"));
             updateStatusUI();
+
+            handleAdditionalFilter();
+
         }catch (Exception e){e.printStackTrace();}
 
     }
@@ -129,9 +228,17 @@ public class OrderFilterDialog {
         dialog.dismiss();
         activity.orders.clear();
         activity.filter.putAll(tempFilter);
-        if(binding.customerNumber.getText()!=null && binding.customerNumber.getText().length()>0)
-            activity.filter.put("customerNumber",binding.customerNumber.getText().toString());
-        else activity.filter.remove("customerNumber");
+
+        if(binding.orderNumber.getText()!=null && binding.orderNumber.getText().length()>0)
+            activity.filter.put("orderNumber",binding.orderNumber.getText().toString());
+        else activity.filter.remove("orderNumber");
+
+        if(CommonUtil.customers==null || CommonUtil.customers.isEmpty()) {
+            if(binding.customerNumber.getText()!=null && binding.customerNumber.getText().length()>0)
+                activity.filter.put("customerNumber",binding.customerNumber.getText().toString());
+            else activity.filter.remove("customerNumber");
+        }
+
         activity.fetchOrderFromServer();
     }
 

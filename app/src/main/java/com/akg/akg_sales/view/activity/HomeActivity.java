@@ -40,6 +40,8 @@ import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -106,6 +108,11 @@ public class HomeActivity extends AppCompatActivity {
     private void fetchCustomerListForUser(){
         CustomerService.fetchCustomerListForUser(this,customers->{
             CommonUtil.customers = customers;
+            if(CommonUtil.customers!=null && !CommonUtil.customers.isEmpty()){
+                Collections.sort(CommonUtil.customers,
+                        (object1, object2) -> object1.getCustomerName()
+                                .compareTo(object2.getCustomerName()));
+            }
             loadCart();
         });
     }
@@ -123,7 +130,8 @@ public class HomeActivity extends AppCompatActivity {
 
 
     public void onClickReportBtn(){
-        new GeneralDialog(this,defaultMsg);
+//        Intent reportIntent = new Intent(this, ReportActivity.class);
+//        this.startActivity(reportIntent);
     }
 
     public void onClickOrderBtn(){
