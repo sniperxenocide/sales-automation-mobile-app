@@ -1,9 +1,15 @@
 package com.akg.akg_sales.dto.order;
 
+import com.akg.akg_sales.util.CommonUtil;
+
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -43,6 +49,10 @@ public class OrderDto {
         return creationTime;
     }
 
+    public String getValue() {
+        return CommonUtil.decimalToAccounting(this.value);
+    }
+
     public String getBookedDate(){
         if(bookedDate==null || bookedDate.isEmpty()) return "--";
         try {
@@ -54,7 +64,7 @@ public class OrderDto {
 
     public String getBookedValue(){
         if(this.bookedValue==null) return "--";
-        return this.bookedValue.toString();
+        return CommonUtil.decimalToAccounting(this.bookedValue);
     }
 
     public String getOracleOrderNumber(){

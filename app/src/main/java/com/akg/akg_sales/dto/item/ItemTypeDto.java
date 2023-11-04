@@ -14,5 +14,4 @@ import lombok.experimental.Accessors;
 public class ItemTypeDto {
     private Long id;
     private String type;
-    private List<ItemSubTypeDto> subTypes;
 }

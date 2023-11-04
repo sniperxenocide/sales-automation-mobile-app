@@ -18,9 +18,12 @@ import com.akg.akg_sales.dto.order.OrderStatusDto;
 
 import org.json.JSONObject;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 public class CommonUtil {
 
@@ -87,5 +90,11 @@ public class CommonUtil {
         mProgressDialog.setCanceledOnTouchOutside(false);
         mProgressDialog.show();
         return mProgressDialog;
+    }
+
+    public static String decimalToAccounting(Double val){
+        DecimalFormat formatter = (DecimalFormat) NumberFormat.getInstance(Locale.US);
+        formatter.applyPattern("##,##,##,###.##");
+        return formatter.format(val);
     }
 }

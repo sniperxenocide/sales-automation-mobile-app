@@ -15,23 +15,34 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.akg.akg_sales.R;
 import com.akg.akg_sales.databinding.ActivityOrderBinding;
 import com.akg.akg_sales.dto.CustomerDto;
+import com.akg.akg_sales.dto.item.ItemBrandDto;
+import com.akg.akg_sales.dto.item.ItemColorDto;
 import com.akg.akg_sales.dto.item.ItemDto;
+import com.akg.akg_sales.dto.item.ItemMasterDto;
 import com.akg.akg_sales.dto.item.ItemTypeDto;
 import com.akg.akg_sales.dto.order.CartItemDto;
 import com.akg.akg_sales.service.OrderService;
 import com.akg.akg_sales.util.CommonUtil;
 import com.akg.akg_sales.view.adapter.order.OrderItemAdapter;
 import com.akg.akg_sales.view.dialog.ItemFilterDialog;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Hashtable;
 import java.util.List;
+import java.util.Map;
 
 public class OrderActivity extends AppCompatActivity {
     public ActivityOrderBinding orderBinding;
     ArrayList<ItemDto> itemList = new ArrayList<>();
     public int selectedCustomerIdx = -1;
     public List<CustomerDto> customerList = CommonUtil.customers;
-    public List<ItemTypeDto> itemTypes;
+    public ItemMasterDto itemMaster = new ItemMasterDto();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +64,7 @@ public class OrderActivity extends AppCompatActivity {
         orderBinding.executePendingBindings();
         setCustomer();
         enableItemSearch();
-        fetchItemTypeSubType();
+        fetchItemMaster();
     }
 
     private void updateItemList(ArrayList<ItemDto> list){
@@ -109,14 +120,15 @@ public class OrderActivity extends AppCompatActivity {
         orderBinding.applyFilterMsgText.setVisibility(View.GONE);
     }
 
-    private void fetchItemTypeSubType(){
-        OrderService.fetchItemTypeSubTypeFromServer(this,
-                customerList.get(selectedCustomerIdx).getId(), list-> itemTypes = list);
+    private void fetchItemMaster(){
+        OrderService.fetchItemMasterFromServer(this,
+                customerList.get(selectedCustomerIdx).getId(),
+                res-> itemMaster = res);
     }
 
-    public void fetchItemFromServer(Long typeId){
-        OrderService.fetchItemFromServer(customerList.get(selectedCustomerIdx).getId(),
-                this,typeId,list->{
+    public void fetchItemFromServer(Map<String,String> filter){
+        filter.put("customerId",customerList.get(selectedCustomerIdx).getId().toString());
+        OrderService.fetchItemFromServer(this,filter,list->{
             itemList = (ArrayList<ItemDto>) list;
             updateItemList(itemList);
             if(itemList.isEmpty()) disableSearchField();

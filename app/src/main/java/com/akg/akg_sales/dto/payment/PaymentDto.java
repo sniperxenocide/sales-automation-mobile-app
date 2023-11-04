@@ -1,5 +1,7 @@
 package com.akg.akg_sales.dto.payment;
 
+import com.akg.akg_sales.util.CommonUtil;
+
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.util.Date;
@@ -34,6 +36,10 @@ public class PaymentDto {
         try {
             return this.paymentDate.split("T")[0];
         }catch (Exception e){return this.paymentDate;}
+    }
+
+    public String getPaymentAmount(){
+        return CommonUtil.decimalToAccounting(this.paymentAmount);
     }
 
     public String getCreationTime(){

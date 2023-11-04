@@ -9,15 +9,19 @@ import com.akg.akg_sales.api.API;
 import com.akg.akg_sales.api.ItemApi;
 import com.akg.akg_sales.api.OrderApi;
 import com.akg.akg_sales.dto.item.ItemDto;
+import com.akg.akg_sales.dto.item.ItemMasterDto;
 import com.akg.akg_sales.dto.item.ItemTypeDto;
 import com.akg.akg_sales.dto.order.OrderDto;
 import com.akg.akg_sales.dto.order.OrderRequest;
 import com.akg.akg_sales.dto.order.OrderStatusDto;
 import com.akg.akg_sales.util.CommonUtil;
+import com.google.gson.Gson;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -25,10 +29,10 @@ import retrofit2.Response;
 public class OrderService {
     public OrderService(){}
 
-    public static void fetchItemFromServer(Long customerId,Context context,Long typeId, Consumer<List<ItemDto>> callback){
+    public static void fetchItemFromServer(Context context, Map<String,String> filter, Consumer<List<ItemDto>> callback){
         ProgressDialog progressDialog = CommonUtil.showProgressDialog(context);
         API.getClient().create(ItemApi.class)
-                .getOrderItems(customerId,typeId)
+                .getOrderItems(filter)
                 .enqueue(new Callback<List<ItemDto>>() {
                     @Override
                     public void onResponse(Call<List<ItemDto>> call, Response<List<ItemDto>> response) {
@@ -51,27 +55,27 @@ public class OrderService {
     }
 
 
-    public static void fetchItemTypeSubTypeFromServer(Context context,Long customerId, Consumer<List<ItemTypeDto>> callback){
+    public static void fetchItemMasterFromServer(Context context,Long customerId, Consumer<ItemMasterDto> callback){
         ProgressDialog progressDialog = CommonUtil.showProgressDialog(context);
         API.getClient().create(ItemApi.class)
-                .getItemTypes(customerId)
-                .enqueue(new Callback<List<ItemTypeDto>>() {
+                .getItemMaster(customerId)
+                .enqueue(new Callback<ItemMasterDto>() {
                     @Override
-                    public void onResponse(Call<List<ItemTypeDto>> call, Response<List<ItemTypeDto>> response) {
+                    public void onResponse(Call<ItemMasterDto> call, Response<ItemMasterDto> response) {
                         progressDialog.dismiss();
                         try {
-                            if(response.code()==200){
+                            if(response.isSuccessful())
                                 callback.accept(response.body());
-                            }
-                            else throw new Exception(response.code()+"."+response.message());
+                            else throw new Exception(response.code()+" "+response.message());
                         }catch (Exception e){
                             CommonUtil.showToast(context,e.getMessage(),false);
+                            e.printStackTrace();
                         }
                     }
                     @Override
-                    public void onFailure(Call<List<ItemTypeDto>> call, Throwable t) {
+                    public void onFailure(Call<ItemMasterDto> call, Throwable t) {
                         progressDialog.dismiss();
-                        call.cancel();
+                        t.printStackTrace();
                     }
                 });
     }
