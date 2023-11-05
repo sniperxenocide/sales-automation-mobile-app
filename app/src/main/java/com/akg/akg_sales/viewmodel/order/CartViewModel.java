@@ -50,7 +50,6 @@ public class CartViewModel extends BaseObservable {
                             progressDialog.dismiss();
                             if(response.code()==200){
                                 OrderDto orderDto = response.body();
-                                System.out.println(orderDto);
                                 CommonUtil.showToast(activity,"Order Created Successfully",true);
                                 removeCartItems();
 
