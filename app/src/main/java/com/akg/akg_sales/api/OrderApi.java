@@ -2,6 +2,7 @@ package com.akg.akg_sales.api;
 
 import com.akg.akg_sales.dto.PageResponse;
 import com.akg.akg_sales.dto.order.OrderDto;
+import com.akg.akg_sales.dto.order.OrderPermission;
 import com.akg.akg_sales.dto.order.OrderRequest;
 import com.akg.akg_sales.dto.order.OrderStatusDto;
 
@@ -33,4 +34,7 @@ public interface OrderApi {
 
     @GET("/order-service/api/order/status/all")
     Call<List<OrderStatusDto>> getOrderStatus();
+
+    @GET("/access-control-service/api/order/permission")
+    Call<OrderPermission> getOrderPermission();
 }

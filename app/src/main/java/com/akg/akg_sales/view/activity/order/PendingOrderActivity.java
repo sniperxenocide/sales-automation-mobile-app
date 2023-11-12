@@ -17,6 +17,8 @@ import com.akg.akg_sales.api.OrderApi;
 import com.akg.akg_sales.databinding.ActivityPendingOrderBinding;
 import com.akg.akg_sales.dto.PageResponse;
 import com.akg.akg_sales.dto.order.OrderDto;
+import com.akg.akg_sales.dto.order.OrderPermission;
+import com.akg.akg_sales.service.OrderService;
 import com.akg.akg_sales.util.CommonUtil;
 import com.akg.akg_sales.view.adapter.order.PendingOrderAdapter;
 import com.akg.akg_sales.view.dialog.OrderFilterDialog;
@@ -47,26 +49,17 @@ public class PendingOrderActivity extends AppCompatActivity {
         fetchOrderFromServer();
     }
 
-//    @Override
-//    protected void onRestart() {
-//        super.onRestart();
-//        System.out.println("Inside onRestart***********************");
-//        initFilter();
-//        orders.clear();
-//        fetchOrderFromServer();
-//    }
-
     private void loadPage(){
         binding= DataBindingUtil.setContentView(this,R.layout.activity_pending_order);
         binding.setActivity(this);
         initRecycleView();
-        newOrderControl();
+        createOrderControl();
     }
 
-    private void newOrderControl(){
-        if(this.userCategory.equals("Customer"))
-            binding.newOrderBtn.setVisibility(View.VISIBLE);
-        else binding.newOrderBtn.setVisibility(View.GONE);
+    private void createOrderControl(){
+        OrderService.fetchOrderPermission(this,permission->{
+            if(permission.getCanCreateOrder()) binding.newOrderBtn.setVisibility(View.VISIBLE);
+        });
     }
 
     private void initRecycleView(){

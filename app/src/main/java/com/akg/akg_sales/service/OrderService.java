@@ -12,6 +12,7 @@ import com.akg.akg_sales.dto.item.ItemDto;
 import com.akg.akg_sales.dto.item.ItemMasterDto;
 import com.akg.akg_sales.dto.item.ItemTypeDto;
 import com.akg.akg_sales.dto.order.OrderDto;
+import com.akg.akg_sales.dto.order.OrderPermission;
 import com.akg.akg_sales.dto.order.OrderRequest;
 import com.akg.akg_sales.dto.order.OrderStatusDto;
 import com.akg.akg_sales.util.CommonUtil;
@@ -175,6 +176,28 @@ public class OrderService {
                     @Override
                     public void onFailure(Call<List<OrderStatusDto>> call, Throwable t) {
                         progressDialog.dismiss();
+                        call.cancel();
+                        t.printStackTrace();
+                    }
+                });
+    }
+
+    public static void fetchOrderPermission(Context context,Consumer<OrderPermission> callback){
+        API.getClient().create(OrderApi.class).getOrderPermission()
+                .enqueue(new Callback<OrderPermission>() {
+                    @Override
+                    public void onResponse(Call<OrderPermission> call, Response<OrderPermission> response) {
+                        try {
+                            if(response.code()==200){
+                                callback.accept(response.body());
+                            }
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<OrderPermission> call, Throwable t) {
                         call.cancel();
                         t.printStackTrace();
                     }
