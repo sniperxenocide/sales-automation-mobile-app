@@ -9,20 +9,16 @@ import com.akg.akg_sales.api.API;
 import com.akg.akg_sales.api.ItemApi;
 import com.akg.akg_sales.api.OrderApi;
 import com.akg.akg_sales.dto.item.ItemDto;
-import com.akg.akg_sales.dto.item.ItemMasterDto;
-import com.akg.akg_sales.dto.item.ItemTypeDto;
+import com.akg.akg_sales.dto.item.ItemMaster;
 import com.akg.akg_sales.dto.order.OrderDto;
 import com.akg.akg_sales.dto.order.OrderPermission;
 import com.akg.akg_sales.dto.order.OrderRequest;
 import com.akg.akg_sales.dto.order.OrderStatusDto;
 import com.akg.akg_sales.util.CommonUtil;
-import com.google.gson.Gson;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -56,13 +52,13 @@ public class OrderService {
     }
 
 
-    public static void fetchItemMasterFromServer(Context context,Long customerId, Consumer<ItemMasterDto> callback){
+    public static void fetchItemMasterFromServer(Context context,Long customerId, Consumer<ItemMaster> callback){
         ProgressDialog progressDialog = CommonUtil.showProgressDialog(context);
         API.getClient().create(ItemApi.class)
                 .getItemMaster(customerId)
-                .enqueue(new Callback<ItemMasterDto>() {
+                .enqueue(new Callback<ItemMaster>() {
                     @Override
-                    public void onResponse(Call<ItemMasterDto> call, Response<ItemMasterDto> response) {
+                    public void onResponse(Call<ItemMaster> call, Response<ItemMaster> response) {
                         progressDialog.dismiss();
                         try {
                             if(response.isSuccessful())
@@ -74,7 +70,7 @@ public class OrderService {
                         }
                     }
                     @Override
-                    public void onFailure(Call<ItemMasterDto> call, Throwable t) {
+                    public void onFailure(Call<ItemMaster> call, Throwable t) {
                         progressDialog.dismiss();
                         t.printStackTrace();
                     }

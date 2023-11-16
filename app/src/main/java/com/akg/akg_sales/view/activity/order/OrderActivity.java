@@ -15,25 +15,15 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.akg.akg_sales.R;
 import com.akg.akg_sales.databinding.ActivityOrderBinding;
 import com.akg.akg_sales.dto.CustomerDto;
-import com.akg.akg_sales.dto.item.ItemBrandDto;
-import com.akg.akg_sales.dto.item.ItemColorDto;
 import com.akg.akg_sales.dto.item.ItemDto;
-import com.akg.akg_sales.dto.item.ItemMasterDto;
-import com.akg.akg_sales.dto.item.ItemTypeDto;
+import com.akg.akg_sales.dto.item.ItemMaster;
 import com.akg.akg_sales.dto.order.CartItemDto;
 import com.akg.akg_sales.service.OrderService;
 import com.akg.akg_sales.util.CommonUtil;
 import com.akg.akg_sales.view.adapter.order.OrderItemAdapter;
 import com.akg.akg_sales.view.dialog.ItemFilterDialog;
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
-
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
 
@@ -42,7 +32,7 @@ public class OrderActivity extends AppCompatActivity {
     ArrayList<ItemDto> itemList = new ArrayList<>();
     public int selectedCustomerIdx = -1;
     public List<CustomerDto> customerList = CommonUtil.customers;
-    public ItemMasterDto itemMaster = new ItemMasterDto();
+    public ItemMaster itemMaster = new ItemMaster();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

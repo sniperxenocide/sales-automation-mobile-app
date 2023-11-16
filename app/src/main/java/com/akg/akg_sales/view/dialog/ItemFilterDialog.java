@@ -10,6 +10,7 @@ import com.akg.akg_sales.api.API;
 import com.akg.akg_sales.api.ItemApi;
 import com.akg.akg_sales.databinding.DialogItemFilterBinding;
 import com.akg.akg_sales.dto.item.ItemBrandDto;
+import com.akg.akg_sales.dto.item.ItemCategory;
 import com.akg.akg_sales.dto.item.ItemColorDto;
 import com.akg.akg_sales.dto.item.ItemSubTypeDto;
 import com.akg.akg_sales.dto.item.ItemTypeDto;
@@ -17,6 +18,7 @@ import com.akg.akg_sales.service.OrderService;
 import com.akg.akg_sales.util.CommonUtil;
 import com.akg.akg_sales.view.activity.order.OrderActivity;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -39,7 +41,6 @@ public class ItemFilterDialog {
     List<ItemColorDto> itemColors;
 
     Map<String,String> filterParam = new HashMap<>();
-    boolean onlyOneFilter = true;
 
     public ItemFilterDialog(OrderActivity activity){
         this.activity=activity;
@@ -48,13 +49,25 @@ public class ItemFilterDialog {
         dialog.setContentView(binding.getRoot());
         CommonUtil.setDialogWindowParams(this.activity,this.dialog);
         binding.applyBtn.setOnClickListener(view -> onClickApply());
+        setUiVisibility();
         loadItemType();
-        loadItemBrand();
-        loadItemColor();
+    }
+
+    private void setUiVisibility(){
+        if(!activity.itemMaster.getItemBrandActive())
+            binding.itemBrandDropdownContainer.setVisibility(View.GONE);
+
+        if(!activity.itemMaster.getItemColorActive())
+            binding.itemColorDropdownContainer.setVisibility(View.GONE);
     }
 
     private void loadItemType(){
-        itemTypes = activity.itemMaster.getItemTypes();
+        itemTypes = new ArrayList<>();
+        Map<Long,ItemTypeDto> typeMap = new HashMap<>();
+        for(ItemCategory c:activity.itemMaster.getCategories())
+            typeMap.put(c.getItemType().getId(),c.getItemType());
+        for(Long k: typeMap.keySet()) itemTypes.add(typeMap.get(k));
+
         AutoCompleteTextView tView=binding.productTypeDropdown;
         String[] productTypes = new String[itemTypes.size()];
         for (int i=0;i< itemTypes.size();i++) productTypes[i]=itemTypes.get(i).getType();
@@ -62,17 +75,24 @@ public class ItemFilterDialog {
         tView.setAdapter(ptAdapter);
         tView.setOnItemClickListener((adapterView, view, i, l) -> {
             selectedTypeId = itemTypes.get(i).getId();
-            if(onlyOneFilter) onClickApply();
+            if(activity.itemMaster.getItemBrandActive()) {
+                loadItemBrand();
+                loadItemColor();
+            }
+            else onClickApply();
         });
     }
 
     private void loadItemBrand(){
-        itemBrands = activity.itemMaster.getItemBrands();
-        if(itemBrands==null || itemBrands.isEmpty()){
-            binding.itemBrandDropdownContainer.setVisibility(View.GONE);
-            return;
+        itemBrands = new ArrayList<>();
+        Map<Long,ItemBrandDto> brandMap = new HashMap<>();
+        for(ItemCategory c:activity.itemMaster.getCategories()){
+            try {
+                if(c.getItemType().getId().longValue()==selectedTypeId)
+                    brandMap.put(c.getItemBrand().getId(),c.getItemBrand());
+            }catch (Exception ignored){}
         }
-        onlyOneFilter=false;
+        for(Long k: brandMap.keySet()) itemBrands.add(brandMap.get(k));
 
         AutoCompleteTextView tView=binding.itemBrandDropdown;
         String[] itemBrandList = new String[itemBrands.size()];
@@ -81,16 +101,21 @@ public class ItemFilterDialog {
         tView.setAdapter(adapter);
         tView.setOnItemClickListener((adapterView, view, i, l) -> {
             selectedBrandId = itemBrands.get(i).getId();
+            if(activity.itemMaster.getItemBrandActive()) loadItemColor();
         });
     }
 
     private void loadItemColor(){
-        itemColors = activity.itemMaster.getItemColors();
-        if(itemColors==null || itemColors.isEmpty()){
-            binding.itemColorDropdownContainer.setVisibility(View.GONE);
-            return;
+        itemColors = new ArrayList<>();
+        Map<Long,ItemColorDto> colorMap = new HashMap<>();
+        for(ItemCategory c:activity.itemMaster.getCategories()){
+            try {
+                if((selectedBrandId==null || c.getItemBrand().getId().longValue()==selectedBrandId)
+                        && c.getItemType().getId().longValue()==selectedTypeId )
+                    colorMap.put(c.getItemColor().getId(),c.getItemColor());
+            }catch (Exception ignored){}
         }
-        onlyOneFilter=false;
+        for(Long k: colorMap.keySet()) itemColors.add(colorMap.get(k));
 
         AutoCompleteTextView tView=binding.itemColorDropdown;
         String[] itemColorList = new String[itemColors.size()];

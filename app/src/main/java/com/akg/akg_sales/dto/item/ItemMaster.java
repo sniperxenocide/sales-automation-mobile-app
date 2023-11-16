@@ -7,8 +7,9 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Data @NoArgsConstructor @AllArgsConstructor
-public class ItemMasterDto {
-    List<ItemTypeDto> itemTypes;
-    List<ItemBrandDto> itemBrands;
-    List<ItemColorDto> itemColors;
+public class ItemMaster {
+    private Boolean itemTypeActive;
+    private Boolean itemBrandActive;
+    private Boolean itemColorActive;
+    List<ItemCategory> categories;
 }
