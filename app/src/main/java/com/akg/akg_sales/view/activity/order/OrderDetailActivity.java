@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.akg.akg_sales.R;
 import com.akg.akg_sales.databinding.ActivityOrderDetailBinding;
 import com.akg.akg_sales.dto.StatusFlow;
+import com.akg.akg_sales.dto.delivery.DeliveryOrderDto;
 import com.akg.akg_sales.dto.order.OrderApprovalDto;
 import com.akg.akg_sales.dto.order.OrderDto;
 import com.akg.akg_sales.dto.order.OrderLineDto;
@@ -28,6 +29,7 @@ import com.akg.akg_sales.view.activity.delivery.DeliveryListActivity;
 import com.akg.akg_sales.view.activity.payment.PaymentListActivity;
 import com.akg.akg_sales.view.adapter.order.OrderLineAdapter;
 import com.akg.akg_sales.view.dialog.ConfirmationDialog;
+import com.akg.akg_sales.view.dialog.DeliveryOrderDoLineDialog;
 import com.akg.akg_sales.view.dialog.OrderItemDialog;
 import com.akg.akg_sales.view.dialog.StatusFlowDialog;
 
@@ -35,8 +37,10 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Objects;
+import java.util.Set;
 
 public class OrderDetailActivity extends AppCompatActivity {
     public boolean orderActionPermitted=false;
@@ -45,6 +49,7 @@ public class OrderDetailActivity extends AppCompatActivity {
     public OrderDto orderDto;
     public PaymentDto paymentDto;
     public OrderItemDialog orderItemDialog;
+    public DeliveryOrderDoLineDialog deliveryOrderDoLineDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,7 +67,9 @@ public class OrderDetailActivity extends AppCompatActivity {
         setOrderActionUi();
         loadOrderLines();
         loadStatusFlowDialog();
+        loadDeliveryOrders();
         orderItemDialog = new OrderItemDialog(this);
+        deliveryOrderDoLineDialog = new DeliveryOrderDoLineDialog(this);
     }
 
     private void fetchOrderDetailFromServer(String orderId){
@@ -94,6 +101,20 @@ public class OrderDetailActivity extends AppCompatActivity {
         OrderLineAdapter adapter = new OrderLineAdapter(this,
                 (ArrayList<OrderLineDto>) orderDto.getOrderLines());
         recyclerView.setAdapter(adapter);
+    }
+
+    private void loadDeliveryOrders(){
+        try {
+            if(orderDto.getDeliveryOrders()==null || orderDto.getDeliveryOrders().isEmpty())
+                return;
+            StringBuilder sb = new StringBuilder();
+            Set<String> doNumbers = new HashSet<>();
+            for(DeliveryOrderDto d:orderDto.getDeliveryOrders())
+                doNumbers.add(d.getDoNumber());
+            for(String s:doNumbers) sb.append(s).append(" , ");
+            binding.doNumberContainer.setVisibility(View.VISIBLE);
+            binding.doNumber.setText(sb.substring(0,sb.length()-3));
+        }catch (Exception e){e.printStackTrace();}
     }
 
     public void onClickApprove(){

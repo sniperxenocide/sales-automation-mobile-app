@@ -1,5 +1,6 @@
 package com.akg.akg_sales.dto.order;
 
+import com.akg.akg_sales.dto.delivery.DeliveryOrderDto;
 import com.akg.akg_sales.util.CommonUtil;
 
 import java.math.BigDecimal;
@@ -40,6 +41,7 @@ public class OrderDto {
     private List<OrderApprovalDto> approvals;
     private String note;
     private String siteAddress;
+    private List<DeliveryOrderDto> deliveryOrders;
 
     public String getCreationTime(){
         try {
