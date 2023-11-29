@@ -40,15 +40,6 @@ public class PaymentListActivity extends AppCompatActivity {
         fetchPaymentsFromServer();
     }
 
-//    @Override
-//    protected void onRestart() {
-//        super.onRestart();
-//        System.out.println("Inside onRestart***********************");
-//        initFilter();
-//        payments.clear();
-//        fetchPaymentsFromServer();
-//    }
-
     private void loadPage(){
         binding = DataBindingUtil.setContentView(this,R.layout.activity_payment_list);
         binding.setActivity(this);
@@ -58,8 +49,9 @@ public class PaymentListActivity extends AppCompatActivity {
     }
 
     private void newPaymentControl(){
-        if(CommonUtil.loggedInUser.getCategory().equals("Customer"))
-            binding.newPaymentBtn.setVisibility(View.VISIBLE);
+        PaymentService.fetchPaymentPermission(permission->{
+            if(permission.getCanCreatePayment()) binding.newPaymentBtn.setVisibility(View.VISIBLE);
+        });
     }
 
     private void initRecycleView(){

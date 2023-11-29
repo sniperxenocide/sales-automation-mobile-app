@@ -178,7 +178,7 @@ public class OrderService {
                 });
     }
 
-    public static void fetchOrderPermission(Context context,Consumer<OrderPermission> callback){
+    public static void fetchOrderPermission(Consumer<OrderPermission> callback){
         API.getClient().create(OrderApi.class).getOrderPermission()
                 .enqueue(new Callback<OrderPermission>() {
                     @Override

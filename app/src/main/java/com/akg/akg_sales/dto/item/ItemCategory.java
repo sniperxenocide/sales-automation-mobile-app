@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class ItemCategory {
     private ItemTypeDto itemType;
+    private ItemSubTypeDto itemSubType;
     private ItemBrandDto itemBrand;
     private ItemColorDto itemColor;
 }

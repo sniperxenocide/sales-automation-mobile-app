@@ -131,7 +131,7 @@ public class OrderActivity extends AppCompatActivity {
             AutoCompleteTextView tView=orderBinding.customerList;
             String[] customers = new String[customerList.size()];
             for (int i=0;i< customerList.size();i++)
-                customers[i]=customerList.get(i).getCustomerName();
+                customers[i]=customerList.get(i).getCustomerName()+" ("+customerList.get(i).getOracleCustomerCode()+")";
             ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, customers);
             tView.setAdapter(adapter);
             tView.setOnItemClickListener((adapterView, view, i, l) -> onCustomerSelect(tView,i));
@@ -140,7 +140,7 @@ public class OrderActivity extends AppCompatActivity {
     }
 
     private void onCustomerSelect(AutoCompleteTextView tView,int idx){
-        tView.setText(customerList.get(idx).getCustomerName(),false);
+        tView.setText(customerList.get(idx).getCustomerName()+" ("+customerList.get(idx).getOracleCustomerCode()+")",false);
 
         selectedCustomerIdx = idx;
 

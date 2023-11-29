@@ -6,11 +6,14 @@ import android.content.Context;
 import androidx.core.util.Consumer;
 
 import com.akg.akg_sales.api.API;
+import com.akg.akg_sales.api.OrderApi;
 import com.akg.akg_sales.api.PaymentApi;
 import com.akg.akg_sales.dto.PageResponse;
+import com.akg.akg_sales.dto.order.OrderPermission;
 import com.akg.akg_sales.dto.payment.PaymentAccountDto;
 import com.akg.akg_sales.dto.payment.PaymentDto;
 import com.akg.akg_sales.dto.payment.PaymentMasterDto;
+import com.akg.akg_sales.dto.payment.PaymentPermission;
 import com.akg.akg_sales.dto.payment.PaymentRequestDto;
 import com.akg.akg_sales.util.CommonUtil;
 
@@ -131,6 +134,28 @@ public class PaymentService {
                         progressDialog.dismiss();
                         call.cancel();
                         System.out.println(t.getMessage());
+                    }
+                });
+    }
+
+    public static void fetchPaymentPermission(Consumer<PaymentPermission> callback) {
+        API.getClient().create(PaymentApi.class).getPaymentPermission()
+                .enqueue(new Callback<PaymentPermission>() {
+                    @Override
+                    public void onResponse(Call<PaymentPermission> call, Response<PaymentPermission> response) {
+                        try {
+                            if(response.code()==200){
+                                callback.accept(response.body());
+                            }
+                        }catch (Exception e){
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<PaymentPermission> call, Throwable t) {
+                        call.cancel();
+                        t.printStackTrace();
                     }
                 });
     }

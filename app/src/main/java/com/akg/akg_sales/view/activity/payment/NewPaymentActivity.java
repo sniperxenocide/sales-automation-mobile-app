@@ -13,6 +13,8 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
 import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
 
 import com.akg.akg_sales.R;
@@ -36,13 +38,18 @@ import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
 
 public class NewPaymentActivity extends AppCompatActivity {
     ActivityNewPaymentBinding binding;
     public PaymentMasterDto masterDto;
     public PaymentAccountDto accountDto;
+    private List<CustomerDto> customerList = CommonUtil.customers;
     private CustomerDto selectedCustomer;
     public PaymentViewModel paymentViewModel = new PaymentViewModel();
+
+    String[] customers;
+    Long[] customerIds;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +60,7 @@ public class NewPaymentActivity extends AppCompatActivity {
     private void initPage(){
         accountDto = new PaymentAccountDto();
         loadUI();
+        loadCustomerList();
         loadPaymentAccounts();
     }
 
@@ -61,6 +69,26 @@ public class NewPaymentActivity extends AppCompatActivity {
         binding.setActivity(this);
         binding.setVm(paymentViewModel);
         binding.executePendingBindings();
+    }
+
+    public void loadCustomerList(){
+        AutoCompleteTextView tView=binding.customerList;
+        customers = new String[customerList.size()];
+        customerIds = new Long[customerList.size()];
+        for(int a=0;a<customerList.size();a++){
+            customers[a]=customerList.get(a).getCustomerName()+
+                    " ("+customerList.get(a).getOracleCustomerCode()+")";
+            customerIds[a]=customerList.get(a).getId();
+        }
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, customers);
+        tView.setAdapter(adapter);
+        tView.setOnItemClickListener((adapterView, view, i, l) -> onClickCustomer(tView,i));
+        onClickCustomer(tView,0);
+    }
+
+    private void onClickCustomer(AutoCompleteTextView tView,int idx){
+        selectedCustomer = customerList.get(idx);
+        tView.setText(customers[idx],false);
     }
 
     private void loadPaymentAccounts(){

@@ -1,9 +1,11 @@
 package com.akg.akg_sales.api;
 
 import com.akg.akg_sales.dto.PageResponse;
+import com.akg.akg_sales.dto.order.OrderPermission;
 import com.akg.akg_sales.dto.payment.PaymentAccountDto;
 import com.akg.akg_sales.dto.payment.PaymentDto;
 import com.akg.akg_sales.dto.payment.PaymentMasterDto;
+import com.akg.akg_sales.dto.payment.PaymentPermission;
 
 import java.util.List;
 import java.util.Map;
@@ -29,4 +31,7 @@ public interface PaymentApi {
 
     @GET("/payment-service/api/payment/all")
     Call<PageResponse<PaymentDto>> getPayments(@QueryMap Map<String,String> filter);
+
+    @GET("/access-control-service/api/payment/permission")
+    Call<PaymentPermission> getPaymentPermission();
 }

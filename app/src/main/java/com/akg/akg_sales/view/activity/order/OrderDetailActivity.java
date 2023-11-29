@@ -69,7 +69,6 @@ public class OrderDetailActivity extends AppCompatActivity {
         loadStatusFlowDialog();
         loadDeliveryOrders();
         orderItemDialog = new OrderItemDialog(this);
-        deliveryOrderDoLineDialog = new DeliveryOrderDoLineDialog(this);
     }
 
     private void fetchOrderDetailFromServer(String orderId){
@@ -114,6 +113,7 @@ public class OrderDetailActivity extends AppCompatActivity {
             for(String s:doNumbers) sb.append(s).append(" , ");
             binding.doNumberContainer.setVisibility(View.VISIBLE);
             binding.doNumber.setText(sb.substring(0,sb.length()-3));
+            deliveryOrderDoLineDialog = new DeliveryOrderDoLineDialog(this);
         }catch (Exception e){e.printStackTrace();}
     }
 

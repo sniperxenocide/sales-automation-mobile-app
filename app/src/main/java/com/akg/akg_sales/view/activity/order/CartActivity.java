@@ -71,7 +71,8 @@ public class CartActivity extends AppCompatActivity {
         int j=0;
         for (Long k: cartMap.keySet()){
             try {
-                customers[j]=cartMap.get(k).get(0).getCustomerDto().getCustomerName();
+                CustomerDto c = cartMap.get(k).get(0).getCustomerDto();
+                customers[j]=c.getCustomerName()+" ("+c.getOracleCustomerCode()+")";
                 customerIds[j]=k;
                 j++;
             }catch (Exception e){e.getMessage();}
@@ -84,7 +85,8 @@ public class CartActivity extends AppCompatActivity {
 
     private void onClickCustomer(AutoCompleteTextView tView,int idx){
         cSelectedCustomer = cartMap.get(customerIds[idx]).get(0).getCustomerDto();
-        tView.setText(cSelectedCustomer.getCustomerName(),false);
+        tView.setText(cSelectedCustomer.getCustomerName()
+                +" ("+cSelectedCustomer.getOracleCustomerCode()+")",false);
         loadCartListView();
         calculateOrderValue();
 
