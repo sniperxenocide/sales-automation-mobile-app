@@ -15,6 +15,7 @@ import com.akg.akg_sales.dto.payment.PaymentDto;
 import com.akg.akg_sales.dto.payment.PaymentMasterDto;
 import com.akg.akg_sales.dto.payment.PaymentPermission;
 import com.akg.akg_sales.dto.payment.PaymentRequestDto;
+import com.akg.akg_sales.dto.payment.PaymentStatus;
 import com.akg.akg_sales.util.CommonUtil;
 
 import java.lang.reflect.Field;
@@ -56,6 +57,33 @@ public class PaymentService {
                 System.out.println(t.getMessage());
             }
         });
+    }
+
+    public static void getPaymentStatus(Context context, Consumer<List<PaymentStatus>> callback) {
+        ProgressDialog progressDialog = CommonUtil.showProgressDialog(context);
+        API.getClient().create(PaymentApi.class).getPaymentStatus()
+                .enqueue(new Callback<List<PaymentStatus>>() {
+                    @Override
+                    public void onResponse(Call<List<PaymentStatus>> call, Response<List<PaymentStatus>> response) {
+                        progressDialog.dismiss();
+                        try {
+                            if(response.code()==200){
+                                callback.accept(response.body());
+                            }
+                            else throw new Exception(response.code()+"."+response.message());
+                        }catch (Exception e){
+                            CommonUtil.showToast(context,e.getMessage(),false);
+                            System.out.println(e.getMessage());
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<PaymentStatus>> call, Throwable t) {
+                        progressDialog.dismiss();
+                        call.cancel();
+                        System.out.println(t.getMessage());
+                    }
+                });
     }
 
     public static void createPayment(Context context, PaymentRequestDto requestDto,

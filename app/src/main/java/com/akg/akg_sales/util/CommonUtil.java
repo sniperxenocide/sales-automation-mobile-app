@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.akg.akg_sales.dto.order.CartItemDto;
 import com.akg.akg_sales.dto.CustomerDto;
 import com.akg.akg_sales.dto.User;
+import com.akg.akg_sales.dto.order.OrderPermission;
 import com.akg.akg_sales.dto.order.OrderStatusDto;
 
 import org.json.JSONObject;
@@ -31,6 +32,7 @@ public class CommonUtil {
     public static List<CustomerDto> customers;
     public static ArrayList<OrderStatusDto> statusList;
     public static HashMap<Long,ArrayList<CartItemDto>> orderCart = new HashMap<>();
+    public static OrderPermission orderPermission;
 
     public static String deviceModel;
     public static String deviceId;

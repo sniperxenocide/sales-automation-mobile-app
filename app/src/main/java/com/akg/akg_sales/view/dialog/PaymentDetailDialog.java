@@ -13,6 +13,7 @@ import com.akg.akg_sales.api.API;
 import com.akg.akg_sales.databinding.DialogPaymentDetailBinding;
 import com.akg.akg_sales.dto.StatusFlow;
 import com.akg.akg_sales.dto.payment.PaymentDto;
+import com.akg.akg_sales.dto.payment.PaymentStatus;
 import com.akg.akg_sales.util.CommonUtil;
 import com.akg.akg_sales.view.activity.order.OrderDetailActivity;
 import com.akg.akg_sales.view.activity.payment.PaymentListActivity;
@@ -87,18 +88,18 @@ public class PaymentDetailDialog {
 
     private void loadStatusFlowDialog(){
         try {
+            if(paymentDto.getCurrentStatus().equalsIgnoreCase("CANCELED")) return;
             ArrayList<StatusFlow> statusFlows = new ArrayList<>();
-            statusFlows.add(new StatusFlow(1,-1,"Submitted"));
-            statusFlows.add(new StatusFlow(2,-1,"Confirmed"));
-            statusFlows.add(new StatusFlow(3,-1,"Remitted"));
-            statusFlows.add(new StatusFlow(4,-1,"Cleared"));
+            for(PaymentStatus s: activity.paymentStatus){
+                if(s.getStatusCode().equals("CANCELED")) continue;
+                statusFlows.add(new StatusFlow(s.getSequence(),-1,s.getStatusText()));
+            }
             for (StatusFlow s:statusFlows){
                 s.setPassed(1);
                 if(s.getStatus().equals(paymentDto.getCurrentStatus())) break;
             }
-            binding.statusLayout.setOnClickListener(v->{
-                new StatusFlowDialog(statusFlows, activity);
-            });
+            binding.statusLayout.setOnClickListener(v->
+                    new StatusFlowDialog(statusFlows, activity));
         }catch (Exception e){e.printStackTrace();}
     }
 }

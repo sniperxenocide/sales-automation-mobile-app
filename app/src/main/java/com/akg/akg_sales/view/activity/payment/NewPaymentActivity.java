@@ -1,13 +1,6 @@
 package com.akg.akg_sales.view.activity.payment;
 
-import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
-import androidx.databinding.BaseObservable;
-import androidx.databinding.DataBindingUtil;
-import androidx.databinding.ObservableField;
-
 import android.app.Activity;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -16,6 +9,9 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.databinding.DataBindingUtil;
 
 import com.akg.akg_sales.R;
 import com.akg.akg_sales.databinding.ActivityNewPaymentBinding;
@@ -27,14 +23,12 @@ import com.akg.akg_sales.dto.payment.PaymentRequestDto;
 import com.akg.akg_sales.dto.payment.PaymentTypeDto;
 import com.akg.akg_sales.service.PaymentService;
 import com.akg.akg_sales.util.CommonUtil;
-import com.akg.akg_sales.view.activity.order.PendingOrderActivity;
 import com.akg.akg_sales.view.dialog.ConfirmationDialog;
 import com.akg.akg_sales.view.dialog.SearchableTextListDialog;
 import com.akg.akg_sales.viewmodel.PaymentViewModel;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.material.datepicker.MaterialDatePicker;
 
-import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;

@@ -14,6 +14,7 @@ import com.akg.akg_sales.R;
 import com.akg.akg_sales.databinding.ActivityPaymentListBinding;
 import com.akg.akg_sales.dto.PageResponse;
 import com.akg.akg_sales.dto.payment.PaymentDto;
+import com.akg.akg_sales.dto.payment.PaymentStatus;
 import com.akg.akg_sales.service.PaymentService;
 import com.akg.akg_sales.util.CommonUtil;
 import com.akg.akg_sales.view.adapter.payment.PaymentListAdapter;
@@ -30,6 +31,7 @@ public class PaymentListActivity extends AppCompatActivity {
     public HashMap<String,String> filter = new HashMap<>();
     PageResponse<PaymentDto> pageResponse;
     public ArrayList<PaymentDto> payments = new ArrayList<>();
+    public ArrayList<PaymentStatus> paymentStatus = new ArrayList<>();
     RecyclerView recyclerView ;
 
     @Override
@@ -38,6 +40,7 @@ public class PaymentListActivity extends AppCompatActivity {
         loadPage();
         initFilter();
         fetchPaymentsFromServer();
+        fetchPaymentStatusFromServer();
     }
 
     private void loadPage(){
@@ -78,6 +81,13 @@ public class PaymentListActivity extends AppCompatActivity {
         PaymentService.getPayments(this,filter,res->{
             pageResponse = res;
             loadPaymentsInRecycleView();
+        });
+    }
+
+    private void fetchPaymentStatusFromServer(){
+        PaymentService.getPaymentStatus(this,res->{
+            paymentStatus = (ArrayList<PaymentStatus>) res;
+            System.out.println(paymentStatus);
         });
     }
 

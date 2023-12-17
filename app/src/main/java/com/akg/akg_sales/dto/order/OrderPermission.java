@@ -7,4 +7,5 @@ import lombok.NoArgsConstructor;
 @Data @NoArgsConstructor @AllArgsConstructor
 public class OrderPermission {
     private Boolean canCreateOrder;
+    private Boolean canEditOrder;
 }

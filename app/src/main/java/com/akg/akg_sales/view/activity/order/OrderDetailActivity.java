@@ -43,7 +43,7 @@ import java.util.Objects;
 import java.util.Set;
 
 public class OrderDetailActivity extends AppCompatActivity {
-    public boolean orderActionPermitted=false;
+    public boolean canApproveOrder = false;
     public RecyclerView recyclerView;
     public ActivityOrderDetailBinding binding;
     public OrderDto orderDto;
@@ -174,9 +174,9 @@ public class OrderDetailActivity extends AppCompatActivity {
     }
 
     private void setOrderActionUi(){
-        orderActionPermitted = Objects.equals(orderDto.getCurrentApproverUsername(),
-                CommonUtil.loggedInUser.getUsername());
-        if(orderActionPermitted) {
+        canApproveOrder = orderDto.getCurrentApproverUsername()
+                .equals(CommonUtil.loggedInUser.getUsername());
+        if(canApproveOrder) {
             binding.orderAction.setVisibility(View.VISIBLE);
             fetchLastPaymentFromServer();
         }

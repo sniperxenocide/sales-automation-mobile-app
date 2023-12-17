@@ -42,14 +42,13 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
     public void onBindViewHolder(@NonNull OrderLineAdapter.ViewHolder holder, int position) {
         OrderLineDto line = lines.get(position);
         holder.bind(line,Integer.toString(position+1));
-        //holder.itemBinding.quantity.setOnClickListener(view -> onQuantityUpdate(line));
-        //holder.itemBinding.deleteLineItem.setOnClickListener(view -> onClickDeleteItem(line));
 
-//        if(activity.orderActionPermitted){
-//            holder.itemBinding.deleteLineItem.setVisibility(View.VISIBLE);
-//        }
-//        else holder.itemBinding.deleteLineItem.setVisibility(View.GONE);
-        holder.itemBinding.deleteLineItem.setVisibility(View.GONE);
+        if(CommonUtil.orderPermission.getCanEditOrder() && activity.canApproveOrder){
+            holder.itemBinding.deleteLineItem.setVisibility(View.VISIBLE);
+            holder.itemBinding.quantity.setOnClickListener(view -> onQuantityUpdate(line));
+            holder.itemBinding.deleteLineItem.setOnClickListener(view -> onClickDeleteItem(line));
+        }
+        else holder.itemBinding.deleteLineItem.setVisibility(View.GONE);
     }
 
 
@@ -73,7 +72,6 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
     }
 
     private void onClickDeleteItem(OrderLineDto line){
-        if(!activity.orderActionPermitted) return;
         if(lines.size()>1){
             new ConfirmationDialog(activity,"Delete Item ?", i->{
                 activity.orderDto.getOrderLines().remove(line);
@@ -84,15 +82,15 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
     }
 
     private void onQuantityUpdate(OrderLineDto line){
-        if(!activity.orderActionPermitted) return;
         new ItemQuantityDialog(activity, line.getItemDescription(), line.getUom(),  line.getQuantity(),"Update Quantity?",
             qty->{
-            if(qty<= line.getQuantity()){
                 line.setQuantity(qty);
                 Objects.requireNonNull(activity.recyclerView.getAdapter())
                         .notifyItemChanged(lines.indexOf(line));
-            }
-            else CommonUtil.showToast(activity,"Can't Increase Quantity",false);
+//            if(qty<= line.getQuantity()){
+//
+//            }
+//            else CommonUtil.showToast(activity,"Can't Increase Quantity",false);
         });
     }
 }

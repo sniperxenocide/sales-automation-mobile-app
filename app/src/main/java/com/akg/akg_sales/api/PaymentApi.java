@@ -6,6 +6,7 @@ import com.akg.akg_sales.dto.payment.PaymentAccountDto;
 import com.akg.akg_sales.dto.payment.PaymentDto;
 import com.akg.akg_sales.dto.payment.PaymentMasterDto;
 import com.akg.akg_sales.dto.payment.PaymentPermission;
+import com.akg.akg_sales.dto.payment.PaymentStatus;
 
 import java.util.List;
 import java.util.Map;
@@ -25,6 +26,9 @@ public interface PaymentApi {
 
     @GET("/payment-service/api/payment/master")
     Call<PaymentMasterDto> getPaymentMaster(@Query("operatingUnitId") String operatingUnitId);
+
+    @GET("/payment-service/api/payment/status")
+    Call<List<PaymentStatus>> getPaymentStatus();
 
     @POST("/payment-service/api/payment/create")
     Call<PaymentDto> createPayment(@Body MultipartBody body);

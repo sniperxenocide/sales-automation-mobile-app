@@ -54,6 +54,7 @@ public class DeliveryFilterDialog {
             binding.dateTo.setText(sdf.format(ed));
 
             binding.moveOrderNumber.setText(tempFilter.get("movOrderNo"));
+            binding.customerNumber.setText(tempFilter.get("customerNumber"));
             binding.orderNumber.setText(tempFilter.get("orderNumber"));
             binding.doNumber.setText(tempFilter.get("doNumber"));
         }catch (Exception e){e.printStackTrace();}
@@ -101,6 +102,9 @@ public class DeliveryFilterDialog {
 
         if(binding.moveOrderNumber.getText()!=null && binding.moveOrderNumber.getText().length()>0)
             activity.filter.put("movOrderNo",binding.moveOrderNumber.getText().toString());
+        else activity.filter.remove("movOrderNo");
+        if(binding.customerNumber.getText()!=null && binding.customerNumber.getText().length()>0)
+            activity.filter.put("customerNumber",binding.customerNumber.getText().toString());
         else activity.filter.remove("movOrderNo");
         if(binding.orderNumber.getText()!=null && binding.orderNumber.getText().length()>0)
             activity.filter.put("orderNumber",binding.orderNumber.getText().toString());

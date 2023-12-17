@@ -8,6 +8,7 @@ import android.widget.AutoCompleteTextView;
 
 import com.akg.akg_sales.databinding.DialogPaymentFilterBinding;
 import com.akg.akg_sales.dto.CustomerDto;
+import com.akg.akg_sales.dto.payment.PaymentStatus;
 import com.akg.akg_sales.util.CommonUtil;
 import com.akg.akg_sales.view.activity.payment.PaymentListActivity;
 import com.google.android.material.datepicker.CalendarConstraints;
@@ -56,6 +57,7 @@ public class PaymentFilterDialog {
             binding.dateFrom.setText(sdf.format(sd));
             binding.dateTo.setText(sdf.format(ed));
             setCustomerUI();
+            setPaymentStatusUI();
         }catch (Exception e){e.printStackTrace();}
 
     }
@@ -92,6 +94,29 @@ public class PaymentFilterDialog {
         }
     }
 
+    private void setPaymentStatusUI(){
+        ArrayList<PaymentStatus> status = activity.paymentStatus;
+        int arrLen = status.size()+1;
+        AutoCompleteTextView tView=binding.statusDropdown;
+        String[] statusIds = new String[arrLen];
+        String[] statusNames = new String[arrLen];
+        statusIds[0]="%";statusNames[0]="All";
+        for (int i=0;i< status.size();i++) {
+            PaymentStatus s = status.get(i);
+            statusIds[i+1]=s.getId().toString();
+            statusNames[i+1]=s.getStatusText();
+        }
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(activity, android.R.layout.simple_spinner_item, statusNames);
+        tView.setAdapter(adapter);
+        tView.setOnItemClickListener((adapterView, view, i, l) -> {
+            tempFilter.put("statusId",statusIds[i]) ;
+        });
+        for(int i=0;i<arrLen;i++){
+            if(Objects.equals(statusIds[i], tempFilter.get("statusId")))
+                tView.setText(statusNames[i],false);
+        }
+    }
+
     public void onClickDateFrom(){
         showDatePicker("Date From","startDate", binding.dateFrom);
     }
@@ -105,7 +130,7 @@ public class PaymentFilterDialog {
         Calendar cCal = Calendar.getInstance();
         CalendarConstraints.Builder constraintsBuilderRange = new CalendarConstraints.Builder();
         CalendarConstraints.DateValidator dateValidatorMax = DateValidatorPointBackward.before(cCal.getTimeInMillis());
-        cCal.add(Calendar.DATE,-30);
+        cCal.add(Calendar.DATE,-90);
         CalendarConstraints.DateValidator dateValidatorMin = DateValidatorPointForward.from(cCal.getTimeInMillis());
         ArrayList<CalendarConstraints.DateValidator> listValidators = new ArrayList<>();
         listValidators.add(dateValidatorMin);
