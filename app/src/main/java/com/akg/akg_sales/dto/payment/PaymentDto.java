@@ -30,6 +30,7 @@ public class PaymentDto {
     private Long createdByUserId;
     private String createdByUsername;
     private String currentStatus;
+    private String currentStatusCode;
     private String creationTime;
 
     public String getPaymentDate(){

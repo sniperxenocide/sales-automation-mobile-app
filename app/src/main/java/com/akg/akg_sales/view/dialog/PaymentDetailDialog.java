@@ -88,10 +88,10 @@ public class PaymentDetailDialog {
 
     private void loadStatusFlowDialog(){
         try {
-            if(paymentDto.getCurrentStatus().equalsIgnoreCase("CANCELED")) return;
+            if(paymentDto.getCurrentStatusCode().equalsIgnoreCase("REVERSED")) return;
             ArrayList<StatusFlow> statusFlows = new ArrayList<>();
             for(PaymentStatus s: activity.paymentStatus){
-                if(s.getStatusCode().equals("CANCELED")) continue;
+                if(s.getStatusCode().equals("REVERSED")) continue;
                 statusFlows.add(new StatusFlow(s.getSequence(),-1,s.getStatusText()));
             }
             for (StatusFlow s:statusFlows){
