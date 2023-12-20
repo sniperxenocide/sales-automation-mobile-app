@@ -84,7 +84,14 @@ public class OrderDetailActivity extends AppCompatActivity {
         filter.put("customerNumber",orderDto.getCustomerNumber());
         PaymentService.getPayments(this,filter,res->{
             if(res!=null && res.getData().size()>0){
-                paymentDto = res.getData().get(0);
+                for(PaymentDto p:res.getData()){
+                    //getting the latest valid payment
+                    if(!p.getCurrentStatusCode().equals("REVERSED")){
+                        paymentDto = p;
+                        break;
+                    }
+                }
+                if(paymentDto==null) return;
                 binding.paymentValue.setText(String.valueOf(paymentDto.getPaymentAmount()));
                 binding.paymentDate.setText(paymentDto.getPaymentDate());
             }
