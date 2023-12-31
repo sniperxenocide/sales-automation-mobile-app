@@ -12,12 +12,17 @@ import com.akg.akg_sales.BR;
 import com.akg.akg_sales.R;
 import com.akg.akg_sales.databinding.ListitemOrderLineBinding;
 import com.akg.akg_sales.dto.order.OrderLineDto;
+import com.akg.akg_sales.dto.order.OrderLineRequest;
+import com.akg.akg_sales.service.OrderService;
 import com.akg.akg_sales.util.CommonUtil;
 import com.akg.akg_sales.view.activity.order.OrderDetailActivity;
 import com.akg.akg_sales.view.dialog.ConfirmationDialog;
 import com.akg.akg_sales.view.dialog.ItemQuantityDialog;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
+import com.google.firebase.crashlytics.internal.model.CrashlyticsReport;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.ViewHolder>{
@@ -76,6 +81,7 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
             new ConfirmationDialog(activity,"Delete Item ?", i->{
                 activity.orderDto.getOrderLines().remove(line);
                 activity.loadOrderLines();
+                recalculateGrossValue();
             });
         }
         else CommonUtil.showToast(activity,"Minimum one item must be present",false);
@@ -87,10 +93,23 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
                 line.setQuantity(qty);
                 Objects.requireNonNull(activity.recyclerView.getAdapter())
                         .notifyItemChanged(lines.indexOf(line));
-//            if(qty<= line.getQuantity()){
-//
-//            }
-//            else CommonUtil.showToast(activity,"Can't Increase Quantity",false);
+                recalculateGrossValue();
         });
+    }
+
+    private void recalculateGrossValue(){
+        try {
+            double grossValue = 0;
+            for (OrderLineDto l:activity.orderDto.getOrderLines()){
+                if(l.getUnitPrice()==null) continue;
+                grossValue = grossValue+l.getQuantity()*l.getUnitPrice();
+            }
+            activity.orderDto.setValue(grossValue);
+            activity.binding.grossValue.setText(activity.orderDto.getValue());
+        }catch (Exception e){
+            e.printStackTrace();
+            FirebaseCrashlytics.getInstance().recordException(e);
+        }
+
     }
 }

@@ -41,6 +41,7 @@ public class OrderDto {
     private List<OrderApprovalDto> approvals;
     private String note;
     private String siteAddress;
+    private String orderType;
     private List<DeliveryOrderDto> deliveryOrders;
 
     public String getCreationTime(){

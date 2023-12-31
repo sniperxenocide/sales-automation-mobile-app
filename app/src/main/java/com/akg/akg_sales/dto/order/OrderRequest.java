@@ -17,18 +17,9 @@ public class OrderRequest {
     private String note;
     private Long siteId;
     private String deviceInfo;
+    private Long orderTypeId;
 
     public void addLine(Long itemId,Double quantity){
         lines.add(new OrderLineRequest(itemId,quantity));
-    }
-
-    private class OrderLineRequest{
-        private Long itemId;
-        private Double quantity;
-
-        public OrderLineRequest(Long itemId, Double quantity) {
-            this.itemId = itemId;
-            this.quantity = quantity;
-        }
     }
 }

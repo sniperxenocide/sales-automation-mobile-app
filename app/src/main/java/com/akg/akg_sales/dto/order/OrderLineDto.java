@@ -21,6 +21,7 @@ public class OrderLineDto implements Serializable {
     private Double quantity;
     private Double bookedQuantity;
     private String uom;
+    private Double unitPrice;
 
     public String getBookedQuantity(){
         if(this.bookedQuantity==null) return "--";

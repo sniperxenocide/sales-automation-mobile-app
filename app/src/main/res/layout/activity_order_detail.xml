@@ -448,6 +448,7 @@
                                 android:textStyle="bold" />
 
                             <TextView
+                                android:id="@+id/gross_value"
                                 android:layout_width="0dp"
                                 android:layout_height="wrap_content"
                                 android:layout_weight="5"
@@ -456,6 +457,7 @@
                                 android:text="@{vm.value.toString()+` Tk`}"
                                 android:textColor="@color/font_color_main"
                                 android:textSize="@dimen/text_size_1" />
+
                         </LinearLayout>
 
                         <LinearLayout
@@ -502,6 +504,11 @@
                                  />
                         </com.google.android.material.textfield.TextInputLayout>
 
+                        <ImageView
+                            android:paddingTop="10dp"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:id="@+id/attachment" />
 
                         <LinearLayout
                             android:id="@+id/order_action"

@@ -12,20 +12,28 @@ import com.akg.akg_sales.api.OrderApi;
 import com.akg.akg_sales.dto.order.CartItemDto;
 import com.akg.akg_sales.dto.order.OrderDto;
 import com.akg.akg_sales.dto.order.OrderRequest;
+import com.akg.akg_sales.service.OrderService;
 import com.akg.akg_sales.util.CommonUtil;
 import com.akg.akg_sales.view.activity.LoginActivity;
 import com.akg.akg_sales.view.activity.order.CartActivity;
 import com.akg.akg_sales.view.activity.order.PendingOrderActivity;
 import com.akg.akg_sales.view.dialog.ConfirmationDialog;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.RequestBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.http.PartMap;
 
 public class CartViewModel extends BaseObservable {
     CartActivity activity;
@@ -52,6 +60,9 @@ public class CartViewModel extends BaseObservable {
                                 OrderDto orderDto = response.body();
                                 CommonUtil.showToast(activity,"Order Created Successfully",true);
                                 removeCartItems();
+
+                                //Sending Attachment
+                                sendOrderAttachment(orderDto.getId().toString());
 
                                 // Returning to Order List Page
                                 Intent intent = new Intent(activity, PendingOrderActivity.class);
@@ -98,8 +109,11 @@ public class CartViewModel extends BaseObservable {
         try {
             postBody.setDeviceInfo(CommonUtil.getDeviceInfoJson().toString());
         }catch (Exception e){e.printStackTrace();}
+        postBody.setOrderTypeId(activity.selectedOrderType.getId());
+
         return postBody;
     }
+
 
     private String getNote(){
         try {
@@ -111,6 +125,23 @@ public class CartViewModel extends BaseObservable {
             return noteObject.toString();
         }catch (Exception e){e.printStackTrace();}
         return null;
+    }
+
+    private void sendOrderAttachment(String orderId){
+        try {
+            File attachment = new File(Objects.requireNonNull(activity.attachmentPath));
+            MultipartBody.Builder builder = new MultipartBody.Builder();
+            builder.setType(MultipartBody.FORM);
+            RequestBody fileRequestBody = RequestBody.create(MediaType.parse("multipart/form-data"), attachment);
+            builder.addFormDataPart("attachment",attachment.getName(), fileRequestBody);
+            builder.addFormDataPart("orderId",orderId);
+            MultipartBody body = builder.build();
+
+            OrderService.sendOrderAttachment(activity,body,h->{
+                CommonUtil.showToast(activity,"Order Attachment Posted",true);
+            });
+        }
+        catch (Exception e){e.printStackTrace();}
     }
 
 }

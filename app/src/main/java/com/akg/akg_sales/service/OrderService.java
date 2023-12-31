@@ -14,11 +14,13 @@ import com.akg.akg_sales.dto.order.OrderDto;
 import com.akg.akg_sales.dto.order.OrderPermission;
 import com.akg.akg_sales.dto.order.OrderRequest;
 import com.akg.akg_sales.dto.order.OrderStatusDto;
+import com.akg.akg_sales.dto.order.OrderTypeDto;
 import com.akg.akg_sales.util.CommonUtil;
 
 import java.util.List;
 import java.util.Map;
 
+import okhttp3.MultipartBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -194,6 +196,52 @@ public class OrderService {
 
                     @Override
                     public void onFailure(Call<OrderPermission> call, Throwable t) {
+                        call.cancel();
+                        t.printStackTrace();
+                    }
+                });
+    }
+
+    public static void fetchOrderTypes(Context context,Consumer<List<OrderTypeDto>> callback){
+        ProgressDialog progressDialog = CommonUtil.showProgressDialog(context);
+        API.getClient().create(OrderApi.class).getOrderTypes()
+                .enqueue(new Callback<List<OrderTypeDto>>() {
+                    @Override
+                    public void onResponse(Call<List<OrderTypeDto>> call, Response<List<OrderTypeDto>> response) {
+                        progressDialog.dismiss();
+                        try {
+                            if(response.code()==200){
+                                callback.accept(response.body());
+                            }
+                        }catch (Exception e){e.printStackTrace();}
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<OrderTypeDto>> call, Throwable t) {
+                        progressDialog.dismiss();
+                        call.cancel();
+                        t.printStackTrace();
+                    }
+                });
+    }
+
+    public static void sendOrderAttachment(Context context, MultipartBody body,Consumer<OrderDto> callback){
+        ProgressDialog progressDialog = CommonUtil.showProgressDialog(context);
+        API.getClient().create(OrderApi.class).sendOrderAttachment(body)
+                .enqueue(new Callback<OrderDto>() {
+                    @Override
+                    public void onResponse(Call<OrderDto> call, Response<OrderDto> response) {
+                        progressDialog.dismiss();
+                        try {
+                            if(response.code()==200){
+                                callback.accept(response.body());
+                            }
+                        }catch (Exception e){e.printStackTrace();}
+                    }
+
+                    @Override
+                    public void onFailure(Call<OrderDto> call, Throwable t) {
+                        progressDialog.dismiss();
                         call.cancel();
                         t.printStackTrace();
                     }

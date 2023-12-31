@@ -6,6 +6,7 @@ import android.text.Html;
 import android.text.SpannableStringBuilder;
 import android.text.Spanned;
 import android.view.View;
+import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -13,12 +14,14 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.akg.akg_sales.R;
+import com.akg.akg_sales.api.API;
 import com.akg.akg_sales.databinding.ActivityOrderDetailBinding;
 import com.akg.akg_sales.dto.StatusFlow;
 import com.akg.akg_sales.dto.delivery.DeliveryOrderDto;
 import com.akg.akg_sales.dto.order.OrderApprovalDto;
 import com.akg.akg_sales.dto.order.OrderDto;
 import com.akg.akg_sales.dto.order.OrderLineDto;
+import com.akg.akg_sales.dto.order.OrderLineRequest;
 import com.akg.akg_sales.dto.order.OrderRequest;
 import com.akg.akg_sales.dto.order.OrderStatusDto;
 import com.akg.akg_sales.dto.payment.PaymentDto;
@@ -32,6 +35,9 @@ import com.akg.akg_sales.view.dialog.ConfirmationDialog;
 import com.akg.akg_sales.view.dialog.DeliveryOrderDoLineDialog;
 import com.akg.akg_sales.view.dialog.OrderItemDialog;
 import com.akg.akg_sales.view.dialog.StatusFlowDialog;
+import com.bumptech.glide.Glide;
+import com.bumptech.glide.load.model.GlideUrl;
+import com.bumptech.glide.load.model.LazyHeaders;
 
 import org.json.JSONObject;
 
@@ -39,6 +45,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -69,6 +76,7 @@ public class OrderDetailActivity extends AppCompatActivity {
         loadStatusFlowDialog();
         loadDeliveryOrders();
         orderItemDialog = new OrderItemDialog(this);
+        loadAttachment();
     }
 
     private void fetchOrderDetailFromServer(String orderId){
@@ -252,6 +260,20 @@ public class OrderDetailActivity extends AppCompatActivity {
             intent.putExtra("orderNumber",orderDto.getOracleOrderNumber());
             startActivity(intent);
         }catch (Exception e){e.printStackTrace();}
+    }
+
+    private void loadAttachment(){
+        String url = API.baseUrl + "/order-service/api/order/attachment?id="+orderDto.getId();
+        ImageView attachmentView = binding.attachment;
+        GlideUrl glideUrl = new GlideUrl(url,
+                new LazyHeaders.Builder()
+                        .addHeader("Authorization","Bearer "+CommonUtil.loggedInUser.getToken())
+                        .build());
+
+        Glide.with(this)
+                .load(glideUrl)
+                .into(attachmentView);
+
     }
 
 }

@@ -119,6 +119,24 @@
                             tools:ignore="KeyboardInaccessibleWidget" />
                     </com.google.android.material.textfield.TextInputLayout>
 
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/order_type_list_layout"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.ExposedDropdownMenu"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:hint="Order Type">
+
+                        <androidx.appcompat.widget.AppCompatAutoCompleteTextView
+                            android:id="@+id/order_type_list"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:clickable="true"
+                            android:focusable="false"
+                            android:inputType="textNoSuggestions"
+                            tools:ignore="KeyboardInaccessibleWidget" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
                     <TextView
                         android:id="@+id/selected_item_label"
                         android:layout_width="wrap_content"
@@ -153,6 +171,25 @@
                             android:maxLength="250"
                             />
                     </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginBottom="10dp"
+                        android:hint="Attachment (Optional)">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/attachment"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="text"
+                            android:focusable="false"
+                            android:onClick="@{()->activity.onClickAttachment()}"
+                            android:drawableEnd="@android:drawable/ic_menu_report_image"
+                            android:textColor="@color/font_color_main"
+                            android:textSize="@dimen/text_size_1" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
