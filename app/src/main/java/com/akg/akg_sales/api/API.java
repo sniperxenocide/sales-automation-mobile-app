@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 import okhttp3.Interceptor;
@@ -18,27 +20,18 @@ import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
 public class API {
-//    public static String baseUrl = "http://10.10.144.31:5000";  // Dev
-    public static String baseUrl = "http://10.0.2.2:5000";      // Dev
-//    public static String baseUrl = "http://10.10.1.108:5000";  //Test Server
-//    public static String baseUrl = "http://10.10.1.112:5000";  //Production Server
+    public static String devEnvUrl = "http://10.0.2.2:5000";      // Dev
+    public static String testServerLocalAccess = "http://10.10.1.108:5000";  //Test Server
+    public static String testServerPublicAccess = "http://salesapp.test.abulkhairgroup.com:1111";
+    public static String cgdProdServerLocalAccess = "http://10.10.1.112:5000";  //Production Server
+    public static String ceramicProdServerLocalAccess = "http://10.10.1.114:5000";  //Production Server
+    public static String cgdProdServerPublicAccess = "http://salesapp.live.abulkhairgroup.com:1000";
+    public static String ceramicProdServerPublicAccess = "http://akcilsalesapp.live.abulkhairgroup.com:3000";
+    public static HashMap<String,String> baseUrlMap;
 
-    //Test Server
-//    public static String baseUrl = "http://salesapp.test.abulkhairgroup.com:1111";
-
-    //Production Server
-//    public static String baseUrl = "http://salesapp.live.abulkhairgroup.com:1000";
-
-
-    //DMO Chittagong 01926670808
-    //RSO Pahartali 01926670925
-    //TSO Karnafully 01926670951
-    //Customer 183843
-
-
-    //189177
-    //01966660909 MO
-    //01978775254 AM
+//    public static String baseUrl = testServerLocalAccess;
+//    public static String baseUrl = cgdProdServerPublicAccess;
+    public static String baseUrl = ceramicProdServerPublicAccess;
 
     public static Retrofit getClient() {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
@@ -60,5 +53,37 @@ public class API {
                 .baseUrl(baseUrl)
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client).build();
+    }
+
+    public static String cgdBusinessLabel = "CGD";
+    public static String ceramicBusinessLabel = "Ceramic";
+
+    public static void loadServerUrl(){
+        baseUrlMap = new HashMap<>();
+//        loadServerUrlDevelopment();
+        loadServerUrlTestLocalAccess();
+//        loadServerUrlTest();
+//        loadServerUrlProd();
+
+    }
+
+    private static void loadServerUrlDevelopment(){
+        baseUrlMap.put(cgdBusinessLabel,devEnvUrl);
+        baseUrlMap.put(ceramicBusinessLabel,devEnvUrl);
+    }
+
+    private static void loadServerUrlTestLocalAccess(){
+        baseUrlMap.put(cgdBusinessLabel,testServerLocalAccess);
+        baseUrlMap.put(ceramicBusinessLabel,testServerLocalAccess);
+    }
+
+    private static void loadServerUrlTest(){
+        baseUrlMap.put(cgdBusinessLabel,testServerPublicAccess);
+        baseUrlMap.put(ceramicBusinessLabel,testServerPublicAccess);
+    }
+
+    private static void loadServerUrlProd(){
+        baseUrlMap.put(cgdBusinessLabel,cgdProdServerPublicAccess);
+        baseUrlMap.put(ceramicBusinessLabel,ceramicProdServerPublicAccess);
     }
 }

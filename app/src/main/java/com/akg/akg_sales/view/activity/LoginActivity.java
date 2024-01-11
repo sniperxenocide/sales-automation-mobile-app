@@ -9,6 +9,7 @@ import static android.Manifest.permission.READ_SMS;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.Address;
 import android.location.Geocoder;
@@ -18,6 +19,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -36,6 +40,7 @@ import com.akg.akg_sales.viewmodel.LoginViewModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
@@ -51,7 +56,6 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         getDeviceInfo();
-        checkForUpdate();
         loadPage();
     }
 
@@ -60,6 +64,55 @@ public class LoginActivity extends AppCompatActivity {
         loginBinding = DataBindingUtil.setContentView(this,R.layout.activity_login);
         loginBinding.setVm(loginViewModel);
         loginBinding.executePendingBindings();
+
+        checkForUpdate();
+        //handleServerSelection();
+    }
+
+
+    private void handleServerSelection(){
+        loadUrlFromMemory();
+        if(API.baseUrl.trim().length()==0) loadOperatingUnitSelectionDropdown();
+        else showCredentialUI();
+    }
+
+    private void loadUrlFromMemory(){
+        try {
+            System.out.println("Loading Base URL from Memory");
+            SharedPreferences sp = getSharedPreferences("baseUrlMem", Context.MODE_PRIVATE);
+            API.baseUrl = sp.getString("baseUrl","");
+        }catch (Exception e){e.printStackTrace();}
+
+    }
+
+    private void loadOperatingUnitSelectionDropdown() {
+        loginBinding.operatingUnitDropdownContainer.setVisibility(View.VISIBLE);
+        loginBinding.credentialContainer.setVisibility(View.GONE);
+        API.loadServerUrl();
+
+        HashMap<String,String> baseUrlMap = API.baseUrlMap;
+        AutoCompleteTextView tView=loginBinding.operatingUnitDropdown;
+        String[] businessList = new String[baseUrlMap.size()];
+        String[] urlList = new String[baseUrlMap.size()];
+        int cnt = 0;
+        for(String k:baseUrlMap.keySet()){
+            businessList[cnt] = k;
+            urlList[cnt] = baseUrlMap.get(k);
+            cnt++;
+        }
+        ArrayAdapter<String> ptAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, businessList);
+        tView.setAdapter(ptAdapter);
+        tView.setOnItemClickListener((adapterView, view, i, l) -> {
+            tView.setText(businessList[i],false);
+            API.baseUrl = urlList[i];
+            showCredentialUI();
+        });
+    }
+
+    private void showCredentialUI(){
+        loginBinding.operatingUnitDropdownContainer.setVisibility(View.GONE);
+        loginBinding.credentialContainer.setVisibility(View.VISIBLE);
+        checkForUpdate();
     }
 
     private void checkForUpdate(){

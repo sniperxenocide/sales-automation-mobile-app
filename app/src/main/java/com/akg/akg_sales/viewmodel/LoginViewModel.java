@@ -53,6 +53,16 @@ public class LoginViewModel extends BaseObservable {
         }catch (Exception e){e.printStackTrace();}
     }
 
+    private void storeUrlToMemory(){
+        try {
+            System.out.println("Storing Cred in Memory");
+            SharedPreferences sp = activity.getSharedPreferences("baseUrlMem", Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sp.edit();
+            editor.putString("baseUrl",API.baseUrl);
+            editor.apply();
+        }catch (Exception e){e.printStackTrace();}
+    }
+
     @Bindable
     public String getUsername() {
         return this.user.getUsername();
@@ -103,6 +113,7 @@ public class LoginViewModel extends BaseObservable {
                                 if(!validUser.getToken().isEmpty()){
                                     validUser.setUsername(user.getUsername()).setPassword(user.getPassword());
                                     storeCred(validUser);
+                                    //storeUrlToMemory();
                                     CommonUtil.showToast(activity,"Login Success",true);
                                     CommonUtil.loggedInUser = validUser;
                                     Intent homeIntent = new Intent(activity, HomeActivity.class);
