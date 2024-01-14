@@ -30,8 +30,8 @@ public class API {
     public static HashMap<String,String> baseUrlMap;
 
 //    public static String baseUrl = testServerLocalAccess;
-//    public static String baseUrl = cgdProdServerPublicAccess;
-    public static String baseUrl = ceramicProdServerPublicAccess;
+    public static String baseUrl = cgdProdServerPublicAccess;
+//    public static String baseUrl = ceramicProdServerPublicAccess;
 //    public static String baseUrl = ceramicProdServerLocalAccess;
 
     public static Retrofit getClient() {
