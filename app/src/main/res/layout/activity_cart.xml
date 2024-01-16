@@ -81,7 +81,9 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="vertical">
+                    android:orientation="vertical"
+                    android:focusable="true"
+                    android:focusableInTouchMode="true">
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/customer_list_layout"
@@ -108,16 +110,22 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="10dp"
                         android:hint="Delivery Location">
-
                         <androidx.appcompat.widget.AppCompatAutoCompleteTextView
                             android:id="@+id/customer_site_list"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:clickable="true"
-                            android:focusable="false"
                             android:inputType="textNoSuggestions"
                             tools:ignore="KeyboardInaccessibleWidget" />
                     </com.google.android.material.textfield.TextInputLayout>
+                    <TextView
+                        android:layout_gravity="start"
+                        android:id="@+id/site_warning"
+                        android:visibility="gone"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/font_color_red"
+                        android:text="Please select from list.For new Site,Write in Note."/>
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:id="@+id/order_type_list_layout"
@@ -137,6 +145,24 @@
                             tools:ignore="KeyboardInaccessibleWidget" />
                     </com.google.android.material.textfield.TextInputLayout>
 
+                    <com.google.android.material.textfield.TextInputLayout
+                        android:id="@+id/note_container"
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:hint="Note">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/note_field"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:inputType="textNoSuggestions"
+                            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!@#$%-_=+?:;[]()/ "
+                            android:maxLength="250"
+                            />
+                    </com.google.android.material.textfield.TextInputLayout>
+
                     <TextView
                         android:id="@+id/selected_item_label"
                         android:layout_width="wrap_content"
@@ -153,24 +179,6 @@
                         android:layout_height="400dp"
                         android:layout_marginTop="8dp"
                         android:layout_marginBottom="8dp" />
-
-
-                    <com.google.android.material.textfield.TextInputLayout
-                        android:id="@+id/note_container"
-                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="16dp"
-                        android:hint="Note">
-
-                        <com.google.android.material.textfield.TextInputEditText
-                            android:id="@+id/note_field"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789., "
-                            android:maxLength="250"
-                            />
-                    </com.google.android.material.textfield.TextInputLayout>
 
                     <com.google.android.material.textfield.TextInputLayout
                         android:layout_width="match_parent"

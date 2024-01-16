@@ -67,6 +67,7 @@
             android:name=".view.activity.order.PendingOrderActivity"
             android:exported="false" />
         <activity
+            android:windowSoftInputMode="stateAlwaysHidden"
             android:name=".view.activity.order.CartActivity"
             android:exported="false" />
         <activity
@@ -89,7 +90,8 @@
             android:exported="false" />
         <activity
             android:name=".view.activity.LoginActivity"
-            android:exported="true">
+            android:exported="true"
+            android:windowSoftInputMode="stateAlwaysHidden">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

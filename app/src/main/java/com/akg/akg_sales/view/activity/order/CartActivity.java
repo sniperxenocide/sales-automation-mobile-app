@@ -9,6 +9,9 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.Toast;
@@ -113,23 +116,47 @@ public class CartActivity extends AppCompatActivity {
         try {
             cSelectedSite = null;
             AutoCompleteTextView tView=cartBinding.customerSiteList;
-            custSites = new String[customerSites.size()];
+            handleSiteTyping(tView);
+            custSites = new String[customerSites.size()+1];
+            custSites[0] = "----";
             for (CustomerSiteDto s: customerSites){
-                int idx = customerSites.indexOf(s);
+                int idx = customerSites.indexOf(s)+1;
                 custSites[idx]=s.getAddress();
             }
             ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, custSites);
             tView.setAdapter(adapter);
-            tView.setOnItemClickListener((adapterView, view, i, l) -> onClickSite(tView,i));
-            onClickSite(tView,0);
+            tView.setOnItemClickListener((adapterView, view, i, l) -> onClickSite(tView));
+//            tView.setText(custSites[0],false);
         }catch (Exception e){}
     }
 
-    private void onClickSite(AutoCompleteTextView tView,int idx){
-        try {
-            cSelectedSite = customerSites.get(idx);
-            tView.setText(cSelectedSite.getAddress(), false);
-        }catch (Exception e){}
+    private void onClickSite(AutoCompleteTextView tView){
+        for(CustomerSiteDto s:customerSites){
+            if(s.getAddress().equals(tView.getText().toString())){
+                cSelectedSite = s;
+                break;
+            }
+            cSelectedSite = null;
+        }
+        cartBinding.siteWarning.setVisibility(View.GONE);
+        System.out.println(cSelectedSite);
+    }
+
+    private void handleSiteTyping(AutoCompleteTextView tView){
+        tView.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+            @Override
+            public void afterTextChanged(Editable s) {
+                if(cSelectedSite==null || !s.toString().equals(cSelectedSite.getAddress()))
+                {
+                    cSelectedSite=null;
+                    cartBinding.siteWarning.setVisibility(View.VISIBLE);
+                }
+            }
+        });
     }
 
     private void fetchOrderTypes(){
