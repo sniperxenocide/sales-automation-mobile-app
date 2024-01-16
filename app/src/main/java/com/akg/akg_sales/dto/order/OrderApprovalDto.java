@@ -1,5 +1,7 @@
 package com.akg.akg_sales.dto.order;
 
+import com.akg.akg_sales.util.CommonUtil;
+
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -17,12 +19,7 @@ public class OrderApprovalDto {
     private String approvalTime;
 
     public String getApprovalTime(){
-        if(approvalTime==null || approvalTime.isEmpty()) return "--";
-        try {
-            Date dt=new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").parse(approvalTime);
-            return (new SimpleDateFormat("dd-MMM-yyyy hh:mm a")).format(dt);
-        }catch (Exception e){e.printStackTrace();}
-        return approvalTime;
+        return CommonUtil.getFormattedDateTime(approvalTime);
     }
 
 }

@@ -1,5 +1,7 @@
 package com.akg.akg_sales.dto.delivery;
 
+import com.akg.akg_sales.util.CommonUtil;
+
 import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -29,18 +31,10 @@ public class MoveOrderConfirmedHeaderDto implements Serializable {
     private String rowCreationTime;
 
     public String getMoveConfirmedDate(){
-        try {
-            Date dt=new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").parse(moveConfirmedDate);
-            return (new SimpleDateFormat("dd-MMM-yyyy hh:mm a")).format(dt);
-        }catch (Exception e){e.printStackTrace();}
-        return moveConfirmedDate;
+        return CommonUtil.getFormattedDateTime(moveConfirmedDate);
     }
 
     public String getGateOutDate(){
-        try {
-            Date dt=new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").parse(gateOutDate);
-            return (new SimpleDateFormat("dd-MMM-yyyy hh:mm a")).format(dt);
-        }catch (Exception e){e.printStackTrace();}
-        return gateOutDate;
+        return CommonUtil.getFormattedDateTime(gateOutDate);
     }
 }

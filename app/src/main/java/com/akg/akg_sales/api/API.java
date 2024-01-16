@@ -29,8 +29,13 @@ public class API {
     public static String ceramicProdServerPublicAccess = "http://akcilsalesapp.live.abulkhairgroup.com:3000";
     public static HashMap<String,String> baseUrlMap;
 
-//    public static String baseUrl = testServerLocalAccess;
-    public static String baseUrl = cgdProdServerPublicAccess;
+//    public static String baseUrl = devEnvUrl;
+
+    public static String baseUrl = testServerLocalAccess;
+//    public static String baseUrl = testServerPublicAccess;
+
+//    public static String baseUrl = cgdProdServerPublicAccess;
+
 //    public static String baseUrl = ceramicProdServerPublicAccess;
 //    public static String baseUrl = ceramicProdServerLocalAccess;
 

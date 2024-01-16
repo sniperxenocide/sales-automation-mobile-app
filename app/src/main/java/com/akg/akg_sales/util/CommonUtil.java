@@ -21,7 +21,9 @@ import org.json.JSONObject;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -98,5 +100,14 @@ public class CommonUtil {
         DecimalFormat formatter = (DecimalFormat) NumberFormat.getInstance(Locale.US);
         formatter.applyPattern("##,##,##,###.##");
         return formatter.format(val);
+    }
+
+    public static String getFormattedDateTime(String dateTime){
+        if(dateTime==null || dateTime.isEmpty()) return "--";
+        try {
+            Date dt=new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss").parse(dateTime);
+            return (new SimpleDateFormat("dd-MMM-yyyy hh:mm a")).format(dt);
+        }catch (Exception e){e.printStackTrace();}
+        return dateTime;
     }
 }

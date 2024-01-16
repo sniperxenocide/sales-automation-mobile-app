@@ -45,11 +45,7 @@ public class OrderDto {
     private List<DeliveryOrderDto> deliveryOrders;
 
     public String getCreationTime(){
-        try {
-            Date dt=new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").parse(creationTime);
-            return (new SimpleDateFormat("dd-MMM-yyyy hh:mm a")).format(dt);
-        }catch (Exception e){e.printStackTrace();}
-        return creationTime;
+        return CommonUtil.getFormattedDateTime(creationTime);
     }
 
     public String getValue() {
@@ -57,12 +53,7 @@ public class OrderDto {
     }
 
     public String getBookedDate(){
-        if(bookedDate==null || bookedDate.isEmpty()) return "--";
-        try {
-            Date dt=new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").parse(bookedDate);
-            return (new SimpleDateFormat("dd-MMM-yyyy hh:mm a")).format(dt);
-        }catch (Exception e){e.printStackTrace();}
-        return bookedDate;
+        return CommonUtil.getFormattedDateTime(bookedDate);
     }
 
     public String getBookedValue(){

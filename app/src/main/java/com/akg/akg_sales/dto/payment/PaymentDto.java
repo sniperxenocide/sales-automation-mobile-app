@@ -44,10 +44,6 @@ public class PaymentDto {
     }
 
     public String getCreationTime(){
-        try {
-            Date dt=new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss").parse(creationTime);
-            return (new SimpleDateFormat("dd-MMM-yyyy hh:mm a")).format(dt);
-        }catch (Exception e){e.printStackTrace();}
-        return creationTime;
+        return CommonUtil.getFormattedDateTime(creationTime);
     }
 }
