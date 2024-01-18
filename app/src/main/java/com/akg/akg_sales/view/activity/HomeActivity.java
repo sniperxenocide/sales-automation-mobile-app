@@ -1,25 +1,11 @@
 package com.akg.akg_sales.view.activity;
 
-import static android.Manifest.permission.READ_PHONE_NUMBERS;
-import static android.Manifest.permission.READ_PHONE_STATE;
-import static android.Manifest.permission.READ_SMS;
-
-import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
-import android.net.wifi.WifiInfo;
-import android.net.wifi.WifiManager;
-import android.os.Build;
 import android.os.Bundle;
-import android.provider.Settings;
-import android.telephony.TelephonyManager;
-import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 import androidx.databinding.DataBindingUtil;
 
 import com.akg.akg_sales.BuildConfig;
@@ -34,6 +20,7 @@ import com.akg.akg_sales.util.CommonUtil;
 import com.akg.akg_sales.view.activity.delivery.DeliveryListActivity;
 import com.akg.akg_sales.view.activity.order.PendingOrderActivity;
 import com.akg.akg_sales.view.activity.payment.PaymentListActivity;
+import com.akg.akg_sales.view.dialog.ConfirmationDialog;
 import com.akg.akg_sales.view.dialog.GeneralDialog;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -41,7 +28,6 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -59,6 +45,7 @@ public class HomeActivity extends AppCompatActivity {
         homeBinding.setActivity(this);
         homeBinding.executePendingBindings();
         setAppVersion();
+        setWelcomeMsg();
 
         if(CommonUtil.loggedInUser.getLoginCount()<=1) onClickResetPasswordBtn();
     }
@@ -126,6 +113,16 @@ public class HomeActivity extends AppCompatActivity {
         try {
             homeBinding.appVersion.setText("v"+BuildConfig.VERSION_NAME);
         }catch (Exception e){e.printStackTrace();}
+    }
+
+    private void setWelcomeMsg(){
+        String msg = "Welcome "+CommonUtil.loggedInUser.getUsername();
+        homeBinding.welcomeUserText.setText(msg);
+    }
+
+    @Override
+    public void onBackPressed(){
+        new ConfirmationDialog(this,"Do you want to logout?", m-> finish());
     }
 
 
