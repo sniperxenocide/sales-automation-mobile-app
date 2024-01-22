@@ -12,5 +12,7 @@ public class ItemMaster {
     private Boolean itemSubTypeActive;
     private Boolean itemBrandActive;
     private Boolean itemColorActive;
+    private Boolean itemGradeActive;
+    private Boolean itemShapeActive;
     List<ItemCategory> categories;
 }

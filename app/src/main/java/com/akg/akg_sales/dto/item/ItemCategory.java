@@ -12,4 +12,6 @@ public class ItemCategory {
     private ItemSubTypeDto itemSubType;
     private ItemBrandDto itemBrand;
     private ItemColorDto itemColor;
+    private ItemGradeDto itemGrade;
+    private ItemShapeDto itemShape;
 }

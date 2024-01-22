@@ -10,6 +10,8 @@ import com.akg.akg_sales.databinding.DialogItemFilterBinding;
 import com.akg.akg_sales.dto.item.ItemBrandDto;
 import com.akg.akg_sales.dto.item.ItemCategory;
 import com.akg.akg_sales.dto.item.ItemColorDto;
+import com.akg.akg_sales.dto.item.ItemGradeDto;
+import com.akg.akg_sales.dto.item.ItemShapeDto;
 import com.akg.akg_sales.dto.item.ItemSubTypeDto;
 import com.akg.akg_sales.dto.item.ItemTypeDto;
 import com.akg.akg_sales.util.CommonUtil;
@@ -30,11 +32,15 @@ public class ItemFilterDialog {
     private Long selectedSubTypeId;
     private Long selectedBrandId;
     private Long selectedColorId;
+    private Long selectedGradeId;
+    private Long selectedShapeId;
 
     List<ItemTypeDto> itemTypes;
     List<ItemSubTypeDto> itemSubTypes;
     List<ItemBrandDto> itemBrands;
     List<ItemColorDto> itemColors;
+    List<ItemGradeDto> itemGrades;
+    List<ItemShapeDto> itemShapes;
 
     Map<String,String> filterParam = new HashMap<>();
 
@@ -58,6 +64,12 @@ public class ItemFilterDialog {
 
         if(!activity.itemMaster.getItemColorActive())
             binding.itemColorDropdownContainer.setVisibility(View.GONE);
+
+        if(!activity.itemMaster.getItemGradeActive())
+            binding.itemGradeDropdownContainer.setVisibility(View.GONE);
+
+        if(!activity.itemMaster.getItemShapeActive())
+            binding.itemShapeDropdownContainer.setVisibility(View.GONE);
     }
 
     private void loadItemType(){
@@ -103,6 +115,7 @@ public class ItemFilterDialog {
         Map<Long,ItemBrandDto> brandMap = new HashMap<>();
         for(ItemCategory c:activity.itemMaster.getCategories()){
             try {
+                if(c.getItemBrand().getBrand().equals("NA")) continue;
                 if(shouldSelectBrand(c)) brandMap.put(c.getItemBrand().getId(),c.getItemBrand());
             }catch (Exception ignored){}
         }
@@ -125,6 +138,7 @@ public class ItemFilterDialog {
         Map<Long,ItemColorDto> colorMap = new HashMap<>();
         for(ItemCategory c:activity.itemMaster.getCategories()){
             try {
+                if(c.getItemColor().getColor().equals("NA")) continue;
                 if(shouldSelectColor(c) ) colorMap.put(c.getItemColor().getId(),c.getItemColor());
             }catch (Exception ignored){}
         }
@@ -142,6 +156,55 @@ public class ItemFilterDialog {
         selectedColorId=null;
     }
 
+    private void loadItemGrade(){
+        itemGrades = new ArrayList<>();
+        Map<Long, ItemGradeDto> gradeMap = new HashMap<>();
+        for(ItemCategory c:activity.itemMaster.getCategories()){
+            try {
+                if(c.getItemGrade().getGrade().equals("NA")) continue;
+                if(shouldSelectGrade(c) ) gradeMap.put(c.getItemGrade().getId(),c.getItemGrade());
+            }catch (Exception ignored){}
+        }
+        for(Long k: gradeMap.keySet()) itemGrades.add(gradeMap.get(k));
+        Collections.sort(itemGrades,(a,b)-> a.getGrade().compareTo(b.getGrade()));
+
+        AutoCompleteTextView tView=binding.itemGradeDropdown;
+        String[] itemGradeList = new String[itemGrades.size()];
+        for (int i=0;i< itemGrades.size();i++) itemGradeList[i]=itemGrades.get(i).getGrade();
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(activity, android.R.layout.simple_spinner_item, itemGradeList);
+        tView.setAdapter(adapter);
+        tView.setOnItemClickListener((adapterView, view, i, l) -> onSelectGrade(tView,i,itemGradeList[i]));
+
+        tView.setText("");
+        selectedGradeId=null;
+
+        try {onSelectGrade(tView,0,itemGradeList[0]);
+        }catch (Exception ignored){}
+    }
+
+    private void loadItemShape(){
+        itemShapes = new ArrayList<>();
+        Map<Long, ItemShapeDto> shapeMap = new HashMap<>();
+        for(ItemCategory c:activity.itemMaster.getCategories()){
+            try {
+                if(c.getItemShape().getShape().equals("NA")) continue;
+                if(shouldSelectShape(c) ) shapeMap.put(c.getItemShape().getId(),c.getItemShape());
+            }catch (Exception ignored){}
+        }
+        for(Long k: shapeMap.keySet()) itemShapes.add(shapeMap.get(k));
+        Collections.sort(itemShapes,(a,b)-> a.getShape().compareTo(b.getShape()));
+
+        AutoCompleteTextView tView=binding.itemShapeDropdown;
+        String[] itemShapeList = new String[itemShapes.size()];
+        for (int i=0;i< itemShapes.size();i++) itemShapeList[i]=itemShapes.get(i).getShape();
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(activity, android.R.layout.simple_spinner_item, itemShapeList);
+        tView.setAdapter(adapter);
+        tView.setOnItemClickListener((adapterView, view, i, l) -> onSelectShape(tView,i,itemShapeList[i]));
+
+        tView.setText("");
+        selectedShapeId=null;
+    }
+
 
     private void onClickApply(){
         if(selectedTypeId==null){
@@ -152,6 +215,8 @@ public class ItemFilterDialog {
         if(selectedSubTypeId!=null) filterParam.put("subTypeId",selectedSubTypeId.toString());
         if(selectedBrandId!=null) filterParam.put("brandId",selectedBrandId.toString());
         if(selectedColorId!=null) filterParam.put("colorId",selectedColorId.toString());
+        if(selectedGradeId!=null) filterParam.put("gradeId",selectedGradeId.toString());
+        if(selectedShapeId!=null) filterParam.put("shapeId",selectedShapeId.toString());
         activity.fetchItemFromServer(filterParam);
         dialog.dismiss();
     }
@@ -161,9 +226,12 @@ public class ItemFilterDialog {
         if(activity.itemMaster.getItemSubTypeActive()) loadItemSubType();
         if(activity.itemMaster.getItemBrandActive()) loadItemBrand();
         if(activity.itemMaster.getItemColorActive()) loadItemColor();
+        if(activity.itemMaster.getItemGradeActive()) loadItemGrade();
+        if(activity.itemMaster.getItemShapeActive()) loadItemShape();
 
         if(!(activity.itemMaster.getItemSubTypeActive() && activity.itemMaster.getItemBrandActive()
-                && activity.itemMaster.getItemColorActive())) onClickApply();
+                && activity.itemMaster.getItemColorActive() && activity.itemMaster.getItemGradeActive()
+                && activity.itemMaster.getItemShapeActive())) onClickApply();
     }
 
     private void onSelectSubType(AutoCompleteTextView tView,int i,String txt){
@@ -172,6 +240,8 @@ public class ItemFilterDialog {
             tView.setText(txt,false);
             if(activity.itemMaster.getItemBrandActive()) loadItemBrand();
             if(activity.itemMaster.getItemColorActive()) loadItemColor();
+            if(activity.itemMaster.getItemGradeActive()) loadItemGrade();
+            if(activity.itemMaster.getItemShapeActive()) loadItemShape();
         }catch (Exception ignored){}
     }
 
@@ -180,6 +250,8 @@ public class ItemFilterDialog {
             selectedBrandId = itemBrands.get(i).getId();
             tView.setText(txt,false);
             if(activity.itemMaster.getItemColorActive()) loadItemColor();
+            if(activity.itemMaster.getItemGradeActive()) loadItemGrade();
+            if(activity.itemMaster.getItemShapeActive()) loadItemShape();
         }catch (Exception ignored){}
     }
 
@@ -187,8 +259,27 @@ public class ItemFilterDialog {
         try {
             selectedColorId = itemColors.get(i).getId();
             tView.setText(txt,false);
+            if(activity.itemMaster.getItemGradeActive()) loadItemGrade();
+            if(activity.itemMaster.getItemShapeActive()) loadItemShape();
         }catch (Exception ignored){}
     }
+
+    private void onSelectGrade(AutoCompleteTextView tView,int i,String txt){
+        try {
+            selectedGradeId = itemGrades.get(i).getId();
+            tView.setText(txt,false);
+            if(activity.itemMaster.getItemShapeActive()) loadItemShape();
+        }catch (Exception ignored){}
+    }
+
+    private void onSelectShape(AutoCompleteTextView tView,int i,String txt){
+        try {
+            selectedShapeId = itemShapes.get(i).getId();
+            tView.setText(txt,false);
+        }catch (Exception ignored){}
+    }
+
+
 
     private boolean shouldSelectSubType(ItemCategory c){
         return c.getItemType().getId().longValue()==selectedTypeId;
@@ -202,6 +293,18 @@ public class ItemFilterDialog {
     private boolean shouldSelectColor(ItemCategory c){
         return shouldSelectBrand(c)
                 && (selectedBrandId==null || c.getItemBrand().getId().longValue()==selectedBrandId);
+
+    }
+
+    private boolean shouldSelectGrade(ItemCategory c){
+        return shouldSelectColor(c)
+                && (selectedColorId==null || c.getItemColor().getId().longValue()==selectedColorId);
+
+    }
+
+    private boolean shouldSelectShape(ItemCategory c){
+        return shouldSelectGrade(c)
+                && (selectedGradeId==null || c.getItemGrade().getId().longValue()==selectedGradeId);
 
     }
 
