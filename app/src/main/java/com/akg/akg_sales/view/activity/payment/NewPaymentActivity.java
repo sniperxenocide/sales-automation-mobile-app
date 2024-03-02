@@ -48,6 +48,7 @@ public class NewPaymentActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        CommonUtil.setFirebaseUserId();
         initPage();
     }
 

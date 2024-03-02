@@ -44,8 +44,10 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -61,6 +63,7 @@ public class OrderDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        CommonUtil.setFirebaseUserId();
         try {fetchOrderDetailFromServer(getIntent().getStringExtra("orderId"));
         }catch (Exception e){finish();}
     }
@@ -77,6 +80,7 @@ public class OrderDetailActivity extends AppCompatActivity {
         loadDeliveryOrders();
         orderItemDialog = new OrderItemDialog(this);
         loadAttachment();
+        setItemSummary();
     }
 
     private void fetchOrderDetailFromServer(String orderId){
@@ -109,6 +113,7 @@ public class OrderDetailActivity extends AppCompatActivity {
     public void loadOrderLines(){
         binding.orderLinesLabel.setText("Order Lines ("+orderDto.getOrderLines().size()+")");
         recyclerView = binding.orderLinesList;
+        recyclerView.setItemViewCacheSize(orderDto.getOrderLines().size());
         recyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(layoutManager);
@@ -137,7 +142,7 @@ public class OrderDetailActivity extends AppCompatActivity {
             OrderRequest body = new OrderRequest();
             body.setOrderId(orderDto.getId()).setCustomerId(orderDto.getCustomerId());
             for (OrderLineDto l : orderDto.getOrderLines()) {
-                body.addLine(l.getItemId(),l.getQuantity());
+                if(!l.isLineCanceled()) body.addLine(l.getItemId(),l.getQuantity());
             }
             body.setNote(addNote());
             OrderService.approveOrder(body,this,res->{
@@ -250,6 +255,46 @@ public class OrderDetailActivity extends AppCompatActivity {
             }
         }catch (Exception e){e.printStackTrace();}
         return Html.fromHtml(htmlBuilder.toString());
+    }
+
+    public void setItemSummary(){
+        try {
+            Hashtable<String,Double> initialItemCntMap = new Hashtable<>();
+            Hashtable<String,Double> approvedItemCntMap = new Hashtable<>();
+            Hashtable<String,Double> bookedItemCntMap = new Hashtable<>();
+
+            for(OrderLineDto l:orderDto.getOrderLines()){
+                Double initialQty = initialItemCntMap.get(l.getUom());
+                Double approvedQty = approvedItemCntMap.get(l.getUom());
+                Double bookedQty = bookedItemCntMap.get(l.getUom());
+                if(initialQty==null) initialQty = 0.0;
+                if(approvedQty==null) approvedQty = 0.0;
+                if(bookedQty==null) bookedQty = 0.0;
+                initialItemCntMap.put(l.getUom(),initialQty+l.getInitialQuantity());
+                approvedItemCntMap.put(l.getUom(),approvedQty+l.getQuantity());
+                bookedItemCntMap.put(l.getUom(),
+                        bookedQty+(l.getBookedQuantityDbl()==null?0.0:l.getBookedQuantityDbl()));
+            }
+            StringBuilder sb = new StringBuilder();
+            sb.append("<b>Requested: </b>");
+            for(String k:initialItemCntMap.keySet())
+                sb.append(initialItemCntMap.get(k)).append(" ").append(k).append(", ");
+            sb.replace(sb.length() - 2, sb.length(), "");
+            sb.append("<br>");
+
+            sb.append("<b>Approved: </b>");
+            for(String k:approvedItemCntMap.keySet())
+                sb.append(approvedItemCntMap.get(k)).append(" ").append(k).append(", ");
+            sb.replace(sb.length() - 2, sb.length(), "");
+            sb.append("<br>");
+
+            sb.append("<b>Booked: </b>");
+            for(String k:bookedItemCntMap.keySet())
+                sb.append(bookedItemCntMap.get(k)).append(" ").append(k).append(", ");
+            sb.replace(sb.length() - 2, sb.length(), "");
+
+            binding.itemSummary.setText(Html.fromHtml(sb.toString()));
+        }catch (Exception ignored){}
     }
 
     public void showDeliveryList(){

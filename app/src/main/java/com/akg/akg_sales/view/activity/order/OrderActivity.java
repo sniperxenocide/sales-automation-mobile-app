@@ -37,6 +37,7 @@ public class OrderActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        CommonUtil.setFirebaseUserId();
         loadPage();
     }
 
@@ -54,7 +55,7 @@ public class OrderActivity extends AppCompatActivity {
         orderBinding.executePendingBindings();
         setCustomer();
         enableItemSearch();
-        fetchItemMaster();
+        //fetchItemMaster();
     }
 
     private void updateItemList(ArrayList<ItemDto> list){
@@ -146,6 +147,8 @@ public class OrderActivity extends AppCompatActivity {
 
         itemList.clear();
         updateItemList(itemList);
+
+        fetchItemMaster();
 
         updateCartBtnLabel();
         disableSearchField();

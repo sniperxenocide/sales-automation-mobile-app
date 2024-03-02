@@ -37,6 +37,7 @@ public class PaymentListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        CommonUtil.setFirebaseUserId();
         loadPage();
         initFilter();
         fetchPaymentsFromServer();

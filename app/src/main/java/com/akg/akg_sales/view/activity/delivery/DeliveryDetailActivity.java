@@ -43,6 +43,7 @@ public class DeliveryDetailActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        CommonUtil.setFirebaseUserId();
         loadPage();
         fetchDeliveryDetail();
     }

@@ -21,6 +21,7 @@ import com.akg.akg_sales.databinding.ActivityCartBinding;
 import com.akg.akg_sales.dto.CustomerDto;
 import com.akg.akg_sales.dto.CustomerSiteDto;
 import com.akg.akg_sales.dto.order.CartItemDto;
+import com.akg.akg_sales.dto.order.OrderLineDto;
 import com.akg.akg_sales.dto.order.OrderTypeDto;
 import com.akg.akg_sales.service.CustomerService;
 import com.akg.akg_sales.service.OrderService;
@@ -31,6 +32,7 @@ import com.github.dhaval2404.imagepicker.ImagePicker;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Hashtable;
 import java.util.List;
 import java.util.Objects;
 
@@ -53,6 +55,7 @@ public class CartActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        CommonUtil.setFirebaseUserId();
         loadPage();
     }
 
@@ -190,11 +193,23 @@ public class CartActivity extends AppCompatActivity {
     }
 
     public void calculateOrderValue(){
+        Hashtable<String,Double> itemCntMap = new Hashtable<>();
         double value = 0.0;
         for(CartItemDto c: Objects.requireNonNull(cartMap.get(cSelectedCustomer.getId()))){
             value = value + c.getQuantity()*c.getItemDto().getUnitPrice();
+
+            // Calculating Item Quantity
+            Double qty = itemCntMap.get(c.getItemDto().getSellingUom());
+            if(qty==null) qty = 0.0;
+            itemCntMap.put(c.getItemDto().getSellingUom(),qty+c.getQuantity());
         }
-        cartBinding.orderValue.setText("Gross Value:\n"+CommonUtil.decimalToAccounting(value)+" Tk");
+        cartBinding.grossValue.setText(CommonUtil.decimalToAccounting(value)+" Tk");
+
+        // Updating Item Quantity
+        StringBuilder sb = new StringBuilder();
+        for(String k:itemCntMap.keySet())
+            sb.append(itemCntMap.get(k)).append(" ").append(k).append(", ");
+        cartBinding.itemSummary.setText(sb.substring(0,sb.length()-2));
     }
 
     public void onClickAttachment(){

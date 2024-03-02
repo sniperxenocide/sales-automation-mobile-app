@@ -10,4 +10,5 @@ public class ReportDto {
     private String reportName;
     private String reportModuleName;
     private String operatingUnit;
+    private String reportUrl;
 }

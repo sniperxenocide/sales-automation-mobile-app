@@ -39,6 +39,7 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        CommonUtil.setFirebaseUserId();
         fetchCustomerListForUser();
         fetchOrderStatusFromServer();
         homeBinding = DataBindingUtil.setContentView(this,R.layout.activity_home);
@@ -127,8 +128,8 @@ public class HomeActivity extends AppCompatActivity {
 
 
     public void onClickReportBtn(){
-//        Intent reportIntent = new Intent(this, ReportActivity.class);
-//        this.startActivity(reportIntent);
+        Intent reportIntent = new Intent(this, ReportActivity.class);
+        this.startActivity(reportIntent);
     }
 
     public void onClickOrderBtn(){

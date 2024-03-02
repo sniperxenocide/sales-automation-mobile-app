@@ -44,6 +44,7 @@ public class PendingOrderActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        CommonUtil.setFirebaseUserId();
         loadPage();
         initFilter();
         fetchOrderFromServer();

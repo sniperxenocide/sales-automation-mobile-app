@@ -48,7 +48,7 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
         OrderLineDto line = lines.get(position);
         holder.bind(line,Integer.toString(position+1));
 
-        if(CommonUtil.orderPermission.getCanEditOrder() && activity.canApproveOrder){
+        if(CommonUtil.orderPermission.getCanEditOrder() && activity.canApproveOrder && !line.isLineCanceled()){
             holder.itemBinding.deleteLineItem.setVisibility(View.VISIBLE);
             holder.itemBinding.quantity.setOnClickListener(view -> onQuantityUpdate(line));
             holder.itemBinding.deleteLineItem.setOnClickListener(view -> onClickDeleteItem(line));
@@ -110,6 +110,6 @@ public class OrderLineAdapter extends RecyclerView.Adapter<OrderLineAdapter.View
             e.printStackTrace();
             FirebaseCrashlytics.getInstance().recordException(e);
         }
-
+        activity.setItemSummary();
     }
 }

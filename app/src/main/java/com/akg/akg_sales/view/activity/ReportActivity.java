@@ -20,6 +20,7 @@ import com.akg.akg_sales.view.adapter.order.PendingOrderAdapter;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Objects;
 
 public class ReportActivity extends AppCompatActivity {
@@ -32,6 +33,7 @@ public class ReportActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        CommonUtil.setFirebaseUserId();
         binding = DataBindingUtil.setContentView(this, R.layout.activity_report);
         binding.setActivity(this);
         binding.executePendingBindings();
@@ -60,10 +62,17 @@ public class ReportActivity extends AppCompatActivity {
     }
 
     private void fetchReportsFromServer(){
-        ReportService.fetchReportList(this,r->{
-            this.pageResponse = r;
-            loadReportsInRecycleView();
-        });
+        try {
+            Map<String,String> filter = new HashMap<>();
+            //filter.put("operatingUnitId",CommonUtil.customers.get(0).getOperatingUnitId());
+            ReportService.fetchReportList(this,filter,r->{
+                this.pageResponse = r;
+                loadReportsInRecycleView();
+            });
+        }catch (Exception e){
+            e.printStackTrace();
+            CommonUtil.showToast(this,e.getMessage(),false);
+        }
     }
 
     private void handleLoadMoreData(){

@@ -113,7 +113,7 @@
                             android:layout_width="0dp"
                             android:layout_height="0dp"
                             android:layout_marginBottom="10dp"
-                            android:background="@drawable/order_booked"
+                            android:background="@drawable/order"
                             app:layout_constraintBottom_toTopOf="@+id/textView"
                             app:layout_constraintDimensionRatio="1:1"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -144,13 +144,14 @@
                         android:background="@drawable/light_grey_background"
                         android:onClick="@{()->activity.onClickDeliveryBtn()}"
                         android:padding="15sp">
+<!--                        android:background="@drawable/light_grey_background"-->
 
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:id="@+id/btn_icon_2"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
                             android:layout_marginBottom="10dp"
-                            android:background="@drawable/delivery_confirmed"
+                            android:background="@drawable/delivery2"
                             app:layout_constraintBottom_toTopOf="@+id/delivery_btn_label"
                             app:layout_constraintDimensionRatio="1:1"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -189,6 +190,7 @@
                         android:background="@drawable/light_grey_background"
                         android:onClick="@{()->activity.onClickPaymentBtn()}"
                         android:padding="15sp">
+<!--                        android:background="@drawable/light_grey_background"-->
 
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:id="@+id/btn_icon_3"
@@ -224,15 +226,16 @@
                         android:layout_margin="10sp"
                         android:layout_weight="1"
                         android:background="@drawable/light_grey_background"
-                        android:onClick="@{()->activity.onClickResetPasswordBtn()}"
+                        android:onClick="@{()->activity.onClickReportBtn()}"
                         android:padding="15sp">
+<!--                        android:background="@drawable/light_grey_background"-->
 
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:id="@+id/btn_icon_5"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
                             android:layout_marginBottom="10dp"
-                            android:background="@drawable/reset_password"
+                            android:background="@drawable/report"
                             app:layout_constraintBottom_toTopOf="@+id/reset_pass_btn_label"
                             app:layout_constraintDimensionRatio="1:1"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -246,7 +249,7 @@
                             android:id="@+id/reset_pass_btn_label"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Reset"
+                            android:text="Report"
                             android:textColor="@color/font_color_main"
                             android:textSize="@dimen/text_size_1"
                             app:layout_constraintBottom_toBottomOf="parent"
@@ -258,7 +261,7 @@
                 </LinearLayout>
 
                 <LinearLayout
-                    android:visibility="invisible"
+                    android:visibility="visible"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:baselineAligned="false"
@@ -271,7 +274,7 @@
                         android:layout_margin="10sp"
                         android:layout_weight="1"
                         android:background="@drawable/light_grey_background"
-                        android:onClick="@{()->activity.onClickReportBtn()}"
+                        android:onClick="@{()->activity.onClickResetPasswordBtn()}"
                         android:padding="15sp">
 
                         <androidx.constraintlayout.widget.ConstraintLayout
@@ -279,7 +282,7 @@
                             android:layout_width="0dp"
                             android:layout_height="0dp"
                             android:layout_marginBottom="10dp"
-                            android:background="@drawable/report"
+                            android:background="@drawable/reset_password"
                             app:layout_constraintBottom_toTopOf="@+id/notification_btn_label"
                             app:layout_constraintDimensionRatio="1:1"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -293,7 +296,7 @@
                             android:id="@+id/notification_btn_label"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Report"
+                            android:text="Reset"
                             android:textColor="@color/font_color_main"
                             android:textSize="@dimen/text_size_1"
                             app:layout_constraintBottom_toBottomOf="parent"

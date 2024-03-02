@@ -34,6 +34,7 @@ public class DeliveryListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        CommonUtil.setFirebaseUserId();
         loadPage();
         initFilter();
         fetchDeliveryData();

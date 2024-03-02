@@ -12,15 +12,17 @@ import com.akg.akg_sales.dto.order.OrderDto;
 import com.akg.akg_sales.dto.report.ReportDto;
 import com.akg.akg_sales.util.CommonUtil;
 
+import java.util.Map;
+
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
 public class ReportService {
 
-    public static void fetchReportList(Context context, Consumer<PageResponse<ReportDto>> callback){
+    public static void fetchReportList(Context context, Map<String,String> filter, Consumer<PageResponse<ReportDto>> callback){
         ProgressDialog progressDialog = CommonUtil.showProgressDialog(context);
-        API.getClient().create(ReportApi.class).getReportList().enqueue(new Callback<PageResponse<ReportDto>>() {
+        API.getClient().create(ReportApi.class).getReportList(filter).enqueue(new Callback<PageResponse<ReportDto>>() {
             @Override
             public void onResponse(Call<PageResponse<ReportDto>> call, Response<PageResponse<ReportDto>> response) {
                 progressDialog.dismiss();

@@ -16,6 +16,7 @@ import com.akg.akg_sales.dto.CustomerDto;
 import com.akg.akg_sales.dto.User;
 import com.akg.akg_sales.dto.order.OrderPermission;
 import com.akg.akg_sales.dto.order.OrderStatusDto;
+import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
 import org.json.JSONObject;
 
@@ -109,5 +110,10 @@ public class CommonUtil {
             return (new SimpleDateFormat("dd-MMM-yyyy hh:mm a")).format(dt);
         }catch (Exception e){e.printStackTrace();}
         return dateTime;
+    }
+
+    public static void setFirebaseUserId(){
+        if(CommonUtil.loggedInUser!=null)
+            FirebaseCrashlytics.getInstance().setUserId(CommonUtil.loggedInUser.getUsername());
     }
 }

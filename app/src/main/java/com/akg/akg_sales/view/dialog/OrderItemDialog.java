@@ -53,13 +53,15 @@ public class OrderItemDialog {
                 "  width:100%;" +
                 "}</style>";
         String header = "<tr><th>Item</th>" +
-                "<th>Ordered</th><th>Booked</th><th>UOM</th></tr>";
+                "<th>Requested</th><th>Approved</th><th>Booked</th><th>UOM</th></tr>";
 
         StringBuilder bb = new StringBuilder();
         int sl = 1;
         for(OrderLineDto l:activity.orderDto.getOrderLines()){
             bb.append("<tr>");
-            bb.append("<td>").append(sl).append(". ").append(l.getItemDescription()).append("</td>");
+            bb.append("<td>").append(sl).append(". ").append(l.getItemDescription())
+                    .append(l.isLineCanceled()?"<span style='color:red'> &nbsp(Canceled)</span>":"").append("</td>");
+            bb.append("<td>").append(l.getInitialQuantity()).append("</td>");
             bb.append("<td>").append(l.getQuantity()).append("</td>");
             bb.append("<td>").append(l.getBookedQuantity()).append("</td>");
             bb.append("<td>").append(l.getUom()).append("</td>");

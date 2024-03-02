@@ -13,7 +13,7 @@ import retrofit2.http.QueryMap;
 public interface ReportApi {
 
     @GET("/report-service/api/reports")
-    Call<PageResponse<ReportDto>> getReportList();
+    Call<PageResponse<ReportDto>> getReportList(@QueryMap Map<String,String> filter);
 
     @GET("/report-service/api/report-data")
     Call<ResponseBody> getReportData(@QueryMap Map<String,String> filter);

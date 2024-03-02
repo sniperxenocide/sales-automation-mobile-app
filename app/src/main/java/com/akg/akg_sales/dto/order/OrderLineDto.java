@@ -18,14 +18,20 @@ public class OrderLineDto implements Serializable {
     private Long itemId;
     private String itemCode;
     private String itemDescription;
+    private Double initialQuantity;
     private Double quantity;
     private Double bookedQuantity;
     private String uom;
     private Double unitPrice;
+    private boolean lineCanceled;
 
     public String getBookedQuantity(){
         if(this.bookedQuantity==null) return "--";
         return this.bookedQuantity.toString();
+    }
+
+    public Double getBookedQuantityDbl(){
+        return this.bookedQuantity;
     }
 
 }
