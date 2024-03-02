@@ -178,8 +178,8 @@ public class ItemFilterDialog {
         tView.setText("");
         selectedGradeId=null;
 
-        try {onSelectGrade(tView,0,itemGradeList[0]);
-        }catch (Exception ignored){}
+//        try {onSelectGrade(tView,0,itemGradeList[0]);
+//        }catch (Exception ignored){}
     }
 
     private void loadItemShape(){
