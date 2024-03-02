@@ -31,10 +31,10 @@ public class API {
 
 //    public static String baseUrl = devEnvUrl;
 
-    public static String baseUrl = testServerLocalAccess;
+//    public static String baseUrl = testServerLocalAccess;
 //    public static String baseUrl = testServerPublicAccess;
 
-//    public static String baseUrl = cgdProdServerPublicAccess;
+    public static String baseUrl = cgdProdServerPublicAccess;
 
 //    public static String baseUrl = ceramicProdServerPublicAccess;
 //    public static String baseUrl = ceramicProdServerLocalAccess;
