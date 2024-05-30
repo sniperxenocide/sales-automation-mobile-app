@@ -1,5 +1,10 @@
 package com.akg.akg_sales.api;
 
+import android.app.ProgressDialog;
+import android.content.Context;
+
+import androidx.core.util.Consumer;
+
 import com.akg.akg_sales.util.CommonUtil;
 
 import java.io.IOException;
@@ -14,8 +19,10 @@ import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 
 import okhttp3.Request;
-import okhttp3.Response;
 import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
@@ -46,8 +53,7 @@ public class API {
                 .connectTimeout(10, TimeUnit.SECONDS)
                 .writeTimeout(15, TimeUnit.SECONDS)
                 .readTimeout(30, TimeUnit.SECONDS)
-                .addInterceptor(interceptor)
-                .addInterceptor(chain -> {
+                .addInterceptor(interceptor).addInterceptor(chain -> {
                     String token = "";
                     if(CommonUtil.loggedInUser!=null && !CommonUtil.loggedInUser.getToken().isEmpty())
                         token = "Bearer "+CommonUtil.loggedInUser.getToken();
@@ -55,10 +61,32 @@ public class API {
                             .addHeader("Authorization", token ).build();
                     return chain.proceed(newRequest);
                 }).retryOnConnectionFailure(false).build();
-        return new Retrofit.Builder()
-                .baseUrl(baseUrl)
-                .addConverterFactory(GsonConverterFactory.create())
+        return new Retrofit.Builder().baseUrl(baseUrl).addConverterFactory(GsonConverterFactory.create())
                 .client(client).build();
+    }
+
+    public static <T>Callback<T> getCallback(Context context, Consumer<T> callback, ProgressDialog progress){
+        return new Callback<T>() {
+            @Override
+            public void onResponse(Call<T> call, Response<T> response) {
+                progress.dismiss();
+                try {
+                    if(response.code()==200){
+                        callback.accept(response.body());
+                    }
+                    else throw new Exception(response.code()+"."+response.message());
+                }catch (Exception e){
+                    CommonUtil.showToast(context,e.getMessage(),false);
+                }
+            }
+
+            @Override
+            public void onFailure(Call<T> call, Throwable t) {
+                progress.dismiss();
+                call.cancel();
+                CommonUtil.showToast(context,t.getMessage(),false);
+            }
+        };
     }
 
     public static String cgdBusinessLabel = "CGD";

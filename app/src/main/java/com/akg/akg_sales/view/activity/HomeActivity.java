@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.view.View;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
@@ -14,6 +15,7 @@ import com.akg.akg_sales.databinding.ActivityHomeBinding;
 import com.akg.akg_sales.dto.CustomerDto;
 import com.akg.akg_sales.dto.order.CartItemDto;
 import com.akg.akg_sales.dto.order.OrderStatusDto;
+import com.akg.akg_sales.service.CommonService;
 import com.akg.akg_sales.service.CustomerService;
 import com.akg.akg_sales.service.OrderService;
 import com.akg.akg_sales.util.CommonUtil;
@@ -42,6 +44,7 @@ public class HomeActivity extends AppCompatActivity {
         CommonUtil.setFirebaseUserId();
         fetchCustomerListForUser();
         fetchOrderStatusFromServer();
+        fetchHomepagePermission();
         homeBinding = DataBindingUtil.setContentView(this,R.layout.activity_home);
         homeBinding.setActivity(this);
         homeBinding.executePendingBindings();
@@ -121,6 +124,12 @@ public class HomeActivity extends AppCompatActivity {
         homeBinding.welcomeUserText.setText(msg);
     }
 
+    private void fetchHomepagePermission(){
+        CommonService.fetchHomepagePermission(this,permission->{
+            if(permission.getCmsAccess()) homeBinding.cmsButton.setVisibility(View.VISIBLE);
+        });
+    }
+
     @Override
     public void onBackPressed(){
         new ConfirmationDialog(this,"Do you want to logout?", m-> finish());
@@ -128,7 +137,7 @@ public class HomeActivity extends AppCompatActivity {
 
 
     public void onClickReportBtn(){
-        Intent reportIntent = new Intent(this, ReportActivity.class);
+        Intent reportIntent = new Intent(this, ReportWebActivity.class);
         this.startActivity(reportIntent);
     }
 
@@ -149,6 +158,11 @@ public class HomeActivity extends AppCompatActivity {
 
     public void onClickResetPasswordBtn(){
         Intent intent = new Intent(this, ResetPasswordActivity.class);
+        this.startActivity(intent);
+    }
+
+    public void onClickComplainBtn(){
+        Intent intent = new Intent(this, ComplainManagementActivity.class);
         this.startActivity(intent);
     }
 }

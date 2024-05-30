@@ -33,6 +33,12 @@
         android:theme="@style/Theme.MaterialComponents.Light.NoActionBar"
         tools:targetApi="31">
         <activity
+            android:name=".view.activity.ReportWebActivity"
+            android:exported="false" />
+        <activity
+            android:name=".view.activity.ComplainManagementActivity"
+            android:exported="false" />
+        <activity
             android:name=".view.activity.ReportActivity"
             android:exported="false" />
         <activity
@@ -67,26 +73,14 @@
             android:name=".view.activity.order.PendingOrderActivity"
             android:exported="false" />
         <activity
-            android:windowSoftInputMode="stateAlwaysHidden"
             android:name=".view.activity.order.CartActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:windowSoftInputMode="stateAlwaysHidden" />
         <activity
             android:name=".view.activity.order.OrderActivity"
             android:exported="false" />
         <activity
             android:name=".view.activity.HomeActivity"
-            android:exported="false" />
-        <activity
-            android:name=".view.activity.notification.PaymentClearedActivity"
-            android:exported="false" />
-        <activity
-            android:name=".view.activity.notification.DeliveryConfirmedActivity"
-            android:exported="false" />
-        <activity
-            android:name=".view.activity.notification.OrderBookedActivity"
-            android:exported="false" />
-        <activity
-            android:name=".view.activity.notification.NotificationActivity"
             android:exported="false" />
         <activity
             android:name=".view.activity.LoginActivity"

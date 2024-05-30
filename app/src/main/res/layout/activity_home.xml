@@ -306,20 +306,22 @@
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
                     <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/cms_button"
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_margin="10sp"
                         android:layout_weight="1"
-                        android:visibility="invisible"
                         android:background="@drawable/light_grey_background"
-                        android:padding="15sp">
+                        android:onClick="@{()->activity.onClickComplainBtn()}"
+                        android:padding="15sp"
+                        android:visibility="invisible">
 
                         <androidx.constraintlayout.widget.ConstraintLayout
                             android:id="@+id/btn_icon_6"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
                             android:layout_marginBottom="10dp"
-                            android:background="@drawable/reset_password"
+                            android:background="@drawable/justice"
                             app:layout_constraintBottom_toTopOf="@+id/futr_btn_label"
                             app:layout_constraintDimensionRatio="1:1"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -333,7 +335,7 @@
                             android:id="@+id/futr_btn_label"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text=""
+                            android:text="Complaint"
                             android:textColor="@color/font_color_main"
                             android:textSize="@dimen/text_size_1"
                             app:layout_constraintBottom_toBottomOf="parent"
