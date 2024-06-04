@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.databinding.DataBindingUtil;
 
 import android.app.ProgressDialog;
+import android.content.ClipData;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -20,7 +21,11 @@ import com.akg.akg_sales.R;
 import com.akg.akg_sales.api.API;
 import com.akg.akg_sales.databinding.ActivityComplainManagementBinding;
 import com.akg.akg_sales.service.CommonService;
+import com.akg.akg_sales.util.CommonUtil;
 import com.akg.akg_sales.util.WebViewConfig;
+
+import java.lang.reflect.Array;
+import java.util.Arrays;
 
 public class ComplainManagementActivity extends AppCompatActivity {
     ActivityComplainManagementBinding binding;
@@ -57,8 +62,11 @@ public class ComplainManagementActivity extends AppCompatActivity {
             @Override
             public boolean onShowFileChooser(WebView webView, ValueCallback<Uri[]> filePathCallback, WebChromeClient.FileChooserParams fileChooserParams){
 
-                Intent fileChooserIntent = fileChooserParams.createIntent();
-                startActivityForResult( fileChooserIntent, 100);
+                Intent intent = fileChooserParams.createIntent();
+                intent.addCategory(Intent.CATEGORY_OPENABLE);
+                intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                intent.setType("*/*");
+                startActivityForResult( intent, 100);
                 vc = filePathCallback;
                 return true;
             }
@@ -70,8 +78,23 @@ public class ComplainManagementActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        Uri[] selectedFileUri = WebChromeClient.FileChooserParams.parseResult(resultCode, data);
-        vc.onReceiveValue(selectedFileUri);
+        try {
+            Uri[] selectedFileUri = WebChromeClient.FileChooserParams.parseResult(resultCode, data);
+            System.out.println("selectedFileUri "+ Arrays.toString(selectedFileUri));
+            System.out.println("DataString "+data.getDataString());
+            System.out.println("ClipData "+data.getClipData());
+            if(selectedFileUri==null) {
+                ClipData clipData = data.getClipData();
+                selectedFileUri = new Uri[clipData.getItemCount()];
+                for(int i=0;i<clipData.getItemCount();i++){
+                    selectedFileUri[i] = clipData.getItemAt(i).getUri();
+                }
+            }
+            vc.onReceiveValue(selectedFileUri);
+        }catch (Exception e){
+            e.printStackTrace();
+            CommonUtil.showToast(this,"File Selection Error: "+e.getMessage(),false);
+        }
     }
 
     public void backToHomeDialog(){
