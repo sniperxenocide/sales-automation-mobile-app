@@ -36,7 +36,7 @@ import java.util.Set;
 public class HomeActivity extends AppCompatActivity {
     Gson gson = new Gson();
     ActivityHomeBinding homeBinding;
-    private String defaultMsg = "Service not Available";
+    private final String defaultMsg = "Service not Available";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

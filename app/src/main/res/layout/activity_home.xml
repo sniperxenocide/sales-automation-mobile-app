@@ -226,54 +226,6 @@
                         android:layout_margin="10sp"
                         android:layout_weight="1"
                         android:background="@drawable/light_grey_background"
-                        android:onClick="@{()->activity.onClickReportBtn()}"
-                        android:padding="15sp">
-<!--                        android:background="@drawable/light_grey_background"-->
-
-                        <androidx.constraintlayout.widget.ConstraintLayout
-                            android:id="@+id/btn_icon_5"
-                            android:layout_width="0dp"
-                            android:layout_height="0dp"
-                            android:layout_marginBottom="10dp"
-                            android:background="@drawable/report"
-                            app:layout_constraintBottom_toTopOf="@+id/reset_pass_btn_label"
-                            app:layout_constraintDimensionRatio="1:1"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintWidth_percent="0.6">
-
-                        </androidx.constraintlayout.widget.ConstraintLayout>
-
-                        <TextView
-                            android:id="@+id/reset_pass_btn_label"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Report"
-                            android:textColor="@color/font_color_main"
-                            android:textSize="@dimen/text_size_1"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/btn_icon_5" />
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:visibility="visible"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:baselineAligned="false"
-                    android:orientation="horizontal"
-                    android:weightSum="2">
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="10sp"
-                        android:layout_weight="1"
-                        android:background="@drawable/light_grey_background"
                         android:onClick="@{()->activity.onClickResetPasswordBtn()}"
                         android:padding="15sp">
 
@@ -305,6 +257,16 @@
                             app:layout_constraintTop_toBottomOf="@id/btn_icon_4" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
 
+                </LinearLayout>
+
+                <LinearLayout
+                    android:visibility="visible"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:baselineAligned="false"
+                    android:orientation="horizontal"
+                    android:weightSum="2">
+
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:id="@+id/cms_button"
                         android:layout_width="0dp"
@@ -317,11 +279,49 @@
                         android:visibility="invisible">
 
                         <androidx.constraintlayout.widget.ConstraintLayout
-                            android:id="@+id/btn_icon_6"
+                            android:id="@+id/btn_icon_5"
                             android:layout_width="0dp"
                             android:layout_height="0dp"
                             android:layout_marginBottom="10dp"
                             android:background="@drawable/justice"
+                            app:layout_constraintBottom_toTopOf="@+id/reset_pass_btn_label"
+                            app:layout_constraintDimensionRatio="1:1"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintWidth_percent="0.6">
+
+                        </androidx.constraintlayout.widget.ConstraintLayout>
+
+                        <TextView
+                            android:id="@+id/reset_pass_btn_label"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Complaint"
+                            android:textColor="@color/font_color_main"
+                            android:textSize="@dimen/text_size_1"
+                            app:layout_constraintBottom_toBottomOf="parent"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/btn_icon_5" />
+                    </androidx.constraintlayout.widget.ConstraintLayout>
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="10sp"
+                        android:layout_weight="1"
+                        android:background="@drawable/light_grey_background"
+                        android:onClick="@{()->activity.onClickReportBtn()}"
+                        android:padding="15sp"
+                        android:visibility="invisible">
+
+                        <androidx.constraintlayout.widget.ConstraintLayout
+                            android:id="@+id/btn_icon_6"
+                            android:layout_width="0dp"
+                            android:layout_height="0dp"
+                            android:layout_marginBottom="10dp"
+                            android:background="@drawable/report"
                             app:layout_constraintBottom_toTopOf="@+id/futr_btn_label"
                             app:layout_constraintDimensionRatio="1:1"
                             app:layout_constraintEnd_toEndOf="parent"
@@ -335,7 +335,7 @@
                             android:id="@+id/futr_btn_label"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Complaint"
+                            android:text="Report"
                             android:textColor="@color/font_color_main"
                             android:textSize="@dimen/text_size_1"
                             app:layout_constraintBottom_toBottomOf="parent"
@@ -343,7 +343,6 @@
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toBottomOf="@id/btn_icon_6" />
                     </androidx.constraintlayout.widget.ConstraintLayout>
-
 
                 </LinearLayout>
 

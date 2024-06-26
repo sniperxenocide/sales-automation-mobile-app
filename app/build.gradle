@@ -5,12 +5,12 @@ plugins {
 }
 
 android {
-    compileSdk 32
+    compileSdk 34
 
     defaultConfig {
         applicationId "com.akg.akg_sales"
         minSdk 23
-        targetSdk 32
+        targetSdk 33
         versionCode 21
         versionName "2.5.12-test"    // Test Release Version
 //        versionName "1.0.10"    // Production Release Version
