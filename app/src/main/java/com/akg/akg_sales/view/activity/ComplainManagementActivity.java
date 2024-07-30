@@ -7,24 +7,19 @@ import androidx.databinding.DataBindingUtil;
 import android.app.ProgressDialog;
 import android.content.ClipData;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.webkit.ConsoleMessage;
 import android.webkit.ValueCallback;
 import android.webkit.WebChromeClient;
-import android.webkit.WebSettings;
 import android.webkit.WebView;
-import android.webkit.WebViewClient;
 
 import com.akg.akg_sales.R;
-import com.akg.akg_sales.api.API;
 import com.akg.akg_sales.databinding.ActivityComplainManagementBinding;
 import com.akg.akg_sales.service.CommonService;
 import com.akg.akg_sales.util.CommonUtil;
 import com.akg.akg_sales.util.WebViewConfig;
 
-import java.lang.reflect.Array;
 import java.util.Arrays;
 
 public class ComplainManagementActivity extends AppCompatActivity {

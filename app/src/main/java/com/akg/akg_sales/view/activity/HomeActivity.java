@@ -3,16 +3,22 @@ package com.akg.akg_sales.view.activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.Browser;
 import android.view.View;
+import android.webkit.CookieManager;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.databinding.DataBindingUtil;
 
 import com.akg.akg_sales.BuildConfig;
 import com.akg.akg_sales.R;
+import com.akg.akg_sales.api.API;
 import com.akg.akg_sales.databinding.ActivityHomeBinding;
 import com.akg.akg_sales.dto.CustomerDto;
+import com.akg.akg_sales.dto.HomeMenuItem;
 import com.akg.akg_sales.dto.order.CartItemDto;
 import com.akg.akg_sales.dto.order.OrderStatusDto;
 import com.akg.akg_sales.service.CommonService;
@@ -20,8 +26,10 @@ import com.akg.akg_sales.service.CustomerService;
 import com.akg.akg_sales.service.OrderService;
 import com.akg.akg_sales.util.CommonUtil;
 import com.akg.akg_sales.view.activity.delivery.DeliveryListActivity;
+import com.akg.akg_sales.view.activity.order.OrderActivity;
 import com.akg.akg_sales.view.activity.order.PendingOrderActivity;
 import com.akg.akg_sales.view.activity.payment.PaymentListActivity;
+import com.akg.akg_sales.view.adapter.HomeMenuAdapter;
 import com.akg.akg_sales.view.dialog.ConfirmationDialog;
 import com.akg.akg_sales.view.dialog.GeneralDialog;
 import com.google.gson.Gson;
@@ -36,7 +44,6 @@ import java.util.Set;
 public class HomeActivity extends AppCompatActivity {
     Gson gson = new Gson();
     ActivityHomeBinding homeBinding;
-    private final String defaultMsg = "Service not Available";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,14 +51,33 @@ public class HomeActivity extends AppCompatActivity {
         CommonUtil.setFirebaseUserId();
         fetchCustomerListForUser();
         fetchOrderStatusFromServer();
-        fetchHomepagePermission();
         homeBinding = DataBindingUtil.setContentView(this,R.layout.activity_home);
         homeBinding.setActivity(this);
         homeBinding.executePendingBindings();
         setAppVersion();
         setWelcomeMsg();
 
+        generateHomeMenu();
+
         if(CommonUtil.loggedInUser.getLoginCount()<=1) onClickResetPasswordBtn();
+    }
+
+    private void generateHomeMenu(){
+        ArrayList<HomeMenuItem> list = new ArrayList<>();
+        list.add(new HomeMenuItem("Order",R.drawable.order,PendingOrderActivity.class));
+        list.add(new HomeMenuItem("Delivery",R.drawable.delivery2,DeliveryListActivity.class));
+        list.add(new HomeMenuItem("Payment",R.drawable.payment,PaymentListActivity.class));
+        list.add(new HomeMenuItem("Reset",R.drawable.reset_password, ResetPasswordActivity.class));
+
+        HomeMenuAdapter adapter = new HomeMenuAdapter(this,list);
+        homeBinding.homeGrid.setAdapter(adapter);
+
+        CommonService.fetchHomepagePermission(this,permission->{
+            if(permission.getCmsAccess()) list.add(new HomeMenuItem("CMS",R.drawable.justice, ComplainManagementActivity.class));
+            if(permission.getReportAccess()) list.add(new HomeMenuItem("Report",R.drawable.report, ReportWebActivity.class));
+
+            adapter.notifyDataSetChanged();
+        });
     }
 
     @Override
@@ -124,45 +150,17 @@ public class HomeActivity extends AppCompatActivity {
         homeBinding.welcomeUserText.setText(msg);
     }
 
-    private void fetchHomepagePermission(){
-        CommonService.fetchHomepagePermission(this,permission->{
-            if(permission.getCmsAccess()) homeBinding.cmsButton.setVisibility(View.VISIBLE);
-        });
-    }
-
     @Override
     public void onBackPressed(){
         new ConfirmationDialog(this,"Do you want to logout?", m-> finish());
     }
 
 
-    public void onClickReportBtn(){
-        Intent reportIntent = new Intent(this, ReportWebActivity.class);
-        this.startActivity(reportIntent);
-    }
 
-    public void onClickOrderBtn(){
-        Intent pendingOrderIntent = new Intent(this, PendingOrderActivity.class);
-        this.startActivity(pendingOrderIntent);
-    }
-
-    public void onClickDeliveryBtn(){
-        Intent intent = new Intent(this, DeliveryListActivity.class);
-        this.startActivity(intent);
-    }
-
-    public void onClickPaymentBtn(){
-        Intent intent = new Intent(this, PaymentListActivity.class);
-        this.startActivity(intent);
-    }
 
     public void onClickResetPasswordBtn(){
         Intent intent = new Intent(this, ResetPasswordActivity.class);
         this.startActivity(intent);
     }
 
-    public void onClickComplainBtn(){
-        Intent intent = new Intent(this, ComplainManagementActivity.class);
-        this.startActivity(intent);
-    }
 }

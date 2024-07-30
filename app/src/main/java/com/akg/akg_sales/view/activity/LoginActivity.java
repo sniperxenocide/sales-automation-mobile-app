@@ -5,6 +5,7 @@ import static android.Manifest.permission.ACCESS_FINE_LOCATION;
 import static android.Manifest.permission.READ_PHONE_NUMBERS;
 import static android.Manifest.permission.READ_PHONE_STATE;
 import static android.Manifest.permission.READ_SMS;
+import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -19,6 +20,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -166,8 +168,23 @@ public class LoginActivity extends AppCompatActivity {
             CommonUtil.deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
         }catch (Exception e){e.printStackTrace();}
 
+        requestExternalStoragePermission();
         getGpsLocation();
         getPhoneNumber();
+    }
+
+    public void requestExternalStoragePermission(){
+        try {
+            Boolean externalStoragePermission = ActivityCompat.checkSelfPermission(this, WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+            Log.d("requestExternalStoragePermission", "requestExternalStoragePermission: "+externalStoragePermission);
+            if(!externalStoragePermission){
+                System.out.println("Requesting Storage Permission");
+                String[] permissions = new String[]{WRITE_EXTERNAL_STORAGE};
+                requestPermissions(permissions, 102);
+            }
+        }catch (Exception e){
+            Log.d("Permission", "requestExternalStoragePermission: "+e.getMessage());
+        }
     }
 
     public void getPhoneNumber() {
@@ -217,6 +234,9 @@ public class LoginActivity extends AppCompatActivity {
                 return;
             }
             setLocation();
+        }
+        else if(requestCode==102){
+            CommonUtil.showToast(this,"Permission Granted",true);
         }
         else System.out.println("Permission Failed");
     }

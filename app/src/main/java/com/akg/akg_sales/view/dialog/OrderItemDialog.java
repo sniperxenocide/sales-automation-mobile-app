@@ -1,8 +1,11 @@
 package com.akg.akg_sales.view.dialog;
 
 import android.app.Dialog;
+import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.print.PrintDocumentAdapter;
+import android.print.PrintManager;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 
@@ -32,10 +35,10 @@ public class OrderItemDialog {
         int height = (int)(0.9*displayMetrics.heightPixels);
         dialog.getWindow().setLayout(width, height);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
-        dialog.show();
         binding.webview.loadDataWithBaseURL(null, page, "text/html", "UTF-8", null);
         binding.webview.getSettings().setBuiltInZoomControls(true);
         binding.webview.getSettings().setDisplayZoomControls(true);
+        dialog.show();
     }
 
     private void generateTable(){
@@ -69,7 +72,25 @@ public class OrderItemDialog {
             sl++;
         }
         String body = bb.toString();
-        page = style+"<table>"+header+body+"</table>";
+        String top =
+                "<label><b>Customer:</b>&nbsp"+activity.orderDto.getCustomerName()+"&nbsp"+activity.orderDto.getCustomerNumber()+"</label><br>"+
+                "<label><b>Order Date:</b>&nbsp"+activity.orderDto.getCreationTime()+"</label><br>"+
+                "<label><b>Book Date:</b>&nbsp"+activity.orderDto.getBookedDate()+"</label><br>"+
+                "<label><b>Customer Order No:</b>&nbsp"+activity.orderDto.getOrderNumber()+"</label><br>"+
+                "<label><b>System Order No:</b>&nbsp"+activity.orderDto.getOracleOrderNumber()+"</label><br><br>"+
+                "<label><b>Order Summary</b></label><br>"+
+                "<label><b>Gross Value:</b> "+activity.orderDto.getValue()+" Tk</label><br>"+
+                "<label><b>Book Value:</b> "+activity.orderDto.getBookedValue()+" Tk</label><br>"+
+                "<label>"+activity.generateSummaryString()+"</label><br><br>";
+
+        page = top+style+"<table>"+header+body+"</table>";
+    }
+
+    public void createWebPrintJob() {
+        PrintManager printManager = (PrintManager) activity.getSystemService(Context.PRINT_SERVICE);
+        String jobName = activity.orderDto.getOrderNumber();
+        PrintDocumentAdapter printAdapter = binding.webview.createPrintDocumentAdapter(jobName);
+        printManager.print(jobName, printAdapter, null);
     }
 
 }

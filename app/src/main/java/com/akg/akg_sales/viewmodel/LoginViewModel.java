@@ -132,7 +132,8 @@ public class LoginViewModel extends BaseObservable {
                     public void onFailure(Call<User> call, Throwable t) {
                         progressDialog.dismiss();
                         call.cancel();
-                        CommonUtil.showToast(activity,"Login Failed",false);
+                        t.printStackTrace();
+                        CommonUtil.showToast(activity,t.getMessage()+" Login Failed",false);
                     }
                 });
             }catch (Exception e){

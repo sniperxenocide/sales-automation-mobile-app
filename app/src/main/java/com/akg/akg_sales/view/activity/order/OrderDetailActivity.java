@@ -259,6 +259,13 @@ public class OrderDetailActivity extends AppCompatActivity {
 
     public void setItemSummary(){
         try {
+            binding.itemSummary.setText(Html.fromHtml(generateSummaryString()));
+        }catch (Exception ignored){}
+    }
+
+    public String generateSummaryString(){
+        StringBuilder sb = new StringBuilder();
+        try {
             Hashtable<String,Double> initialItemCntMap = new Hashtable<>();
             Hashtable<String,Double> approvedItemCntMap = new Hashtable<>();
             Hashtable<String,Double> bookedItemCntMap = new Hashtable<>();
@@ -275,7 +282,6 @@ public class OrderDetailActivity extends AppCompatActivity {
                 bookedItemCntMap.put(l.getUom(),
                         bookedQty+(l.getBookedQuantityDbl()==null?0.0:l.getBookedQuantityDbl()));
             }
-            StringBuilder sb = new StringBuilder();
             sb.append("<b>Requested: </b>");
             for(String k:initialItemCntMap.keySet())
                 sb.append(initialItemCntMap.get(k)).append(" ").append(k).append(", ");
@@ -292,9 +298,8 @@ public class OrderDetailActivity extends AppCompatActivity {
             for(String k:bookedItemCntMap.keySet())
                 sb.append(bookedItemCntMap.get(k)).append(" ").append(k).append(", ");
             sb.replace(sb.length() - 2, sb.length(), "");
-
-            binding.itemSummary.setText(Html.fromHtml(sb.toString()));
         }catch (Exception ignored){}
+        return sb.toString();
     }
 
     public void showDeliveryList(){
