@@ -15,6 +15,9 @@ import com.akg.akg_sales.dto.delivery.MoveOrderConfirmedHeaderDto;
 import com.akg.akg_sales.dto.delivery.MoveOrderConfirmedLineDto;
 import com.akg.akg_sales.view.activity.delivery.DeliveryDetailActivity;
 
+import java.util.HashMap;
+import java.util.Map;
+
 public class DeliveryDetailReportDialog {
     DialogDeliveryDetailReportBinding binding;
     public Dialog dialog;
@@ -47,9 +50,10 @@ public class DeliveryDetailReportDialog {
         MoveOrderConfirmedHeaderDto mov = activity.moveConfirmedHeaderDto;
         String title = "<h3>Move Order: <span style='font-weight:normal'>"+mov.getMovOrderNo() +"</span></h3>" +
                 "<h3>Loading Date: <span style='font-weight:normal'>"+mov.getMoveConfirmedDate() +"</span></h3>" +
-                "<h3>Gate-Out Date: <span style='font-weight:normal'>"+" " +"</span></h3>" +
+                "<h3>Gate-Out Date: <span style='font-weight:normal'>"+mov.getGateOutDate() +"</span></h3>" +
                 "<h3>Vehicle No: <span style='font-weight:normal'>"+mov.getVehicleNo() +"</span></h3>" +
-                "<h3>Driver: <span style='font-weight:normal'>"+mov.getDriverName()+" , "+mov.getDriverMobile() +"</span></h3>";
+                "<h3>Driver: <span style='font-weight:normal'>"+mov.getDriverName()+" , "+mov.getDriverMobile() +"</span></h3>"+
+                "<h3>Item Summary: <span style='font-weight:normal'>"+generateItemQuantity()+"</span></h3>";
 
         String style = "<style>" +
                 "@media print { " +
@@ -106,6 +110,25 @@ public class DeliveryDetailReportDialog {
         String jobName = activity.moveConfirmedHeaderDto.getMovOrderNo();
         PrintDocumentAdapter printAdapter = binding.webview.createPrintDocumentAdapter(jobName);
         printManager.print(jobName, printAdapter, null);
+    }
+
+    private String generateItemQuantity(){
+        try {
+            Map<String,Double> m = new HashMap<>();
+            for(MoveOrderConfirmedLineDto l:activity.deliveryLines){
+                String uom = l.getUomCode();
+                Double prvQty = m.get(uom);
+                if(prvQty==null) prvQty=0.0;
+                Double qty = l.getLineQuantity();
+                m.put(uom,prvQty+qty);
+            }
+            StringBuilder sb = new StringBuilder();
+            for(String k:m.keySet())
+                sb.append(m.get(k)).append(" ").append(k).append(", ");
+            sb.replace(sb.length() - 2, sb.length(), "");
+            return sb.toString();
+        }catch (Exception e){}
+        return "";
     }
 
 //    PrintAttributes attributes = new PrintAttributes.Builder()

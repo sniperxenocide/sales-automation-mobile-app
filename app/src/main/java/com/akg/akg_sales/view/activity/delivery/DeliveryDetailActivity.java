@@ -33,9 +33,9 @@ public class DeliveryDetailActivity extends AppCompatActivity {
     public MoveOrderConfirmedHeaderDto moveConfirmedHeaderDto;
     public List<MoveOrderConfirmedLineDto> deliveryLines;
 
-    Hashtable<String,HashSet<Long>> customerOrdersMap = new Hashtable<>();
-    Hashtable<Long,HashSet<String>> orderDosMap = new Hashtable<>();
-    Hashtable<String,ArrayList<MoveOrderConfirmedLineDto>> doItemsMap = new Hashtable<>();
+    public Hashtable<String,HashSet<Long>> customerOrdersMap = new Hashtable<>();
+    public Hashtable<Long,HashSet<String>> orderDosMap = new Hashtable<>();
+    public Hashtable<String,ArrayList<MoveOrderConfirmedLineDto>> doItemsMap = new Hashtable<>();
     public Hashtable<String,Integer> dataFrequency = new Hashtable<>();
 
     DeliveryDetailReportDialog reportDialog;
