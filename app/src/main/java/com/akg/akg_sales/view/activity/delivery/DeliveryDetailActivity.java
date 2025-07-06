@@ -17,6 +17,7 @@ import com.akg.akg_sales.dto.delivery.MoveOrderConfirmedLineDto;
 import com.akg.akg_sales.service.DeliveryService;
 import com.akg.akg_sales.util.CommonUtil;
 import com.akg.akg_sales.view.adapter.delivery.DeliveryLineAdapter;
+import com.akg.akg_sales.view.dialog.DeliveryAcknowledgeDialog;
 import com.akg.akg_sales.view.dialog.DeliveryDetailReportDialog;
 
 import java.util.ArrayList;
@@ -121,6 +122,7 @@ public class DeliveryDetailActivity extends AppCompatActivity {
     }
 
     String[] customerNames;
+    String selectedCustomer="";
     private void loadCustomerList(){
         try {
             binding.customerListLayout.setHint("Customers ("+customerOrdersMap.size()+")");
@@ -138,6 +140,7 @@ public class DeliveryDetailActivity extends AppCompatActivity {
     private void onCustomerSelect(AutoCompleteTextView tView,int idx){
         try {
             tView.setText(customerNames[idx],false);
+            selectedCustomer = customerNames[idx];
             loadOrderNumbers(customerNames[idx]);
         }catch (Exception e){e.printStackTrace();}
     }
@@ -201,6 +204,10 @@ public class DeliveryDetailActivity extends AppCompatActivity {
 
     public void showReportView(){
         reportDialog.showReport();
+    }
+
+    public void doReceivingDialog(){
+        DeliveryAcknowledgeDialog dialog = new DeliveryAcknowledgeDialog(this,selectedCustomer);
     }
 
 }

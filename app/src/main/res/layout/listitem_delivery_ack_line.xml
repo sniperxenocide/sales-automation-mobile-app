@@ -8,9 +8,6 @@
         <variable
             name="vm"
             type="com.akg.akg_sales.dto.delivery.DeliveryAcknowledgeLineDto" />
-        <variable
-            name="index"
-            type="String" />
     </data>
 
     <LinearLayout
@@ -25,7 +22,7 @@
             android:text="@{vm.doNumber}"
             android:hint="DO/CGOU/4089089"
             android:textColor="@color/black"
-            android:textSize="@dimen/text_size_1"
+            android:textSize="18sp"
             android:textStyle="bold"
             android:layout_weight="1"
             android:visibility="@{vm.isHeader ? View.VISIBLE : View.GONE}"/>
@@ -59,9 +56,9 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/font_color_main"
-                        android:textSize="@dimen/text_size_1"
+                        android:textSize="18sp"
                         android:textStyle="bold"
-                        android:text="@{index+`.`}"
+                        android:text="@{vm.serial+`.`}"
                         android:hint="1."
                         />
                 </LinearLayout>
@@ -147,24 +144,23 @@
                         android:weightSum="10">
 
                         <EditText
+                            android:id="@+id/rcvQty"
                             android:layout_width="0dp"
                             android:layout_height="wrap_content"
-                            android:layout_weight="6"
+                            android:layout_weight="7"
                             android:textAlignment="center"
-                            android:background="@drawable/white_background"
+                            android:background="@drawable/deep_green_background"
                             android:textColor="@color/font_color_main"
                             android:textStyle="italic"
-                            android:padding="5dp"
+                            android:padding="6dp"
                             android:text="@{vm.lineQuantity.toString()}"
                             android:layout_marginEnd="5sp"
                             android:textSize="18sp"
-                            android:inputType="number"
-                            android:hint="5" />
+                            android:inputType="number" />
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_weight="4"
                             android:textAlignment="textStart"
                             android:text="@{vm.uomCode}"
                             android:textColor="@color/font_color_main"

@@ -290,8 +290,24 @@
 
                     </androidx.recyclerview.widget.RecyclerView>
                 </LinearLayout>
-
+                <Button
+                    android:id="@+id/order_approve"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Receive DO"
+                    android:onClick="@{()->activity.doReceivingDialog()}"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="10sp"
+                    android:textColor="@color/white"
+                    android:textStyle="bold"
+                    android:textSize="@dimen/text_size_1"
+                    android:layout_margin="10dp"
+                    android:paddingTop="10dp"
+                    android:paddingBottom="10dp"
+                    android:backgroundTint="@android:color/holo_green_dark"
+                    />
             </LinearLayout>
+
 
 
 

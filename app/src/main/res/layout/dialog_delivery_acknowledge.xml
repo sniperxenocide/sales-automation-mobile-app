@@ -7,124 +7,229 @@
             type="com.akg.akg_sales.view.dialog.DeliveryAcknowledgeDialog" />
     </data>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/header_container"
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:nestedScrollingEnabled="true">
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_marginBottom="15dp"
+            android:padding="10sp"
+            android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/header_container"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Delivery Acknowledge"
-                android:textColor="@color/font_color_main"
-                android:textSize="@dimen/text_size_2"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Delivery Acknowledge"
+                    android:textColor="@color/font_color_main"
+                    android:textSize="@dimen/text_size_2"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="10sp"
+                android:layout_marginBottom="10sp"
+                android:weightSum="10">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/font_color_main"
+                    android:textSize="@dimen/text_size_1"
+                    android:text="Customer:"
+                    android:textStyle="bold"
+                    android:layout_weight="3.5"/>
+                <TextView
+                    android:layout_width="0dp"
+                    android:text="@{vm.customer}"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/font_color_main"
+                    android:textSize="@dimen/text_size_1"
+                    android:layout_weight="6.5"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="2sp"
+                android:background="@color/black">
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:weightSum="10">
+
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Del Qty"
+                    android:textAlignment="center"
+                    android:textSize="@dimen/text_size_1"
+                    android:textColor="@color/font_color_main"
+                    android:textStyle="bold"
+                    android:layout_weight="4"/>
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:paddingTop="3sp"
+                    android:paddingBottom="3sp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="2">
+
+                    <androidx.constraintlayout.widget.ConstraintLayout
+                        android:id="@+id/mismatchIcon"
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:background="@drawable/equal"
+                        app:layout_constraintWidth_percent=".4"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toTopOf="parent" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:text="Rcv Qty"
+                    android:textAlignment="center"
+                    android:textSize="@dimen/text_size_1"
+                    android:textColor="@color/font_color_main"
+                    android:textStyle="bold"
+                    android:layout_weight="4"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="2sp"
+                android:background="@color/black">
+            </LinearLayout>
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/delivery_ack_lines_list"
+                android:layout_width="match_parent"
+                android:layout_marginTop="10sp"
+                android:layout_marginBottom="10sp"
+                android:layout_height="450dp"
+                android:scrollbars="vertical">
+            </androidx.recyclerview.widget.RecyclerView>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:paddingTop="2sp"
+                android:background="@color/black">
+            </LinearLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:clickable="true"
+                android:focusable="false"
+                android:hint="Receiving Time">
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/receiving_time"
+                    android:inputType="none"
+                    android:focusable="false"
+                    android:onClick="@{()->vm.onClickReceivingTime()}"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/comment_container"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:hint="Comment (Optional)">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/comment_field"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="textNoSuggestions"
+                    android:digits="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789.,!@#$%-_=+?:;[]()/ "
+                    android:maxLength="250"
+                    />
+            </com.google.android.material.textfield.TextInputLayout>
+
+            <com.google.android.material.textfield.TextInputLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="10dp"
+                android:layout_marginTop="10dp"
+                android:hint="Attachment (Optional)">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/attachment"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:inputType="text"
+                    android:focusable="false"
+                    android:drawableEnd="@android:drawable/ic_menu_report_image"
+                    android:textColor="@color/font_color_main"
+                    android:textSize="@dimen/text_size_1" />
+            </com.google.android.material.textfield.TextInputLayout>
+
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="300dp">
+
+            <Button
+                android:id="@+id/button"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                android:backgroundTint="#e6e3dc"
+                android:paddingStart="20dp"
+                android:paddingTop="10dp"
+                android:paddingEnd="20dp"
+                android:paddingBottom="10dp"
+                android:text="Submit"
+                android:textColor="@color/dark_green"
+                android:textSize="@dimen/text_size_1"
                 android:textStyle="bold"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <ScrollView
-            android:id="@+id/scrollView"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:paddingTop="10dp"
-            android:paddingBottom="20dp"
-            android:nestedScrollingEnabled="true"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/header_container">
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="15dp"
-                android:padding="10sp"
-                android:orientation="vertical">
+        </LinearLayout>
+    </ScrollView>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="10">
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/font_color_main"
-                        android:textSize="@dimen/text_size_1"
-                        android:text="Customer:"
-                        android:textStyle="bold"
-                        android:layout_weight="3.5"/>
-                    <TextView
-                        android:layout_width="0dp"
-                        android:text="@{vm.customer}"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/font_color_main"
-                        android:textSize="@dimen/text_size_1"
-                        android:layout_weight="6.5"/>
-                </LinearLayout>
-
-                <TextView
-                    android:id="@+id/item_list_header"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="12dp"
-                    android:layout_marginBottom="8dp"
-                    android:textStyle="bold"
-                    android:text="DO Items"
-                    android:textColor="@color/font_color_main"
-                    android:textSize="@dimen/text_size_2"
-                    />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:weightSum="10"
-                    android:layout_marginBottom="10sp">
-
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:text="Del Qty"
-                        android:textAlignment="center"
-                        android:textSize="@dimen/text_size_1"
-                        android:textColor="@color/font_color_main"
-                        android:textStyle="bold"
-                        android:layout_weight="5"/>
-                    <TextView
-                        android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:text="Rcv Qty"
-                        android:textAlignment="center"
-                        android:textSize="@dimen/text_size_1"
-                        android:textColor="@color/font_color_main"
-                        android:textStyle="bold"
-                        android:layout_weight="5"/>
-
-                </LinearLayout>
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/delivery_ack_lines_list"
-                    android:layout_width="match_parent"
-                    android:layout_height="500dp"
-                    android:scrollbars="vertical">
-
-                </androidx.recyclerview.widget.RecyclerView>
-
-            </LinearLayout>
-        </ScrollView>
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>
