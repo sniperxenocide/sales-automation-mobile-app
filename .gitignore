@@ -16,3 +16,9 @@ local.properties
 /app/google-services.json
 /gitlab_access_token.txt
 /.idea/
+/app_signing_key/akg_shetu_app_signing_key.jks
+/app/release/app-release.apk
+/app/release/baselineProfiles/0/app-release.dm
+/app/release/baselineProfiles/1/app-release.dm
+/app/release/output-metadata.json
+/app_signing_key/pwd.txt

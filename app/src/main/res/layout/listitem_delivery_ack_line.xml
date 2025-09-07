@@ -8,6 +8,10 @@
         <variable
             name="vm"
             type="com.akg.akg_sales.dto.delivery.DeliveryAcknowledgeLineDto" />
+
+        <variable
+            name="editable"
+            type="boolean" />
     </data>
 
     <LinearLayout
@@ -149,11 +153,12 @@
                             android:layout_height="wrap_content"
                             android:layout_weight="7"
                             android:textAlignment="center"
-                            android:background="@drawable/deep_green_background"
+                            android:background="@{vm.lineQuantity==vm.receivedQuantity? @drawable/deep_green_background:@drawable/yellow_background }"
                             android:textColor="@color/font_color_main"
                             android:textStyle="italic"
                             android:padding="6dp"
-                            android:text="@{vm.lineQuantity.toString()}"
+                            android:enabled="@{editable}"
+                            android:text="@{vm.receivedQuantity.toString()}"
                             android:layout_marginEnd="5sp"
                             android:textSize="18sp"
                             android:inputType="number" />

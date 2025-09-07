@@ -3,12 +3,16 @@
     xmlns:android="http://schemas.android.com/apk/res/android">
 
     <data>
+        <import type="android.view.View"/>
         <variable
             name="vm"
             type="com.akg.akg_sales.dto.delivery.MoveOrderConfirmedHeaderDto" />
         <variable
             name="index"
             type="String" />
+        <variable
+            name="canView"
+            type="Boolean" />
     </data>
     <LinearLayout
         android:id="@+id/delivery_header"
@@ -32,8 +36,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/font_color_main"
-                android:textSize="@dimen/text_size_1"
+                android:textSize="18sp"
                 android:textStyle="bold"
+                android:hint="1."
                 android:text="@{index+`.`}"
                 />
         </LinearLayout>
@@ -56,17 +61,17 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:textColor="@color/font_color_main"
-                    android:textSize="@dimen/text_size_1"
-                    android:text="Load:"
+                    android:textSize="16sp"
+                    android:text="MO:"
                     android:textStyle="bold"
-                    android:layout_weight="4"/>
+                    android:layout_weight="3"/>
                 <TextView
                     android:layout_width="0dp"
-                    android:text="@{vm.moveConfirmedDate}"
+                    android:text="@{vm.movOrderNo}"
                     android:layout_height="wrap_content"
                     android:textColor="@color/font_color_main"
-                    android:textSize="@dimen/text_size_1"
-                    android:layout_weight="6"/>
+                    android:textSize="16sp"
+                    android:layout_weight="7"/>
             </LinearLayout>
 
             <LinearLayout
@@ -78,23 +83,98 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:textColor="@color/font_color_main"
-                    android:textSize="@dimen/text_size_1"
-                    android:text="Gateout:"
+                    android:textSize="16sp"
+                    android:text="Load:"
                     android:textStyle="bold"
-                    android:layout_weight="4"/>
+                    android:layout_weight="3"/>
                 <TextView
                     android:layout_width="0dp"
-                    android:text="@{vm.gateOutDate}"
+                    android:text="@{vm.moveConfirmedDate}"
                     android:layout_height="wrap_content"
                     android:textColor="@color/font_color_main"
-                    android:textSize="@dimen/text_size_1"
-                    android:layout_weight="6"/>
+                    android:textSize="16sp"
+                    android:layout_weight="7"/>
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:weightSum="10">
+                <TextView
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/font_color_main"
+                    android:textSize="16sp"
+                    android:text="Gateout:"
+                    android:textStyle="bold"
+                    android:layout_weight="3"/>
+                <TextView
+                    android:layout_width="0dp"
+                    android:text="@{vm.gateOutDate}"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/font_color_main"
+                    android:textSize="16sp"
+                    android:layout_weight="7"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="@{canView?View.VISIBLE:View.GONE}"
+                android:gravity="end">
+                <TextView
+                    android:id="@+id/fr_txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/font_color_white"
+                    android:textSize="16sp"
+                    android:layout_marginTop="5dp"
+                    android:paddingHorizontal="15dp"
+                    android:paddingVertical="3dp"
+                    android:background="@drawable/deep_green_background"
+                    android:text="@{`FR: `+vm.numberOfFullReceived}"
+                    android:visibility="@{vm.numberOfFullReceived>0?View.VISIBLE:View.GONE}"
+                    android:textStyle="bold"
+                    />
+                <TextView
+                    android:id="@+id/pr_txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/font_color_white"
+                    android:textSize="16sp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginStart="10dp"
+                    android:paddingHorizontal="15dp"
+                    android:paddingVertical="3dp"
+                    android:background="@drawable/yellow_background"
+                    android:text="@{`PR: `+(vm.numberOfReceiving-vm.numberOfFullReceived)}"
+                    android:visibility="@{vm.numberOfReceiving-vm.numberOfFullReceived>0?View.VISIBLE:View.GONE}"
+                    android:textStyle="bold"
+                    />
+                <TextView
+                    android:id="@+id/nr_txt"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/font_color_white"
+                    android:textSize="16sp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginStart="10dp"
+                    android:paddingHorizontal="15dp"
+                    android:paddingVertical="3dp"
+                    android:background="@drawable/red_background"
+                    android:text="@{`NR: `+(vm.numberOfCustomers-vm.numberOfReceiving)}"
+                    android:visibility="@{vm.numberOfCustomers-vm.numberOfReceiving>0?View.VISIBLE:View.GONE}"
+                    android:textStyle="bold"
+                    />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:visibility="gone"
                 android:weightSum="10">
 
                 <TextView
@@ -119,6 +199,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
+                android:visibility="gone"
                 android:weightSum="10">
                 <TextView
                     android:layout_width="0dp"
@@ -131,28 +212,6 @@
                 <TextView
                     android:layout_width="0dp"
                     android:text="@{vm.driverName+` `+vm.driverMobile}"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/font_color_main"
-                    android:textSize="@dimen/text_size_1"
-                    android:layout_weight="6"/>
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:weightSum="10">
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:textColor="@color/font_color_main"
-                    android:textSize="@dimen/text_size_1"
-                    android:text="Move No:"
-                    android:textStyle="bold"
-                    android:layout_weight="4"/>
-                <TextView
-                    android:layout_width="0dp"
-                    android:text="@{vm.movOrderNo}"
                     android:layout_height="wrap_content"
                     android:textColor="@color/font_color_main"
                     android:textSize="@dimen/text_size_1"

@@ -21,6 +21,7 @@ public class MoveOrderConfirmedLineDto {
     private String itemDescription;
     private Double lineQuantity;
     private Double shippedQty;
+    private Double receivedQuantity;
     private String uomCode;
     private String doWarehouseOrgName;
     private String shipToLocation;

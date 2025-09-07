@@ -1,6 +1,7 @@
 package com.akg.akg_sales.view.adapter.delivery;
 
 import android.text.Editable;
+import android.text.Html;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,11 +26,13 @@ public class DeliveryAckLineAdapter extends RecyclerView.Adapter<DeliveryAckLine
     private ArrayList<DeliveryAcknowledgeLineDto> lines;
     private final DeliveryDetailActivity context;
     DeliveryAcknowledgeDialog dialogObj;
+    boolean editable;
 
-    public DeliveryAckLineAdapter(DeliveryDetailActivity context, ArrayList<DeliveryAcknowledgeLineDto> objects,DeliveryAcknowledgeDialog dialog){
+    public DeliveryAckLineAdapter(DeliveryDetailActivity context, ArrayList<DeliveryAcknowledgeLineDto> objects,DeliveryAcknowledgeDialog dialog,boolean editable){
         this.lines = objects;
         this.context = context;
         this.dialogObj = dialog;
+        this.editable = editable;
     }
 
     @NonNull
@@ -61,6 +64,7 @@ public class DeliveryAckLineAdapter extends RecyclerView.Adapter<DeliveryAckLine
         }
         public void bind(Object obj) {
             itemBinding.setVariable(BR.vm, obj);
+            itemBinding.setVariable(BR.editable, editable);
             handleQuantityChange((DeliveryAcknowledgeLineDto) obj,itemBinding);
             itemBinding.executePendingBindings();
         }
@@ -89,11 +93,12 @@ public class DeliveryAckLineAdapter extends RecyclerView.Adapter<DeliveryAckLine
                     Log.e("LINE", "afterTextChanged: ",e);
                 }
                 updateMismatchIcon();
+                updateMismatchSummary();
             }
         });
     }
 
-    private void updateMismatchIcon(){
+    public void updateMismatchIcon(){
         try {
             for(DeliveryAcknowledgeLineDto l:lines){
                 if(l.getIsHeader()) continue;
@@ -104,5 +109,20 @@ public class DeliveryAckLineAdapter extends RecyclerView.Adapter<DeliveryAckLine
             }
             dialogObj.binding.mismatchIcon.setBackgroundResource(R.drawable.equal);
         }catch (Exception e){}
+    }
+
+    public void updateMismatchSummary(){
+        StringBuilder sb = new StringBuilder("<b>MISMATCH SUMMARY</b><br/>");
+        for(DeliveryAcknowledgeLineDto l:lines){
+            if(l.getIsHeader()) continue;
+            if(l.getLineQuantity().doubleValue() != l.getReceivedQuantity()){
+                sb.append("<br/><b>DO:</b> ").append(l.getDoNumber()).append("<br/>");
+                sb.append("<b>Item:</b> ").append(l.getItemDescription()).append("<br/>");
+                sb.append("<b>Del:</b> ").append(l.getLineQuantity()).append("&nbsp;&nbsp;");
+                sb.append("<b>Rcv:</b> ").append(l.getReceivedQuantity()).append("&nbsp;&nbsp;")
+                        .append(l.getUomCode()).append("<br/>");
+            }
+        }
+        dialogObj.binding.mismatchSummary.setText(Html.fromHtml(sb.toString()));
     }
 }

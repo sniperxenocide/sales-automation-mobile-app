@@ -7,6 +7,7 @@ import lombok.ToString;
 
 @Data @NoArgsConstructor @AllArgsConstructor @ToString
 public class DeliveryAcknowledgeLineDto {
+    private Long id;
     private String serial;
     private Boolean isHeader;
     private Long orderNumber;
@@ -21,11 +22,13 @@ public class DeliveryAcknowledgeLineDto {
         this.doNumber = doNumber;
     }
 
-    public DeliveryAcknowledgeLineDto(String itemDescription, Double lineQuantity, String uomCode,int serial) {
+    public DeliveryAcknowledgeLineDto(Long id,String doNumber,String itemDescription, Double lineQuantity,Double receivedQuantity, String uomCode,int serial) {
         isHeader = false;
+        this.id = id;
+        this.doNumber = doNumber;
         this.itemDescription = itemDescription;
         this.lineQuantity = lineQuantity;
-        this.receivedQuantity = lineQuantity;
+        this.receivedQuantity = receivedQuantity==null?lineQuantity:receivedQuantity;
         this.uomCode = uomCode;
         this.serial = Integer.toString(serial);
     }

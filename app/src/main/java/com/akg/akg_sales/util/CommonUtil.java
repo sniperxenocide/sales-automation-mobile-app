@@ -11,6 +11,8 @@ import android.text.Html;
 import android.util.DisplayMetrics;
 import android.view.WindowManager;
 import android.widget.Toast;
+
+import com.akg.akg_sales.dto.delivery.DeliveryPermission;
 import com.akg.akg_sales.dto.order.CartItemDto;
 import com.akg.akg_sales.dto.CustomerDto;
 import com.akg.akg_sales.dto.User;
@@ -36,6 +38,7 @@ public class CommonUtil {
     public static ArrayList<OrderStatusDto> statusList;
     public static HashMap<Long,ArrayList<CartItemDto>> orderCart = new HashMap<>();
     public static OrderPermission orderPermission;
+    public static DeliveryPermission deliveryPermission;
 
     public static String deviceModel;
     public static String deviceId;

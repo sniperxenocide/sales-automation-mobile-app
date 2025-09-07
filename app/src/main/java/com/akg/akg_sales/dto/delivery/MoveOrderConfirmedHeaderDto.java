@@ -29,12 +29,11 @@ public class MoveOrderConfirmedHeaderDto implements Serializable {
     private String gateOutDate;
     private String transporterName;
     private String rowCreationTime;
+    private Integer numberOfCustomers;
+    private Integer numberOfReceiving;
+    private Integer numberOfFullReceived;
 
-    public String getMoveConfirmedDate(){
-        return CommonUtil.getFormattedDateTime(moveConfirmedDate);
-    }
+    public String getMoveConfirmedDate(){return CommonUtil.getFormattedDateTime(moveConfirmedDate);}
 
-    public String getGateOutDate(){
-        return CommonUtil.getFormattedDateTime(gateOutDate);
-    }
+    public String getGateOutDate(){return CommonUtil.getFormattedDateTime(gateOutDate);}
 }

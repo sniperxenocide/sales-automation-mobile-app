@@ -23,6 +23,7 @@ import com.akg.akg_sales.dto.order.CartItemDto;
 import com.akg.akg_sales.dto.order.OrderStatusDto;
 import com.akg.akg_sales.service.CommonService;
 import com.akg.akg_sales.service.CustomerService;
+import com.akg.akg_sales.service.DeliveryService;
 import com.akg.akg_sales.service.OrderService;
 import com.akg.akg_sales.util.CommonUtil;
 import com.akg.akg_sales.view.activity.delivery.DeliveryListActivity;
@@ -56,7 +57,7 @@ public class HomeActivity extends AppCompatActivity {
         homeBinding.executePendingBindings();
         setAppVersion();
         setWelcomeMsg();
-
+        fetchDeliveryPermission();
         generateHomeMenu();
 
         if(CommonUtil.loggedInUser.getLoginCount()<=1) onClickResetPasswordBtn();
@@ -161,6 +162,10 @@ public class HomeActivity extends AppCompatActivity {
     public void onClickResetPasswordBtn(){
         Intent intent = new Intent(this, ResetPasswordActivity.class);
         this.startActivity(intent);
+    }
+
+    private void fetchDeliveryPermission(){
+        DeliveryService.fetchDeliveryPermission(permission-> CommonUtil.deliveryPermission = permission);
     }
 
 }
