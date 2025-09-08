@@ -40,6 +40,13 @@ public class DeliveryListActivity extends AppCompatActivity {
         fetchDeliveryData();
     }
 
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        deliveries.clear();
+        fetchDeliveryData();
+    }
+
     private void loadPage(){
         binding = DataBindingUtil.setContentView(this,R.layout.activity_delivery_list);
         binding.setActivity(this);
