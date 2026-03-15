@@ -159,10 +159,13 @@ public class LoginActivity extends AppCompatActivity {
 
     private void getDeviceInfo(){
         try {
-            CommonUtil.deviceModel = Build.MANUFACTURER+" "+Build.MODEL;
+            CommonUtil.deviceModel = Build.MANUFACTURER+" "+Build.BRAND+" "+Build.MODEL;
         }catch (Exception e){e.printStackTrace();}
         try {
             CommonUtil.appVersion = BuildConfig.VERSION_CODE+":"+BuildConfig.VERSION_NAME;
+        }catch (Exception e){e.printStackTrace();}
+        try {
+            CommonUtil.osVersion = Build.VERSION.RELEASE+" SDK: "+Build.VERSION.SDK_INT;
         }catch (Exception e){e.printStackTrace();}
         try {
             CommonUtil.deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);

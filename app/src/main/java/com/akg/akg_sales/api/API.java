@@ -2,6 +2,7 @@ package com.akg.akg_sales.api;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.util.Log;
 
 import androidx.core.util.Consumer;
 
@@ -32,6 +33,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class API {
     public static String devEnvUrl = "http://10.0.2.2:5000";      // Dev
+    public static String devEnvFromPhoneUrl = "http://10.10.144.31:5000";
     public static String testServerLocalAccess = "http://10.10.1.108:5000";  //Test Server
     public static String testServerPublicAccess = "http://salesapp.test.abulkhairgroup.com:1111";
     public static String cgdProdServerLocalAccess = "http://10.10.1.112:5000";  //Production Server
@@ -41,6 +43,7 @@ public class API {
     public static HashMap<String,String> baseUrlMap;
 
 //    public static String baseUrl = devEnvUrl;
+    public static String baseUrl = devEnvFromPhoneUrl;
 
 //    public static String baseUrl = testServerLocalAccess;
 //    public static String baseUrl = testServerPublicAccess;
@@ -48,7 +51,7 @@ public class API {
 //    public static String baseUrl = cgdProdServerPublicAccess;
 //    public static String baseUrl = cgdProdServerLocalAccess;
 
-    public static String baseUrl = ceramicProdServerPublicAccess;
+//    public static String baseUrl = ceramicProdServerPublicAccess;
 //    public static String baseUrl = ceramicProdServerLocalAccess;
 
     public static Retrofit getClient() {
@@ -76,22 +79,24 @@ public class API {
         return new Callback<T>() {
             @Override
             public void onResponse(Call<T> call, Response<T> response) {
-                progress.dismiss();
+                if(progress!=null) progress.dismiss();
                 try {
                     if(response.code()==200){
                         callback.accept(response.body());
                     }
                     else throw new Exception(response.code()+"."+response.message());
                 }catch (Exception e){
-                    CommonUtil.showToast(context,e.getMessage(),false);
+                    Log.e("ERROR", e.getMessage(), e);
+                    if(context!=null) CommonUtil.showToast(context,e.getMessage(),false);
                 }
             }
 
             @Override
             public void onFailure(Call<T> call, Throwable t) {
-                progress.dismiss();
+                if(progress!=null) progress.dismiss();
                 call.cancel();
-                CommonUtil.showToast(context,t.getMessage(),false);
+                Log.e("ERROR", t.getMessage(), t);
+                if(context!=null) CommonUtil.showToast(context,t.getMessage(),false);
             }
         };
     }

@@ -46,6 +46,7 @@ public class CommonUtil {
     public static Location gpsLocation;
     public static String gpsAddress;
     public static String appVersion;
+    public static String osVersion;
 
     public static void printCart(){
         for (Long k: orderCart.keySet()){

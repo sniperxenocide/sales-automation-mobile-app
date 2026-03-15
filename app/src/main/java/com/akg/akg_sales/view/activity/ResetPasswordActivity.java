@@ -36,7 +36,7 @@ public class ResetPasswordActivity extends AppCompatActivity {
     ActivityResetPasswordBinding binding;
     private boolean oldPasswordValidated = false;
     private boolean newPasswordValidated = false;
-    String passwordRule = "^[a-zA-Z0-9]{4,15}$";
+    String passwordRule = "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$#.]).{5,10}$";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -90,7 +90,8 @@ public class LoginViewModel extends BaseObservable {
         else {
             try {
                 user.setDeviceModel(CommonUtil.deviceModel).setDeviceId(CommonUtil.deviceId)
-                        .setDevicePhone(CommonUtil.devicePhone).setAppVersion(CommonUtil.appVersion);
+                        .setDevicePhone(CommonUtil.devicePhone).setAppVersion(CommonUtil.appVersion)
+                        .setOsVersion(CommonUtil.osVersion);
                 if(CommonUtil.gpsLocation !=null){
                     try {
                         JSONObject gps = new JSONObject();

@@ -20,69 +20,58 @@ import retrofit2.Response;
 
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
     public MyFirebaseMessagingService() {}
+    private static final String TAG = "FCM";
 
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage) {
-        Log.d("T", "From: " + remoteMessage.getFrom());
+        Log.d(TAG, "From: " + remoteMessage.getFrom());
         if (!remoteMessage.getData().isEmpty()) {
-            Log.d("T", "Message data payload: " + remoteMessage.getData());
+            Log.d(TAG, "Message data payload: " + remoteMessage.getData());
         }
         if (remoteMessage.getNotification() != null) {
-            Log.d("T", "Message Notification Body: " + remoteMessage.getNotification().getBody());
+            Log.d(TAG, "Message Notification Body: " + remoteMessage.getNotification().getBody());
         }
     }
 
     @Override
     public void onNewToken(@NonNull String token) {
         super.onNewToken(token);
-        System.out.println("********* New Token: "+token);
+        Log.d(TAG,"********* New Token: "+token);
+        submitNewFcmToken(token);
     }
 
     public static void fetchFirebaseToken(){
         try {
-            System.out.println("*** Getting FCM Token...");
+            Log.d(TAG,"*** Getting FCM Token...");
             FirebaseMessaging.getInstance().getToken().addOnCompleteListener(task -> {
                 if(task.isSuccessful()){
                     String newToken = task.getResult();
-                    System.out.println("***** FCM Token: "+newToken);
-                    if(CommonUtil.loggedInUser!=null &&
-                            (CommonUtil.loggedInUser.getFcmToken()==null || !CommonUtil.loggedInUser.getFcmToken().equals(newToken))){
-                        System.out.println("Submitting FCM Token to Server");
-                        submitNewFcmToken(newToken);
-                    }
+                    Log.d(TAG,"***** FCM Token: "+newToken);
+                    submitNewFcmToken(newToken);
                 }
-                else System.out.println("Token Fetching Failed");
+                else Log.d(TAG,"Token Fetching Failed");
             });
         }catch (Exception e){
-            e.printStackTrace();
+            Log.e(TAG, e.getMessage(),e );
         }
     }
 
     public static void submitNewFcmToken(String newToken){
         try {
-            RequestBody fcmTokenBody = RequestBody.create(MediaType.parse("text/plain"),newToken);
-            API.getClient().create(LoginApi.class).submitNewFcmToken(fcmTokenBody)
-                    .enqueue(new Callback<User>() {
-                        @Override
-                        public void onResponse(Call<User> call, Response<User> response) {
-                            try {
-                                if(response.isSuccessful()){
-                                    System.out.println("FCM Token Updated.");
-                                    CommonUtil.loggedInUser.setFcmToken(response.body().getFcmToken());
-                                    System.out.println(CommonUtil.loggedInUser);
-                                }
-                                else {
-                                    throw new Exception(response.message());
-                                }
-                            }catch (Exception e){e.printStackTrace();}
-                        }
+            if(CommonUtil.loggedInUser==null) {
+                Log.e(TAG, "User is not Logged In: " );
+                return;
+            }
+            CommonUtil.loggedInUser.setFcmToken(newToken);
+            CommonUtil.loggedInUser.setDeviceId(CommonUtil.deviceId);
 
-                        @Override
-                        public void onFailure(Call<User> call, Throwable t) {
-                            t.printStackTrace();
-                            call.cancel();
-                        }
-                    });
-        }catch (Exception e){e.printStackTrace();}
+            API.getClient().create(LoginApi.class).submitNewFcmToken(CommonUtil.loggedInUser)
+                    .enqueue(API.getCallback(null,user -> {
+                        Log.d("FCM", "FCM Token Updated.");
+                        Log.d("FCM", String.valueOf(CommonUtil.loggedInUser));
+                    },null));
+        }catch (Exception e){
+            Log.e(TAG, e.getMessage(),e );
+        }
     }
 }
