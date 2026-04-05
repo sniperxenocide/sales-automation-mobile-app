@@ -23,7 +23,6 @@ import com.akg.akg_sales.view.adapter.delivery.DeliveryAckLineAdapter;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.model.GlideUrl;
 import com.bumptech.glide.load.model.LazyHeaders;
-import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.timepicker.MaterialTimePicker;
 import com.google.android.material.timepicker.TimeFormat;
@@ -183,17 +182,6 @@ public class DeliveryAcknowledgeDialog {
         );
 
     }
-
-//    public void onAttachmentSelected(String path){
-//        try {
-//            String[] paths = path.split("/");
-//            binding.attachment.setText(paths[paths.length-1]);
-//            try {deliveryAckRequestHeader.setAttachment(new File(path));
-//            }catch (Exception e){Log.d("Error", "submitAcknowledgement: ",e);}
-//        } catch (Exception e) {
-//            Log.d("Error", "onAttachmentSelected: ",e);
-//        }
-//    }
 
     private void loadAttachment(Long id){
         String url = API.baseUrl + "/notification-service/api/move-order/acknowledge-attachment?id="+id;

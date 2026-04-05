@@ -5,9 +5,6 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.Activity;
-import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -15,14 +12,12 @@ import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.Toast;
 
 import com.akg.akg_sales.R;
 import com.akg.akg_sales.databinding.ActivityCartBinding;
 import com.akg.akg_sales.dto.CustomerDto;
 import com.akg.akg_sales.dto.CustomerSiteDto;
 import com.akg.akg_sales.dto.order.CartItemDto;
-import com.akg.akg_sales.dto.order.OrderLineDto;
 import com.akg.akg_sales.dto.order.OrderTypeDto;
 import com.akg.akg_sales.service.CustomerService;
 import com.akg.akg_sales.service.OrderService;
@@ -30,7 +25,6 @@ import com.akg.akg_sales.util.CommonUtil;
 import com.akg.akg_sales.util.ImagePickerHelper;
 import com.akg.akg_sales.view.adapter.order.CartItemAdapter;
 import com.akg.akg_sales.viewmodel.order.CartViewModel;
-import com.github.dhaval2404.imagepicker.ImagePicker;
 
 import java.io.File;
 import java.util.ArrayList;

@@ -7,17 +7,11 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import android.app.Activity;
-import android.content.Intent;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
-import android.widget.ScrollView;
-import android.widget.Toast;
 
 import com.akg.akg_sales.R;
 import com.akg.akg_sales.databinding.ActivityDeliveryDetailBinding;
@@ -29,16 +23,13 @@ import com.akg.akg_sales.util.CommonUtil;
 import com.akg.akg_sales.view.adapter.delivery.DeliveryLineAdapter;
 import com.akg.akg_sales.view.dialog.DeliveryAcknowledgeDialog;
 import com.akg.akg_sales.view.dialog.DeliveryDetailReportDialog;
-import com.github.dhaval2404.imagepicker.ImagePicker;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 
 public class DeliveryDetailActivity extends AppCompatActivity {
     private static final String TAG = "DeliveryDetailActivity";
@@ -228,24 +219,6 @@ public class DeliveryDetailActivity extends AppCompatActivity {
 
         deliveryAcknowledgeDialog = new DeliveryAcknowledgeDialog(this,selectedCustomer,deliveryAckRequestHeader);
     }
-
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//        if (resultCode == Activity.RESULT_OK) {
-//            try {
-//                Uri uri = data.getData();
-//                assert uri != null;
-//                deliveryAcknowledgeDialog.onAttachmentSelected(uri.getPath());
-//            }catch (Exception e){
-//                Log.e(TAG, "onActivityResult: ",e);
-//            }
-//        } else if (resultCode == ImagePicker.RESULT_ERROR) {
-//            Toast.makeText(this, ImagePicker.getError(data), Toast.LENGTH_SHORT).show();
-//        } else {
-//            Toast.makeText(this, "Task Cancelled", Toast.LENGTH_SHORT).show();
-//        }
-//    }
 
     private void fetchAcknowledgementStatus(){
         String customerNumber = selectedCustomer.split("\\(")[1].replace(")","");
