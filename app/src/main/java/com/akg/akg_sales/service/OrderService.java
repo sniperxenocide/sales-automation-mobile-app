@@ -226,24 +226,25 @@ public class OrderService {
     }
 
     public static void sendOrderAttachment(Context context, MultipartBody body,Consumer<OrderDto> callback){
-        ProgressDialog progressDialog = CommonUtil.showProgressDialog(context);
         API.getClient().create(OrderApi.class).sendOrderAttachment(body)
-                .enqueue(new Callback<OrderDto>() {
+                .enqueue(new Callback<>() {
                     @Override
                     public void onResponse(Call<OrderDto> call, Response<OrderDto> response) {
-                        progressDialog.dismiss();
                         try {
-                            if(response.code()==200){
+                            if (response.code() == 200) {
                                 callback.accept(response.body());
-                            }
-                        }catch (Exception e){e.printStackTrace();}
+                            }else throw new Exception(response.code()+" "+response.message());
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                            callback.accept(null);
+                        }
                     }
 
                     @Override
                     public void onFailure(Call<OrderDto> call, Throwable t) {
-                        progressDialog.dismiss();
                         call.cancel();
                         t.printStackTrace();
+                        callback.accept(null);
                     }
                 });
     }

@@ -11,6 +11,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -26,10 +27,12 @@ import com.akg.akg_sales.dto.order.OrderTypeDto;
 import com.akg.akg_sales.service.CustomerService;
 import com.akg.akg_sales.service.OrderService;
 import com.akg.akg_sales.util.CommonUtil;
+import com.akg.akg_sales.util.ImagePickerHelper;
 import com.akg.akg_sales.view.adapter.order.CartItemAdapter;
 import com.akg.akg_sales.viewmodel.order.CartViewModel;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
@@ -38,6 +41,7 @@ import java.util.Objects;
 
 public class CartActivity extends AppCompatActivity {
     public ActivityCartBinding cartBinding;
+    private ImagePickerHelper imagePicker;
     public RecyclerView recyclerView;
     public CustomerDto cSelectedCustomer;
     public CustomerSiteDto cSelectedSite;
@@ -46,6 +50,7 @@ public class CartActivity extends AppCompatActivity {
     public HashMap<Long,ArrayList<CartItemDto>> cartMap = CommonUtil.orderCart;
     public List<CustomerSiteDto> customerSites = new ArrayList<>();
     public List<OrderTypeDto> orderTypes = new ArrayList<>();
+    private final String LOG_TAG = "CartActivity";
 
     String[] customers;
     Long[] customerIds;
@@ -66,6 +71,7 @@ public class CartActivity extends AppCompatActivity {
         cartBinding.executePendingBindings();
         loadCustomerList();
         fetchOrderTypes();
+        initImagePicker();
     }
 
     public void loadCartListView(){
@@ -213,32 +219,31 @@ public class CartActivity extends AppCompatActivity {
     }
 
     public void onClickAttachment(){
-        ImagePicker.with(this).crop()	    			//Crop image(Optional), Check Customization for more option
-                .compress(500)			//Final image size will be less than 500 KB(Optional)
-                .maxResultSize(800, 600)	//Final image resolution will be less than 800 x 600(Optional)
-                .start();
+        imagePicker.launchImagePicker();
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK) {
-            try {
-                Uri uri = data.getData();
-                System.out.println(uri.getPath());
-                attachmentPath = uri.getPath();
-                String[] paths = uri.getPath().split("/");
-                cartBinding.attachment.setText(paths[paths.length-1]);
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-        } else if (resultCode == ImagePicker.RESULT_ERROR) {
-            Toast.makeText(this, ImagePicker.getError(data), Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, "Task Cancelled", Toast.LENGTH_SHORT).show();
-        }
+    public void initImagePicker(){
+        imagePicker = new ImagePickerHelper(this,this,
+                new ImagePickerHelper.Callback() {
+                    @Override
+                    public void onImageReady(File file) {
+                        try {
+                            Log.i(LOG_TAG, "onImageReady: "+file.getPath());
+                            Log.i(LOG_TAG, "File Size: "+(file.length()/1024)+" KB" );
+                            attachmentPath = file.getPath();
+                            String[] paths = file.getPath().split("/");
+                            cartBinding.attachment.setText(paths[paths.length-1]);
+                        } catch (Exception e) {
+                            Log.e(LOG_TAG, "onImageReady: ", e);
+                            CommonUtil.showToast(getApplicationContext(),e.getMessage(),false);
+                        }
+                    }
+                    @Override
+                    public void onError(Exception e) {
+                        Log.e(LOG_TAG, "onError: ", e);
+                        CommonUtil.showToast(getApplicationContext(),e.getMessage(),false);
+                    }
+                }
+        );
     }
-
-
-
 }

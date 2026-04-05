@@ -17,6 +17,7 @@ import com.akg.akg_sales.dto.delivery.DeliveryAcknowledgeLineDto;
 import com.akg.akg_sales.dto.delivery.MoveOrderConfirmedLineDto;
 import com.akg.akg_sales.service.DeliveryService;
 import com.akg.akg_sales.util.CommonUtil;
+import com.akg.akg_sales.util.ImagePickerHelper;
 import com.akg.akg_sales.view.activity.delivery.DeliveryDetailActivity;
 import com.akg.akg_sales.view.adapter.delivery.DeliveryAckLineAdapter;
 import com.bumptech.glide.Glide;
@@ -46,6 +47,8 @@ public class DeliveryAcknowledgeDialog {
     private String receivingDateTimeStr;
     ArrayList<DeliveryAcknowledgeLineDto> acknowledgeLines = new ArrayList<>();
     public boolean editable;
+    private ImagePickerHelper imagePicker;
+    private final String LOG_TAG = "DeliveryAcknowledgeDialog";
 
     public DeliveryAcknowledgeDialog(DeliveryDetailActivity activity,String customer,DeliveryAckRequestHeader ackRequestHeader){
         this.activity = activity;
@@ -72,7 +75,7 @@ public class DeliveryAcknowledgeDialog {
         dialog.getWindow().setLayout(width, height);
         dialog.show();
 
-        dialog.show();
+        initImagePicker();
         loadData();
     }
 
@@ -151,22 +154,46 @@ public class DeliveryAcknowledgeDialog {
     }
 
     public void onClickAttachment(){
-        ImagePicker.with(activity).crop()	    			//Crop image(Optional), Check Customization for more option
-                .compress(500)			//Final image size will be less than 500 KB(Optional)
-                .maxResultSize(800, 600)	//Final image resolution will be less than 800 x 600(Optional)
-                .start();
+        imagePicker.launchImagePicker();
     }
 
-    public void onAttachmentSelected(String path){
-        try {
-            String[] paths = path.split("/");
-            binding.attachment.setText(paths[paths.length-1]);
-            try {deliveryAckRequestHeader.setAttachment(new File(path));
-            }catch (Exception e){Log.d("Error", "submitAcknowledgement: ",e);}
-        } catch (Exception e) {
-            Log.d("Error", "onAttachmentSelected: ",e);
-        }
+    public void initImagePicker(){
+        imagePicker = new ImagePickerHelper(activity,activity,
+                new ImagePickerHelper.Callback() {
+                    @Override
+                    public void onImageReady(File file) {
+                        try {
+                            Log.i(LOG_TAG, "onImageReady: "+file.getPath());
+                            Log.i(LOG_TAG, "File Size: "+(file.length()/1024)+" KB" );
+                            String[] paths = file.getPath().split("/");
+                            binding.attachment.setText(paths[paths.length-1]);
+                            try {deliveryAckRequestHeader.setAttachment(file);
+                            }catch (Exception e){Log.d(LOG_TAG, "submitAcknowledgement: ",e);}
+                        } catch (Exception e) {
+                            Log.e(LOG_TAG, "onImageReady: ", e);
+                            CommonUtil.showToast(activity,e.getMessage(),false);
+                        }
+                    }
+                    @Override
+                    public void onError(Exception e) {
+                        Log.e(LOG_TAG, "onError: ", e);
+                        CommonUtil.showToast(activity,e.getMessage(),false);
+                    }
+                }
+        );
+
     }
+
+//    public void onAttachmentSelected(String path){
+//        try {
+//            String[] paths = path.split("/");
+//            binding.attachment.setText(paths[paths.length-1]);
+//            try {deliveryAckRequestHeader.setAttachment(new File(path));
+//            }catch (Exception e){Log.d("Error", "submitAcknowledgement: ",e);}
+//        } catch (Exception e) {
+//            Log.d("Error", "onAttachmentSelected: ",e);
+//        }
+//    }
 
     private void loadAttachment(Long id){
         String url = API.baseUrl + "/notification-service/api/move-order/acknowledge-attachment?id="+id;
@@ -185,11 +212,6 @@ public class DeliveryAcknowledgeDialog {
 
     public void submitAcknowledgement(){
         try {
-//            if(deliveryAckRequestHeader.getReceivingTime()==null || deliveryAckRequestHeader.getReceivingTime().isBlank())
-//            {
-//                throw new Exception("Receiving Time Can't be empty.");
-//            }
-
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
             deliveryAckRequestHeader.setReceivingTime(sdf.format(new Date()));
 

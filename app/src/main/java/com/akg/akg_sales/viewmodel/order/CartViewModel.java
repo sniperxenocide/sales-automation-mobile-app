@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 
 import androidx.databinding.BaseObservable;
 
@@ -37,6 +38,8 @@ import retrofit2.http.PartMap;
 
 public class CartViewModel extends BaseObservable {
     CartActivity activity;
+    ProgressDialog progressDialog;
+    private final String LOG_TAG = "CartViewModel";
     public CartViewModel(CartActivity activity){
         this.activity=activity;
     }
@@ -50,31 +53,25 @@ public class CartViewModel extends BaseObservable {
                 CommonUtil.showToast(activity,"No Item Selected",false);
                 return;
             }
-            ProgressDialog progressDialog = CommonUtil.showProgressDialog(activity);
+            progressDialog = CommonUtil.showProgressDialog(activity);
             API.getClient().create(OrderApi.class).createOrder(postBody)
                     .enqueue(new Callback<OrderDto>() {
                         @Override
                         public void onResponse(Call<OrderDto> call, Response<OrderDto> response) {
-                            progressDialog.dismiss();
-                            if(response.code()==200){
-                                OrderDto orderDto = response.body();
-                                CommonUtil.showToast(activity,"Order Created Successfully",true);
-                                removeCartItems();
-
-                                //Sending Attachment
-                                sendOrderAttachment(orderDto.getId().toString());
-
-                                // Returning to Order List Page
-                                Intent intent = new Intent(activity, PendingOrderActivity.class);
-                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK
-                                        | Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                                activity.startActivity(intent);
-                                activity.finish();
+                            try {
+                                if(response.code()==200){
+                                    OrderDto orderDto = response.body();
+                                    CommonUtil.showToast(activity,"Order Created Successfully",true);
+                                    removeCartItems();
+                                    sendOrderAttachment(orderDto.getId().toString()); //Sending Attachment
+                                }
+                                else {
+                                    CommonUtil.showToast(activity,response.code()+"."+response.message(),false);
+                                    progressDialog.dismiss();
+                                }
+                            } catch (Exception e) {
+                                Log.e(LOG_TAG, "onResponse: ", e);
                             }
-                            else {
-                                CommonUtil.showToast(activity,response.code()+"."+response.message(),false);
-                            }
-
                         }
 
                         @Override
@@ -138,10 +135,21 @@ public class CartViewModel extends BaseObservable {
             MultipartBody body = builder.build();
 
             OrderService.sendOrderAttachment(activity,body,h->{
-                CommonUtil.showToast(activity,"Order Attachment Posted",true);
+                if(h==null) CommonUtil.showToast(activity,"Failed to Post Order Attachment!!!!",false);
+                else CommonUtil.showToast(activity,"Order Attachment Posted",true);
+                afterOrderWithAttachmentSubmission();
             });
         }
         catch (Exception e){e.printStackTrace();}
+    }
+
+    private void afterOrderWithAttachmentSubmission(){
+        progressDialog.dismiss();
+        // Returning to Order List Page
+        Intent intent = new Intent(activity, PendingOrderActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        activity.startActivity(intent);
+        activity.finish();
     }
 
 }

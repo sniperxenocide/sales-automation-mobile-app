@@ -171,7 +171,7 @@ public class LoginActivity extends AppCompatActivity {
             CommonUtil.deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
         }catch (Exception e){e.printStackTrace();}
 
-        requestExternalStoragePermission();
+//        requestExternalStoragePermission();
         getGpsLocation();
         getPhoneNumber();
     }

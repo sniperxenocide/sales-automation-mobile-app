@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
@@ -23,12 +24,15 @@ import com.akg.akg_sales.dto.payment.PaymentRequestDto;
 import com.akg.akg_sales.dto.payment.PaymentTypeDto;
 import com.akg.akg_sales.service.PaymentService;
 import com.akg.akg_sales.util.CommonUtil;
+import com.akg.akg_sales.util.ImagePickerHelper;
 import com.akg.akg_sales.view.dialog.ConfirmationDialog;
 import com.akg.akg_sales.view.dialog.SearchableTextListDialog;
 import com.akg.akg_sales.viewmodel.PaymentViewModel;
 import com.github.dhaval2404.imagepicker.ImagePicker;
 import com.google.android.material.datepicker.MaterialDatePicker;
 
+import java.io.File;
+import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -41,6 +45,7 @@ public class NewPaymentActivity extends AppCompatActivity {
     private List<CustomerDto> customerList = CommonUtil.customers;
     private CustomerDto selectedCustomer;
     public PaymentViewModel paymentViewModel = new PaymentViewModel();
+    private ImagePickerHelper imagePicker;
 
     String[] customers;
     Long[] customerIds;
@@ -57,6 +62,7 @@ public class NewPaymentActivity extends AppCompatActivity {
         loadUI();
         loadCustomerList();
         loadPaymentAccounts();
+        initImagePicker();
     }
 
     private void loadUI(){
@@ -148,10 +154,33 @@ public class NewPaymentActivity extends AppCompatActivity {
     }
 
     public void onClickAttachment(){
-        ImagePicker.with(this).crop()	    			//Crop image(Optional), Check Customization for more option
-                .compress(500)			//Final image size will be less than 500 KB(Optional)
-                .maxResultSize(800, 600)	//Final image resolution will be less than 800 x 600(Optional)
-                .start();
+        imagePicker.launchImagePicker();
+    }
+
+    public void initImagePicker(){
+        imagePicker = new ImagePickerHelper(this,this,
+                new ImagePickerHelper.Callback() {
+                    @Override
+                    public void onImageReady(File file) {
+                        try {
+                            Log.i("PAYMENT", "onImageReady: "+file.getPath());
+                            Log.i("PAYMENT", "File Size: "+(file.length()/1024)+" KB" );
+                            paymentViewModel.getAttachment().set(file.getPath());
+                            String[] paths = file.getPath().split("/");
+                            binding.attachment.setText(paths[paths.length-1]);
+                        } catch (Exception e) {
+                            Log.e("PAYMENT", "onImageReady: ", e);
+                            CommonUtil.showToast(getApplicationContext(),e.getMessage(),false);
+                        }
+                    }
+                    @Override
+                    public void onError(Exception e) {
+                        Log.e("PAYMENT", "onError: ", e);
+                        CommonUtil.showToast(getApplicationContext(),e.getMessage(),false);
+                    }
+                }
+        );
+
     }
 
     public void onClickSubmit(){
@@ -172,26 +201,5 @@ public class NewPaymentActivity extends AppCompatActivity {
             }
         });
     }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK) {
-            try {
-                Uri uri = data.getData();
-                System.out.println(uri.getPath());
-                paymentViewModel.getAttachment().set(uri.getPath());
-                String[] paths = uri.getPath().split("/");
-                binding.attachment.setText(paths[paths.length-1]);
-            }catch (Exception e){
-                e.printStackTrace();
-            }
-        } else if (resultCode == ImagePicker.RESULT_ERROR) {
-            Toast.makeText(this, ImagePicker.getError(data), Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, "Task Cancelled", Toast.LENGTH_SHORT).show();
-        }
-    }
-
 
 }

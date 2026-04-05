@@ -229,23 +229,23 @@ public class DeliveryDetailActivity extends AppCompatActivity {
         deliveryAcknowledgeDialog = new DeliveryAcknowledgeDialog(this,selectedCustomer,deliveryAckRequestHeader);
     }
 
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode == Activity.RESULT_OK) {
-            try {
-                Uri uri = data.getData();
-                assert uri != null;
-                deliveryAcknowledgeDialog.onAttachmentSelected(uri.getPath());
-            }catch (Exception e){
-                Log.e(TAG, "onActivityResult: ",e);
-            }
-        } else if (resultCode == ImagePicker.RESULT_ERROR) {
-            Toast.makeText(this, ImagePicker.getError(data), Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(this, "Task Cancelled", Toast.LENGTH_SHORT).show();
-        }
-    }
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//        if (resultCode == Activity.RESULT_OK) {
+//            try {
+//                Uri uri = data.getData();
+//                assert uri != null;
+//                deliveryAcknowledgeDialog.onAttachmentSelected(uri.getPath());
+//            }catch (Exception e){
+//                Log.e(TAG, "onActivityResult: ",e);
+//            }
+//        } else if (resultCode == ImagePicker.RESULT_ERROR) {
+//            Toast.makeText(this, ImagePicker.getError(data), Toast.LENGTH_SHORT).show();
+//        } else {
+//            Toast.makeText(this, "Task Cancelled", Toast.LENGTH_SHORT).show();
+//        }
+//    }
 
     private void fetchAcknowledgementStatus(){
         String customerNumber = selectedCustomer.split("\\(")[1].replace(")","");
