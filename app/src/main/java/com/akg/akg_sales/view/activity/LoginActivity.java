@@ -7,6 +7,7 @@ import static android.Manifest.permission.READ_PHONE_STATE;
 import static android.Manifest.permission.READ_SMS;
 import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -25,8 +26,11 @@ import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.core.util.Consumer;
 import androidx.databinding.DataBindingUtil;
 
@@ -43,6 +47,7 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -54,6 +59,7 @@ import retrofit2.Response;
 public class LoginActivity extends AppCompatActivity {
     public LoginViewModel loginViewModel;
     ActivityLoginBinding loginBinding;
+    private final String LOG_TAG = "LoginActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -158,137 +164,102 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void getDeviceInfo(){
-        try {
-            CommonUtil.deviceModel = Build.MANUFACTURER+" "+Build.BRAND+" "+Build.MODEL;
-        }catch (Exception e){e.printStackTrace();}
-        try {
-            CommonUtil.appVersion = BuildConfig.VERSION_CODE+":"+BuildConfig.VERSION_NAME;
-        }catch (Exception e){e.printStackTrace();}
-        try {
-            CommonUtil.osVersion = Build.VERSION.RELEASE+" SDK: "+Build.VERSION.SDK_INT;
-        }catch (Exception e){e.printStackTrace();}
-        try {
-            CommonUtil.deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
-        }catch (Exception e){e.printStackTrace();}
+        CommonUtil.deviceModel = Build.MANUFACTURER + " " + Build.BRAND + " " + Build.MODEL;
+        CommonUtil.appVersion = BuildConfig.VERSION_CODE + ":" + BuildConfig.VERSION_NAME;
+        CommonUtil.osVersion = Build.VERSION.RELEASE + " SDK: " + Build.VERSION.SDK_INT;
+        CommonUtil.deviceId = Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
 
-//        requestExternalStoragePermission();
-        getGpsLocation();
-        getPhoneNumber();
+        requestAllPermissions();
+        setGpsLocation();
     }
 
-    public void requestExternalStoragePermission(){
-        try {
-            Boolean externalStoragePermission = ActivityCompat.checkSelfPermission(this, WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
-            Log.d("requestExternalStoragePermission", "requestExternalStoragePermission: "+externalStoragePermission);
-            if(!externalStoragePermission){
-                System.out.println("Requesting Storage Permission");
-                String[] permissions = new String[]{WRITE_EXTERNAL_STORAGE};
-                requestPermissions(permissions, 102);
+    private void requestAllPermissions(){
+        String[] PERMISSIONS = {
+                Manifest.permission.ACCESS_COARSE_LOCATION,
+                Manifest.permission.ACCESS_FINE_LOCATION,
+        };
+
+        List<String> listPermissionsNeeded = new ArrayList<>();
+
+        for (String permission : PERMISSIONS) {
+            if (ContextCompat.checkSelfPermission(this, permission) != PackageManager.PERMISSION_GRANTED) {
+                listPermissionsNeeded.add(permission);
             }
-        }catch (Exception e){
-            Log.d("Permission", "requestExternalStoragePermission: "+e.getMessage());
         }
-    }
 
-    public void getPhoneNumber() {
-        if (ActivityCompat.checkSelfPermission(this, READ_SMS) == PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, READ_PHONE_NUMBERS) == PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED)
-        {
-            setPhone();
-        }
-        else {
-            String[] permissions = new String[]{READ_SMS, READ_PHONE_STATE};
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                permissions = new String[]{READ_PHONE_NUMBERS,READ_SMS, READ_PHONE_STATE};
+        // Android 13+ notification permission
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(this,
+                    Manifest.permission.POST_NOTIFICATIONS)
+                    != PackageManager.PERMISSION_GRANTED) {
+                listPermissionsNeeded.add(Manifest.permission.POST_NOTIFICATIONS);
             }
-            requestPermissions(permissions, 100);
         }
 
-    }
-
-    private void getGpsLocation(){
-        if (ActivityCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-                && ActivityCompat.checkSelfPermission(this, ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)
-        {
-            setLocation();
-        }
-        else {
-            String[] permissions = new String[]{ACCESS_FINE_LOCATION, ACCESS_COARSE_LOCATION};
-            requestPermissions(permissions, 101);
+        if (!listPermissionsNeeded.isEmpty()) {
+            ActivityCompat.requestPermissions(this,
+                    listPermissionsNeeded.toArray(new String[0]), 105);
         }
     }
 
+    @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
-        if (requestCode==100) {
-            if (ActivityCompat.checkSelfPermission(this, READ_SMS) !=
-                    PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(this,
-                    READ_PHONE_NUMBERS) != PackageManager.PERMISSION_GRANTED &&
-                    ActivityCompat.checkSelfPermission(this, READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
-                return;
-            }
-            setPhone();
+        if (requestCode == 101) {
+            for (int result : grantResults)
+                if (result != PackageManager.PERMISSION_GRANTED) {
+                    CommonUtil.showToast(this,"All Permissions are required to Function the App Properly!",false);
+                    break;
+                }
+            setGpsLocation();
         }
-        else if(requestCode==101){
-            if (ActivityCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
-                    && ActivityCompat.checkSelfPermission(this, ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
-            {
-                return;
-            }
-            setLocation();
-        }
-        else if(requestCode==102){
-            CommonUtil.showToast(this,"Permission Granted",true);
-        }
-        else System.out.println("Permission Failed");
     }
 
-    private void setLocation(){
+    private void setGpsLocation(){
+        if (ActivityCompat.checkSelfPermission(this, ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED
+                && ActivityCompat.checkSelfPermission(this, ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED)
+            return;
+        Log.d("LOGIN", "setGpsLocation: ");
         FusedLocationProviderClient client = LocationServices.getFusedLocationProviderClient(this);
         client.getLastLocation().addOnSuccessListener(location ->{
             try {
                 if(location!=null){
                     CommonUtil.gpsLocation = location;
                     CommonUtil.gpsAddress = getGpsAddress(location);
-                    System.out.println(CommonUtil.gpsLocation.toString());
-                    System.out.println(CommonUtil.gpsAddress);
+                    Log.d(LOG_TAG, "GPS Location: "+CommonUtil.gpsLocation.toString());
+                    Log.d(LOG_TAG, "GPS Address: "+CommonUtil.gpsAddress);
                 }
                 else System.out.println("################### Location Null");
-            }catch (Exception e){e.printStackTrace();}
+            }catch (Exception e){
+                Log.e(LOG_TAG, "setGpsLocation: ",e );
+            }
 
         });
-    }
-
-    private void setPhone(){
-        try {
-            TelephonyManager telephonyManager = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
-            CommonUtil.devicePhone = telephonyManager.getLine1Number();
-            System.out.println("Device Phone "+CommonUtil.devicePhone);
-        }catch (Exception e){e.printStackTrace();}
     }
 
     private String getGpsAddress(Location location){
         try {
             Geocoder geocoder = new Geocoder(this, Locale.getDefault());
-            List<Address> addressList = geocoder.getFromLocation(
-                    location.getLatitude(), location.getLongitude(), 1);
-            if (addressList != null && addressList.size() > 0) {
-                Address address = addressList.get(0);
-                StringBuilder sb = new StringBuilder();
-                for (int i = 0; i < address.getMaxAddressLineIndex(); i++) {
-                    sb.append(address.getAddressLine(i)).append(",");
-                }
-                sb.append(address.getFeatureName()).append(",")
-                        .append(address.getSubLocality()).append(",")
-                        .append(address.getLocality()).append(",")
-                        .append(address.getCountryName());
-                String addr = sb.toString();
-                if(addr.length()>200) addr = addr.substring(0,200);
-                return addr;
-            }
-        }catch (Exception e){e.printStackTrace();}
+            List<Address> addressList = geocoder.getFromLocation(location.getLatitude(), location.getLongitude(), 1);
+            if (addressList != null && !addressList.isEmpty()) return getGpsAddress(addressList);
+        }catch (Exception e){Log.e(LOG_TAG, "getGpsAddress: ",e);}
         return null;
+    }
+
+    @NonNull
+    private static String getGpsAddress(List<Address> addressList) {
+        Address address = addressList.get(0);
+        StringBuilder sb = new StringBuilder();
+        for (int i = 0; i < address.getMaxAddressLineIndex(); i++) {
+            sb.append(address.getAddressLine(i)).append(",");
+        }
+        sb.append(address.getFeatureName()).append(",")
+                .append(address.getSubLocality()).append(",")
+                .append(address.getLocality()).append(",")
+                .append(address.getCountryName());
+        String addr = sb.toString();
+        if(addr.length()>200) addr = addr.substring(0,200);
+        return addr;
     }
 
 }
