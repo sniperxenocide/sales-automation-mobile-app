@@ -47,7 +47,10 @@ import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -64,7 +67,6 @@ public class LoginActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        getDeviceInfo();
         loadPage();
     }
 
@@ -74,93 +76,28 @@ public class LoginActivity extends AppCompatActivity {
         loginBinding.setVm(loginViewModel);
         loginBinding.executePendingBindings();
 
+        getDeviceInfo();
         checkForUpdate();
         //handleServerSelection();
     }
 
-
-    private void handleServerSelection(){
-        loadUrlFromMemory();
-        if(API.baseUrl.trim().length()==0) loadOperatingUnitSelectionDropdown();
-        else showCredentialUI();
-    }
-
-    private void loadUrlFromMemory(){
-        try {
-            System.out.println("Loading Base URL from Memory");
-            SharedPreferences sp = getSharedPreferences("baseUrlMem", Context.MODE_PRIVATE);
-            API.baseUrl = sp.getString("baseUrl","");
-        }catch (Exception e){e.printStackTrace();}
-
-    }
-
-    private void loadOperatingUnitSelectionDropdown() {
-        loginBinding.operatingUnitDropdownContainer.setVisibility(View.VISIBLE);
-        loginBinding.credentialContainer.setVisibility(View.GONE);
-        API.loadServerUrl();
-
-        HashMap<String,String> baseUrlMap = API.baseUrlMap;
-        AutoCompleteTextView tView=loginBinding.operatingUnitDropdown;
-        String[] businessList = new String[baseUrlMap.size()];
-        String[] urlList = new String[baseUrlMap.size()];
-        int cnt = 0;
-        for(String k:baseUrlMap.keySet()){
-            businessList[cnt] = k;
-            urlList[cnt] = baseUrlMap.get(k);
-            cnt++;
-        }
-        ArrayAdapter<String> ptAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, businessList);
-        tView.setAdapter(ptAdapter);
-        tView.setOnItemClickListener((adapterView, view, i, l) -> {
-            tView.setText(businessList[i],false);
-            API.baseUrl = urlList[i];
-            showCredentialUI();
-        });
-    }
-
-    private void showCredentialUI(){
-        loginBinding.operatingUnitDropdownContainer.setVisibility(View.GONE);
-        loginBinding.credentialContainer.setVisibility(View.VISIBLE);
-        checkForUpdate();
-    }
-
     private void checkForUpdate(){
-        fetchAppUpdateInfo(v->{
-            if(v.getVersionCode()>BuildConfig.VERSION_CODE){
-                new ConfirmationDialog(this,
-                        "New Version (v"+v.getVersionName()+") Available. Download Now?", i->{
-                    try {startActivity(new Intent(Intent.ACTION_VIEW,
-                                Uri.parse(v.getDownloadUrl())));
-                    }catch (Exception e){e.printStackTrace();}
-                });
-            }
-        });
+        Log.d(LOG_TAG, "checkForUpdate: Verifying if updated check needed.");
+        if(!shouldCheckUpdate()) return;
 
-    }
-
-    private void fetchAppUpdateInfo(Consumer<AppVersion> callback){
+        Log.d(LOG_TAG, "checkForUpdate: App Update Check Initiating...");
         ProgressDialog progressDialog = CommonUtil.showProgressDialog(this);
         API.getClient().create(LoginApi.class).getLatestVersion()
-                .enqueue(new Callback<AppVersion>() {
-                    @Override
-                    public void onResponse(Call<AppVersion> call, Response<AppVersion> response) {
-                        progressDialog.dismiss();
-                        try {
-                            if(response.code()==200){
-                                callback.accept(response.body());
-                            }
-                            else throw new Exception(response.code()+"."+response.message());
-                        }catch (Exception e){
-                            CommonUtil.showToast(getApplicationContext(),e.getMessage(),false);
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<AppVersion> call, Throwable t) {
-                        progressDialog.dismiss();
-                        call.cancel();
-                    }
-                });
+                .enqueue(API.getCallback(this,v->{
+                    markUpdateChecked();
+                    if(v.getVersionCode()>BuildConfig.VERSION_CODE){
+                        new ConfirmationDialog(this,
+                                "New Version (v"+v.getVersionName()+") Available. Download Now?", i->{
+                            try {startActivity(new Intent(Intent.ACTION_VIEW,
+                                    Uri.parse(v.getDownloadUrl())));
+                            }catch (Exception e){Log.e(LOG_TAG, "checkForUpdate: ",e);}
+                        });
+                    }},progressDialog));
     }
 
     private void getDeviceInfo(){
@@ -246,8 +183,7 @@ public class LoginActivity extends AppCompatActivity {
         return null;
     }
 
-    @NonNull
-    private static String getGpsAddress(List<Address> addressList) {
+    private String getGpsAddress(List<Address> addressList) {
         Address address = addressList.get(0);
         StringBuilder sb = new StringBuilder();
         for (int i = 0; i < address.getMaxAddressLineIndex(); i++) {
@@ -261,5 +197,92 @@ public class LoginActivity extends AppCompatActivity {
         if(addr.length()>200) addr = addr.substring(0,200);
         return addr;
     }
+
+    private boolean shouldCheckUpdate() {
+        SharedPreferences prefs = getSharedPreferences("update_checker_pref", Context.MODE_PRIVATE);
+        long lastCheck = prefs.getLong("last_update_check_time", -1);
+        // Get today's 8 AM
+        Calendar today8AM = Calendar.getInstance();
+        set8AMTime(today8AM);
+        long now = System.currentTimeMillis();
+        // If current time is before today 8 AM → don't run
+        if (now < today8AM.getTimeInMillis()) return false;
+        // If never checked before → allow
+        if (lastCheck == -1) return true;
+
+        // Get last check day's 8 AM
+        Calendar lastCheckCal = Calendar.getInstance();
+        lastCheckCal.setTimeInMillis(lastCheck);
+
+        Calendar lastCheckDay8AM = Calendar.getInstance();
+        lastCheckDay8AM.setTimeInMillis(lastCheck);
+        set8AMTime(lastCheckDay8AM);
+
+        // If last check was before today's 8 AM → allow
+        return lastCheckDay8AM.getTimeInMillis() < today8AM.getTimeInMillis();
+    }
+
+    private void set8AMTime(Calendar dateTime){
+        dateTime.set(Calendar.HOUR_OF_DAY, 8);
+        dateTime.set(Calendar.MINUTE, 0);
+        dateTime.set(Calendar.SECOND, 0);
+        dateTime.set(Calendar.MILLISECOND, 0);
+    }
+
+    private void markUpdateChecked() {
+        Log.d(LOG_TAG, "markUpdateChecked: App Update Check Done.Storing Last Check Time.");
+        SharedPreferences prefs = getSharedPreferences("update_checker_pref", Context.MODE_PRIVATE);
+        prefs.edit().putLong("last_update_check_time", System.currentTimeMillis()).apply();
+    }
+
+
+
+
+    private void handleServerSelection(){
+        loadUrlFromMemory();
+        if(API.baseUrl.trim().length()==0) loadOperatingUnitSelectionDropdown();
+        else showCredentialUI();
+    }
+
+    private void loadUrlFromMemory(){
+        try {
+            System.out.println("Loading Base URL from Memory");
+            SharedPreferences sp = getSharedPreferences("baseUrlMem", Context.MODE_PRIVATE);
+            API.baseUrl = sp.getString("baseUrl","");
+        }catch (Exception e){e.printStackTrace();}
+
+    }
+
+    private void loadOperatingUnitSelectionDropdown() {
+        loginBinding.operatingUnitDropdownContainer.setVisibility(View.VISIBLE);
+        loginBinding.credentialContainer.setVisibility(View.GONE);
+        API.loadServerUrl();
+
+        HashMap<String,String> baseUrlMap = API.baseUrlMap;
+        AutoCompleteTextView tView=loginBinding.operatingUnitDropdown;
+        String[] businessList = new String[baseUrlMap.size()];
+        String[] urlList = new String[baseUrlMap.size()];
+        int cnt = 0;
+        for(String k:baseUrlMap.keySet()){
+            businessList[cnt] = k;
+            urlList[cnt] = baseUrlMap.get(k);
+            cnt++;
+        }
+        ArrayAdapter<String> ptAdapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, businessList);
+        tView.setAdapter(ptAdapter);
+        tView.setOnItemClickListener((adapterView, view, i, l) -> {
+            tView.setText(businessList[i],false);
+            API.baseUrl = urlList[i];
+            showCredentialUI();
+        });
+    }
+
+    private void showCredentialUI(){
+        loginBinding.operatingUnitDropdownContainer.setVisibility(View.GONE);
+        loginBinding.credentialContainer.setVisibility(View.VISIBLE);
+        checkForUpdate();
+    }
+
+
 
 }
