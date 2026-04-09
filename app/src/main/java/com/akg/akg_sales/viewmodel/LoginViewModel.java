@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.util.Log;
 
 import androidx.databinding.BaseObservable;
 import androidx.databinding.Bindable;
@@ -25,6 +26,7 @@ import retrofit2.Response;
 
 public class LoginViewModel extends BaseObservable {
     public LoginActivity activity;
+    private final String LOG_TAG = "LoginViewModel";
     private User user;
 
     public LoginViewModel(LoginActivity activity){
@@ -83,67 +85,50 @@ public class LoginViewModel extends BaseObservable {
         notifyPropertyChanged(BR.password);
     }
 
+    private void prepareLoginPostBody(){
+        user.setDeviceModel(CommonUtil.deviceModel).setDeviceId(CommonUtil.deviceId)
+                .setDevicePhone(CommonUtil.devicePhone).setAppVersion(CommonUtil.appVersion)
+                .setOsVersion(CommonUtil.osVersion);
+        if(CommonUtil.gpsLocation !=null){
+            try {
+                JSONObject gps = new JSONObject();
+                gps.put("gpsLocation",CommonUtil.gpsLocation.getLatitude()+","+CommonUtil.gpsLocation.getLongitude());
+                gps.put("gpsAddress",CommonUtil.gpsAddress);
+                user.setGpsLocation(gps.toString());
+            }catch (Exception ignored){}
+        }
+    }
+
     // Customer Number 194311
     public void loginAction(){
-        if(user.getUsername()==null || user.getUsername().length()==0)
+        if(user.getUsername()==null || user.getUsername().isEmpty()){
             CommonUtil.showToast(activity,"Username Cannot be Empty",false);
-        else {
-            try {
-                user.setDeviceModel(CommonUtil.deviceModel).setDeviceId(CommonUtil.deviceId)
-                        .setDevicePhone(CommonUtil.devicePhone).setAppVersion(CommonUtil.appVersion)
-                        .setOsVersion(CommonUtil.osVersion);
-                if(CommonUtil.gpsLocation !=null){
-                    try {
-                        JSONObject gps = new JSONObject();
-                        gps.put("gpsLocation",CommonUtil.gpsLocation.getLatitude()+","+CommonUtil.gpsLocation.getLongitude());
-                        gps.put("gpsAddress",CommonUtil.gpsAddress);
-                        user.setGpsLocation(gps.toString());
-                    }catch (Exception e){}
-                    //user.setGpsLocation(CommonUtil.gpsLocation.getLatitude()+","+CommonUtil.gpsLocation.getLongitude());
-                }
-                ProgressDialog progressDialog=CommonUtil.showProgressDialog(activity);
-                API.getClient().create(LoginApi.class).authenticate(user)
-                .enqueue(new Callback<User>() {
-                    @Override
-                    public void onResponse(Call<User> call, Response<User> response) {
-                        progressDialog.dismiss();
-                        try {
-                            if(response.code()==200){
-                                System.out.println("Login Success****************");
-                                User validUser = response.body();
-                                if(!validUser.getToken().isEmpty()){
-                                    validUser.setUsername(user.getUsername()).setPassword(user.getPassword());
-                                    storeCred(validUser);
-                                    //storeUrlToMemory();
-                                    CommonUtil.showToast(activity,"Login Success",true);
-                                    CommonUtil.loggedInUser = validUser;
-                                    Intent homeIntent = new Intent(activity, HomeActivity.class);
-                                    activity.startActivity(homeIntent);
-                                    MyFirebaseMessagingService.fetchFirebaseToken();
-                                }
-                                else CommonUtil.showToast(activity,"Login Failed",false);
-                            }
-                            else throw new Exception("Login Failed. Incorrect Username or Password.");
-                        }catch (Exception e){
-                            CommonUtil.showToast(activity,e.getMessage(),false);
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<User> call, Throwable t) {
-                        progressDialog.dismiss();
-                        call.cancel();
-                        t.printStackTrace();
-                        CommonUtil.showToast(activity,t.getMessage()+" Login Failed",false);
-                    }
-                });
-            }catch (Exception e){
-                CommonUtil.showToast(activity,e.getMessage(),false);
-                e.printStackTrace();
-            }
-
-
+            return;
         }
+        prepareLoginPostBody();
+        try {
+            ProgressDialog progressDialog=CommonUtil.showProgressDialog(activity);
+            API.getClient().create(LoginApi.class).authenticate(user)
+                    .enqueue(API.getCallback(activity,validUser->{
+                        System.out.println("Login Success****************");
+                        if (!validUser.getToken().isEmpty()) {
+                            validUser.setUsername(user.getUsername()).setPassword(user.getPassword());
+                            storeCred(validUser);
+                            //storeUrlToMemory();
+                            CommonUtil.showToast(activity, "Login Success", true);
+                            CommonUtil.loggedInUser = validUser;
+                            Intent homeIntent = new Intent(activity, HomeActivity.class);
+                            activity.startActivity(homeIntent);
+                            MyFirebaseMessagingService.fetchFirebaseToken();
+                        } else CommonUtil.showToast(activity, "Login Failed", false);
+                    }, e-> CommonUtil.showToast(activity,"Login Failed. Incorrect Username or Password.",false),
+                            progressDialog));
+
+        }catch (Exception e){
+            CommonUtil.showToast(activity,e.getMessage(),false);
+            Log.e(LOG_TAG, "loginAction: ",e);
+        }
+
     }
 
 

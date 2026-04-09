@@ -64,19 +64,20 @@ public class API {
                 .client(client).build();
     }
 
-    public static <T>Callback<T> getCallback(Context context, Consumer<T> callback, ProgressDialog progress){
+    public static <T>Callback<T> getCallback(Context context, Consumer<T> successCallback,Consumer<Exception> errorCallback, ProgressDialog progress){
         return new Callback<T>() {
             @Override
             public void onResponse(Call<T> call, Response<T> response) {
                 if(progress!=null) progress.dismiss();
                 try {
-                    if(response.code()==200){
-                        callback.accept(response.body());
+                    if(response.isSuccessful()){
+                        successCallback.accept(response.body());
                     }
                     else throw new Exception(response.code()+"."+response.message());
                 }catch (Exception e){
                     Log.e("ERROR", e.getMessage(), e);
                     if(context!=null) CommonUtil.showToast(context,e.getMessage(),false);
+                    errorCallback.accept(e);
                 }
             }
 

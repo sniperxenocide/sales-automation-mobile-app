@@ -19,13 +19,13 @@ public class CommonService {
     public static void fetchHomepagePermission(Context context, Consumer<HomepagePermission> callback){
         ProgressDialog progressDialog = CommonUtil.showProgressDialog(context);
         API.getClient().create(HomeApi.class).getHomepagePermission()
-                .enqueue(API.getCallback(context, callback, progressDialog));
+                .enqueue(API.getCallback(context, callback,e->{}, progressDialog));
     }
 
     public static void fetchComplaintHandlingConfig(Context context, Consumer<ExternalApplicationConfig> callback){
         ProgressDialog progressDialog = CommonUtil.showProgressDialog(context);
         API.getClient().create(ExternalApplicationApi.class).getCmsConfig()
-                .enqueue(API.getCallback(context, callback, progressDialog));
+                .enqueue(API.getCallback(context, callback,e->{}, progressDialog));
     }
 }
 

@@ -69,7 +69,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     .enqueue(API.getCallback(null,user -> {
                         Log.d("FCM", "FCM Token Updated.");
                         Log.d("FCM", String.valueOf(CommonUtil.loggedInUser));
-                    },null));
+                    },e->{},null));
         }catch (Exception e){
             Log.e(TAG, e.getMessage(),e );
         }

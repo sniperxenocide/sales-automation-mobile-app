@@ -97,7 +97,7 @@ public class LoginActivity extends AppCompatActivity {
                                     Uri.parse(v.getDownloadUrl())));
                             }catch (Exception e){Log.e(LOG_TAG, "checkForUpdate: ",e);}
                         });
-                    }},progressDialog));
+                    }},e->{},progressDialog));
     }
 
     private void getDeviceInfo(){
