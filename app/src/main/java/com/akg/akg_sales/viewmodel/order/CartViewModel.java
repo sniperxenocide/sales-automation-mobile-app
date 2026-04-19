@@ -140,7 +140,10 @@ public class CartViewModel extends BaseObservable {
                 afterOrderWithAttachmentSubmission();
             });
         }
-        catch (Exception e){e.printStackTrace();}
+        catch (Exception e){
+            Log.e(LOG_TAG, "sendOrderAttachment: ", e);
+            afterOrderWithAttachmentSubmission();
+        }
     }
 
     private void afterOrderWithAttachmentSubmission(){
