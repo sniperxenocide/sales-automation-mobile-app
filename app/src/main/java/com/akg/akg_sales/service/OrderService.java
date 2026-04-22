@@ -158,28 +158,6 @@ public class OrderService {
                 });
     }
 
-    public static void fetchOrderStatusFromServer(Context context,Consumer<List<OrderStatusDto>> callback){
-        ProgressDialog progressDialog = CommonUtil.showProgressDialog(context);
-        API.getClient().create(OrderApi.class).getOrderStatus()
-                .enqueue(new Callback<List<OrderStatusDto>>() {
-                    @Override
-                    public void onResponse(Call<List<OrderStatusDto>> call, Response<List<OrderStatusDto>> response) {
-                        progressDialog.dismiss();
-                        try {
-                            if(response.code()==200){
-                                callback.accept(response.body());
-                            }
-                        }catch (Exception e){e.printStackTrace();}
-                    }
-                    @Override
-                    public void onFailure(Call<List<OrderStatusDto>> call, Throwable t) {
-                        progressDialog.dismiss();
-                        call.cancel();
-                        t.printStackTrace();
-                    }
-                });
-    }
-
     public static void fetchOrderPermission(Consumer<OrderPermission> callback){
         API.getClient().create(OrderApi.class).getOrderPermission()
                 .enqueue(new Callback<OrderPermission>() {

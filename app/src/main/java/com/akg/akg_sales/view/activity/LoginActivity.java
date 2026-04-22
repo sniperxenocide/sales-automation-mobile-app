@@ -2,10 +2,6 @@ package com.akg.akg_sales.view.activity;
 
 import static android.Manifest.permission.ACCESS_COARSE_LOCATION;
 import static android.Manifest.permission.ACCESS_FINE_LOCATION;
-import static android.Manifest.permission.READ_PHONE_NUMBERS;
-import static android.Manifest.permission.READ_PHONE_STATE;
-import static android.Manifest.permission.READ_SMS;
-import static android.Manifest.permission.WRITE_EXTERNAL_STORAGE;
 
 import android.Manifest;
 import android.app.ProgressDialog;
@@ -20,18 +16,14 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
-import android.telephony.TelephonyManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 
-import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-import androidx.core.util.Consumer;
 import androidx.databinding.DataBindingUtil;
 
 import com.akg.akg_sales.BuildConfig;
@@ -39,25 +31,17 @@ import com.akg.akg_sales.R;
 import com.akg.akg_sales.api.API;
 import com.akg.akg_sales.api.LoginApi;
 import com.akg.akg_sales.databinding.ActivityLoginBinding;
-import com.akg.akg_sales.dto.AppVersion;
 import com.akg.akg_sales.util.CommonUtil;
+import com.akg.akg_sales.util.SPHelper;
 import com.akg.akg_sales.view.dialog.ConfirmationDialog;
 import com.akg.akg_sales.viewmodel.LoginViewModel;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
-import com.google.firebase.crashlytics.FirebaseCrashlytics;
 
-import java.time.LocalDateTime;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 
 public class LoginActivity extends AppCompatActivity {
     public LoginViewModel loginViewModel;
@@ -82,19 +66,18 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void checkForUpdate(){
-        Log.d(LOG_TAG, "checkForUpdate: Verifying if updated check needed.");
-        if(!shouldCheckUpdate()) return;
+        if(!CommonUtil.shouldCallApiAfterInterval(this,
+                SPHelper.KEY_NEXT_APP_UPDATE_CHECK_TIMESTAMP)) return;
 
         Log.d(LOG_TAG, "checkForUpdate: App Update Check Initiating...");
         ProgressDialog progressDialog = CommonUtil.showProgressDialog(this);
         API.getClient().create(LoginApi.class).getLatestVersion()
                 .enqueue(API.getCallback(this,v->{
-                    markUpdateChecked();
+                    CommonUtil.setNextApiCallTimestamp(this, SPHelper.KEY_NEXT_APP_UPDATE_CHECK_TIMESTAMP,20,30);
                     if(v.getVersionCode()>BuildConfig.VERSION_CODE){
-                        new ConfirmationDialog(this,
-                                "New Version (v"+v.getVersionName()+") Available. Download Now?", i->{
-                            try {startActivity(new Intent(Intent.ACTION_VIEW,
-                                    Uri.parse(v.getDownloadUrl())));
+                        String msg = "New Version (v"+v.getVersionName()+ ") Available. Download Now?";
+                        new ConfirmationDialog(this, msg,i->{
+                            try {startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse(v.getDownloadUrl())));
                             }catch (Exception e){Log.e(LOG_TAG, "checkForUpdate: ",e);}
                         });
                     }},e->{},progressDialog));
@@ -197,45 +180,6 @@ public class LoginActivity extends AppCompatActivity {
         if(addr.length()>200) addr = addr.substring(0,200);
         return addr;
     }
-
-    private boolean shouldCheckUpdate() {
-        SharedPreferences prefs = getSharedPreferences("update_checker_pref", Context.MODE_PRIVATE);
-        long lastCheck = prefs.getLong("last_update_check_time", -1);
-        // Get today's 8 AM
-        Calendar today8AM = Calendar.getInstance();
-        set8AMTime(today8AM);
-        long now = System.currentTimeMillis();
-        // If current time is before today 8 AM → don't run
-        if (now < today8AM.getTimeInMillis()) return false;
-        // If never checked before → allow
-        if (lastCheck == -1) return true;
-
-        // Get last check day's 8 AM
-        Calendar lastCheckCal = Calendar.getInstance();
-        lastCheckCal.setTimeInMillis(lastCheck);
-
-        Calendar lastCheckDay8AM = Calendar.getInstance();
-        lastCheckDay8AM.setTimeInMillis(lastCheck);
-        set8AMTime(lastCheckDay8AM);
-
-        // If last check was before today's 8 AM → allow
-        return lastCheckDay8AM.getTimeInMillis() < today8AM.getTimeInMillis();
-    }
-
-    private void set8AMTime(Calendar dateTime){
-        dateTime.set(Calendar.HOUR_OF_DAY, 8);
-        dateTime.set(Calendar.MINUTE, 0);
-        dateTime.set(Calendar.SECOND, 0);
-        dateTime.set(Calendar.MILLISECOND, 0);
-    }
-
-    private void markUpdateChecked() {
-        Log.d(LOG_TAG, "markUpdateChecked: App Update Check Done.Storing Last Check Time.");
-        SharedPreferences prefs = getSharedPreferences("update_checker_pref", Context.MODE_PRIVATE);
-        prefs.edit().putLong("last_update_check_time", System.currentTimeMillis()).apply();
-    }
-
-
 
 
     private void handleServerSelection(){

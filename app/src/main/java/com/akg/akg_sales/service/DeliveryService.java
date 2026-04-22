@@ -184,25 +184,4 @@ public class DeliveryService {
         }catch (Exception e){e.printStackTrace();}
     }
 
-    public static void fetchDeliveryPermission(Consumer<DeliveryPermission> callback){
-        API.getClient().create(DeliveryApi.class).getDeliveryPermission()
-                .enqueue(new Callback<>() {
-                    @Override
-                    public void onResponse(Call<DeliveryPermission> call, Response<DeliveryPermission> response) {
-                        try {
-                            if (response.code() == 200) {
-                                callback.accept(response.body());
-                            }
-                        } catch (Exception e) {
-                            Log.e("Error", "onFailure: ", e);
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call<DeliveryPermission> call, Throwable t) {
-                        call.cancel();
-                        Log.e("Error", "onFailure: ", t);
-                    }
-                });
-    }
 }

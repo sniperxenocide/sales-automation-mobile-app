@@ -1,38 +1,37 @@
 package com.akg.akg_sales.view.activity;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.Browser;
-import android.view.View;
-import android.webkit.CookieManager;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.browser.customtabs.CustomTabsIntent;
 import androidx.databinding.DataBindingUtil;
 
 import com.akg.akg_sales.BuildConfig;
 import com.akg.akg_sales.R;
 import com.akg.akg_sales.api.API;
+import com.akg.akg_sales.api.DeliveryApi;
+import com.akg.akg_sales.api.HomeApi;
+import com.akg.akg_sales.api.OrderApi;
 import com.akg.akg_sales.databinding.ActivityHomeBinding;
 import com.akg.akg_sales.dto.CustomerDto;
 import com.akg.akg_sales.dto.HomeMenuItem;
+import com.akg.akg_sales.dto.HomepagePermission;
+import com.akg.akg_sales.dto.delivery.DeliveryPermission;
 import com.akg.akg_sales.dto.order.CartItemDto;
 import com.akg.akg_sales.dto.order.OrderStatusDto;
-import com.akg.akg_sales.service.CommonService;
 import com.akg.akg_sales.service.CustomerService;
 import com.akg.akg_sales.service.DeliveryService;
-import com.akg.akg_sales.service.OrderService;
 import com.akg.akg_sales.util.CommonUtil;
+import com.akg.akg_sales.util.SPHelper;
 import com.akg.akg_sales.view.activity.delivery.DeliveryListActivity;
-import com.akg.akg_sales.view.activity.order.OrderActivity;
 import com.akg.akg_sales.view.activity.order.PendingOrderActivity;
 import com.akg.akg_sales.view.activity.payment.PaymentListActivity;
 import com.akg.akg_sales.view.adapter.HomeMenuAdapter;
 import com.akg.akg_sales.view.dialog.ConfirmationDialog;
-import com.akg.akg_sales.view.dialog.GeneralDialog;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 
@@ -59,6 +58,7 @@ public class HomeActivity extends AppCompatActivity {
         setWelcomeMsg();
         fetchDeliveryPermission();
         generateHomeMenu();
+        enableBackPressLogoutDialog();
 
         if(CommonUtil.loggedInUser.getLoginCount()<=1) onClickResetPasswordBtn();
     }
@@ -72,13 +72,32 @@ public class HomeActivity extends AppCompatActivity {
 
         HomeMenuAdapter adapter = new HomeMenuAdapter(this,list);
         homeBinding.homeGrid.setAdapter(adapter);
+        fetchHomepagePermission(list,adapter);
+    }
 
-        CommonService.fetchHomepagePermission(this,permission->{
-            if(permission.getCmsAccess()) list.add(new HomeMenuItem("CMS",R.drawable.justice, ComplainManagementActivity.class));
-            if(permission.getReportAccess()) list.add(new HomeMenuItem("Report",R.drawable.report, ReportWebActivity.class));
+    private void fetchHomepagePermission(ArrayList<HomeMenuItem> list,HomeMenuAdapter adapter){
+        if(!CommonUtil.shouldCallApiAfterInterval(this, SPHelper.KEY_NEXT_HOMEPAGE_PERMISSION_FETCH_TIMESTAMP)) {
+            HomepagePermission permission = SPHelper.getDataFromSharedPref(this,
+                    SPHelper.MASTER_DATA_PREF, SPHelper.KEY_HOMEPAGE_PERMISSION,HomepagePermission.class);
+            if(permission!=null) {
+                applyHomepagePermission(permission,list,adapter);
+                return;
+            }
+        }
 
-            adapter.notifyDataSetChanged();
-        });
+        ProgressDialog progressDialog = CommonUtil.showProgressDialog(this);
+        API.getClient().create(HomeApi.class).getHomepagePermission()
+                .enqueue(API.getCallback(this, permission->{
+                    applyHomepagePermission(permission,list,adapter);
+                    CommonUtil.setNextApiCallTimestamp(this, SPHelper.KEY_NEXT_HOMEPAGE_PERMISSION_FETCH_TIMESTAMP,10,16);
+                    SPHelper.storeDataInSharedPref(HomeActivity.this, SPHelper.MASTER_DATA_PREF, SPHelper.KEY_HOMEPAGE_PERMISSION,permission);
+                },e->{}, progressDialog));
+    }
+
+    private void applyHomepagePermission(HomepagePermission permission,ArrayList<HomeMenuItem> list,HomeMenuAdapter adapter){
+        if(permission.getCmsAccess()) list.add(new HomeMenuItem("CMS",R.drawable.justice, ComplainManagementActivity.class));
+        if(permission.getReportAccess()) list.add(new HomeMenuItem("Report",R.drawable.report, ReportWebActivity.class));
+        adapter.notifyDataSetChanged();
     }
 
     @Override
@@ -129,21 +148,30 @@ public class HomeActivity extends AppCompatActivity {
             if(CommonUtil.customers!=null && !CommonUtil.customers.isEmpty()){
                 Collections.sort(CommonUtil.customers,
                         (object1, object2) -> object1.getCustomerName()
-                                .compareTo(object2.getCustomerName()));
-            }
+                                .compareTo(object2.getCustomerName()));}
             loadCart();
         });
     }
 
     private void fetchOrderStatusFromServer(){
-        OrderService.fetchOrderStatusFromServer(this,orderStatus ->
-                CommonUtil.statusList = (ArrayList<OrderStatusDto>)orderStatus);
+        if(!CommonUtil.shouldCallApiAfterInterval(this, SPHelper.KEY_NEXT_ORDER_STATUS_FETCH_TIMESTAMP)) {
+            Type type = new TypeToken<ArrayList<OrderStatusDto>>() {}.getType();
+            CommonUtil.statusList = SPHelper.getDataFromSharedPref(this,
+                    SPHelper.MASTER_DATA_PREF, SPHelper.KEY_ORDER_STATUS_LIST,type);
+            if(CommonUtil.statusList!=null) return;
+        }
+
+        ProgressDialog progressDialog = CommonUtil.showProgressDialog(this);
+        API.getClient().create(OrderApi.class).getOrderStatus()
+                .enqueue(API.getCallback(this,list->{
+                    CommonUtil.statusList = (ArrayList<OrderStatusDto>)list;
+                    CommonUtil.setNextApiCallTimestamp(this, SPHelper.KEY_NEXT_ORDER_STATUS_FETCH_TIMESTAMP,25,31);
+                    SPHelper.storeDataInSharedPref(HomeActivity.this, SPHelper.MASTER_DATA_PREF, SPHelper.KEY_ORDER_STATUS_LIST,CommonUtil.statusList);
+                },e->{},progressDialog));
     }
 
     private void setAppVersion(){
-        try {
-            homeBinding.appVersion.setText("v"+BuildConfig.VERSION_NAME);
-        }catch (Exception e){e.printStackTrace();}
+        homeBinding.appVersion.setText("v"+BuildConfig.VERSION_NAME);
     }
 
     private void setWelcomeMsg(){
@@ -151,13 +179,14 @@ public class HomeActivity extends AppCompatActivity {
         homeBinding.welcomeUserText.setText(msg);
     }
 
-    @Override
-    public void onBackPressed(){
-        new ConfirmationDialog(this,"Do you want to logout?", m-> finish());
+    private void enableBackPressLogoutDialog(){
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                new ConfirmationDialog(HomeActivity.this, "Do you want to logout?", m -> finish());
+            }
+        });
     }
-
-
-
 
     public void onClickResetPasswordBtn(){
         Intent intent = new Intent(this, ResetPasswordActivity.class);
@@ -165,7 +194,18 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void fetchDeliveryPermission(){
-        DeliveryService.fetchDeliveryPermission(permission-> CommonUtil.deliveryPermission = permission);
+        if(!CommonUtil.shouldCallApiAfterInterval(this, SPHelper.KEY_NEXT_DELIVERY_PERMISSION_FETCH_TIMESTAMP)) {
+            CommonUtil.deliveryPermission = SPHelper.getDataFromSharedPref(this, SPHelper.MASTER_DATA_PREF,
+                    SPHelper.KEY_DELIVERY_PERMISSION,DeliveryPermission.class);
+            if(CommonUtil.deliveryPermission!=null) return;
+        }
+
+        API.getClient().create(DeliveryApi.class).getDeliveryPermission()
+                .enqueue(API.getCallback(this,permission->{
+                    CommonUtil.deliveryPermission = permission;
+                    CommonUtil.setNextApiCallTimestamp(this, SPHelper.KEY_NEXT_DELIVERY_PERMISSION_FETCH_TIMESTAMP,10,16);
+                    SPHelper.storeDataInSharedPref(HomeActivity.this, SPHelper.MASTER_DATA_PREF, SPHelper.KEY_DELIVERY_PERMISSION,CommonUtil.deliveryPermission);
+                },e->{}, null));
     }
 
 }

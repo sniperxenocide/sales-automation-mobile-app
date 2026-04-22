@@ -15,8 +15,9 @@ import android.webkit.WebChromeClient;
 import android.webkit.WebView;
 
 import com.akg.akg_sales.R;
+import com.akg.akg_sales.api.API;
+import com.akg.akg_sales.api.ExternalApplicationApi;
 import com.akg.akg_sales.databinding.ActivityComplainManagementBinding;
-import com.akg.akg_sales.service.CommonService;
 import com.akg.akg_sales.util.CommonUtil;
 import com.akg.akg_sales.util.WebViewConfig;
 
@@ -35,10 +36,12 @@ public class ComplainManagementActivity extends AppCompatActivity {
         binding.setVm(this);
         binding.executePendingBindings();
 
-        CommonService.fetchComplaintHandlingConfig(this,config->{
-            if(config==null) finish();
-            else loadWebView(config.getBaseUrl()+"?"+config.getUrlParams());
-        });
+        ProgressDialog progressDialog = CommonUtil.showProgressDialog(this);
+        API.getClient().create(ExternalApplicationApi.class).getCmsConfig()
+                .enqueue(API.getCallback(this, config->{
+                    if(config==null) finish();
+                    else loadWebView(config.getBaseUrl()+"?"+config.getUrlParams());
+                },e->{}, progressDialog));
     }
 
     private void loadWebView(String url){
