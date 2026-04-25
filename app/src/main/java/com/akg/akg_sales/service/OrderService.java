@@ -8,6 +8,7 @@ import androidx.core.util.Consumer;
 import com.akg.akg_sales.api.API;
 import com.akg.akg_sales.api.ItemApi;
 import com.akg.akg_sales.api.OrderApi;
+import com.akg.akg_sales.dto.delivery.DeliveryPermission;
 import com.akg.akg_sales.dto.item.ItemDto;
 import com.akg.akg_sales.dto.item.ItemMaster;
 import com.akg.akg_sales.dto.order.OrderDto;
@@ -16,7 +17,12 @@ import com.akg.akg_sales.dto.order.OrderRequest;
 import com.akg.akg_sales.dto.order.OrderStatusDto;
 import com.akg.akg_sales.dto.order.OrderTypeDto;
 import com.akg.akg_sales.util.CommonUtil;
+import com.akg.akg_sales.util.SPHelper;
+import com.akg.akg_sales.view.activity.HomeActivity;
+import com.google.gson.reflect.TypeToken;
 
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -158,49 +164,42 @@ public class OrderService {
                 });
     }
 
-    public static void fetchOrderPermission(Consumer<OrderPermission> callback){
-        API.getClient().create(OrderApi.class).getOrderPermission()
-                .enqueue(new Callback<OrderPermission>() {
-                    @Override
-                    public void onResponse(Call<OrderPermission> call, Response<OrderPermission> response) {
-                        try {
-                            if(response.code()==200){
-                                callback.accept(response.body());
-                            }
-                        }catch (Exception e){
-                            e.printStackTrace();
-                        }
-                    }
+    public static void fetchOrderPermission(Context context,Consumer<OrderPermission> callback){
+        if(!SPHelper.shouldCallApiAfterInterval(context, SPHelper.KEY_NEXT_ORDER_PERMISSION_FETCH_TIMESTAMP)) {
+            CommonUtil.orderPermission = SPHelper.getDataFromSharedPref(context, SPHelper.MASTER_DATA_PREF,
+                    SPHelper.KEY_ORDER_PERMISSION, OrderPermission.class);
+            if(CommonUtil.orderPermission!=null) {
+                callback.accept(CommonUtil.orderPermission);
+                return;
+            }
+        }
 
-                    @Override
-                    public void onFailure(Call<OrderPermission> call, Throwable t) {
-                        call.cancel();
-                        t.printStackTrace();
-                    }
-                });
+        API.getClient().create(OrderApi.class).getOrderPermission()
+                .enqueue(API.getCallback(null,permission->{
+                    CommonUtil.orderPermission = permission;
+                    SPHelper.setNextApiCallTimestamp(context, SPHelper.KEY_NEXT_ORDER_PERMISSION_FETCH_TIMESTAMP);
+                    SPHelper.storeDataInSharedPref(context, SPHelper.MASTER_DATA_PREF, SPHelper.KEY_ORDER_PERMISSION,CommonUtil.orderPermission);
+                    callback.accept(permission);
+                },e->{},null));
     }
 
     public static void fetchOrderTypes(Context context,Consumer<List<OrderTypeDto>> callback){
+        if(!SPHelper.shouldCallApiAfterInterval(context, SPHelper.KEY_NEXT_ORDER_TYPE_FETCH_TIMESTAMP)) {
+            Type type = new TypeToken<ArrayList<OrderTypeDto>>() {}.getType();
+            ArrayList<OrderTypeDto> orderTypes = SPHelper.getDataFromSharedPref(context, SPHelper.MASTER_DATA_PREF,
+                    SPHelper.KEY_ORDER_TYPE_LIST, type);
+            if(orderTypes!=null) {
+                callback.accept(orderTypes);
+                return;
+            }
+        }
+
         ProgressDialog progressDialog = CommonUtil.showProgressDialog(context);
         API.getClient().create(OrderApi.class).getOrderTypes()
-                .enqueue(new Callback<List<OrderTypeDto>>() {
-                    @Override
-                    public void onResponse(Call<List<OrderTypeDto>> call, Response<List<OrderTypeDto>> response) {
-                        progressDialog.dismiss();
-                        try {
-                            if(response.code()==200){
-                                callback.accept(response.body());
-                            }
-                        }catch (Exception e){e.printStackTrace();}
-                    }
-
-                    @Override
-                    public void onFailure(Call<List<OrderTypeDto>> call, Throwable t) {
-                        progressDialog.dismiss();
-                        call.cancel();
-                        t.printStackTrace();
-                    }
-                });
+                .enqueue(API.getCallback(context,types->{
+                    SPHelper.setNextApiCallTimestamp(context, SPHelper.KEY_NEXT_ORDER_TYPE_FETCH_TIMESTAMP);
+                    SPHelper.storeDataInSharedPref(context, SPHelper.MASTER_DATA_PREF, SPHelper.KEY_ORDER_TYPE_LIST,types);
+                    callback.accept(types);},e->{},progressDialog));
     }
 
     public static void sendOrderAttachment(Context context, MultipartBody body,Consumer<OrderDto> callback){

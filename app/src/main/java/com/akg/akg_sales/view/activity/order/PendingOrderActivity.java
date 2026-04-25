@@ -58,8 +58,7 @@ public class PendingOrderActivity extends AppCompatActivity {
     }
 
     private void createOrderControl(){
-        OrderService.fetchOrderPermission(p->{
-            CommonUtil.orderPermission = p;
+        OrderService.fetchOrderPermission(this,p->{
             if(p.getCanCreateOrder()) binding.newOrderBtn.setVisibility(View.VISIBLE);
         });
     }

@@ -76,7 +76,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void fetchHomepagePermission(ArrayList<HomeMenuItem> list,HomeMenuAdapter adapter){
-        if(!CommonUtil.shouldCallApiAfterInterval(this, SPHelper.KEY_NEXT_HOMEPAGE_PERMISSION_FETCH_TIMESTAMP)) {
+        if(!SPHelper.shouldCallApiAfterInterval(this, SPHelper.KEY_NEXT_HOMEPAGE_PERMISSION_FETCH_TIMESTAMP)) {
             HomepagePermission permission = SPHelper.getDataFromSharedPref(this,
                     SPHelper.MASTER_DATA_PREF, SPHelper.KEY_HOMEPAGE_PERMISSION,HomepagePermission.class);
             if(permission!=null) {
@@ -89,7 +89,7 @@ public class HomeActivity extends AppCompatActivity {
         API.getClient().create(HomeApi.class).getHomepagePermission()
                 .enqueue(API.getCallback(this, permission->{
                     applyHomepagePermission(permission,list,adapter);
-                    CommonUtil.setNextApiCallTimestamp(this, SPHelper.KEY_NEXT_HOMEPAGE_PERMISSION_FETCH_TIMESTAMP,10,16);
+                    SPHelper.setNextApiCallTimestamp(this, SPHelper.KEY_NEXT_HOMEPAGE_PERMISSION_FETCH_TIMESTAMP);
                     SPHelper.storeDataInSharedPref(HomeActivity.this, SPHelper.MASTER_DATA_PREF, SPHelper.KEY_HOMEPAGE_PERMISSION,permission);
                 },e->{}, progressDialog));
     }
@@ -154,7 +154,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void fetchOrderStatusFromServer(){
-        if(!CommonUtil.shouldCallApiAfterInterval(this, SPHelper.KEY_NEXT_ORDER_STATUS_FETCH_TIMESTAMP)) {
+        if(!SPHelper.shouldCallApiAfterInterval(this, SPHelper.KEY_NEXT_ORDER_STATUS_FETCH_TIMESTAMP)) {
             Type type = new TypeToken<ArrayList<OrderStatusDto>>() {}.getType();
             CommonUtil.statusList = SPHelper.getDataFromSharedPref(this,
                     SPHelper.MASTER_DATA_PREF, SPHelper.KEY_ORDER_STATUS_LIST,type);
@@ -165,7 +165,7 @@ public class HomeActivity extends AppCompatActivity {
         API.getClient().create(OrderApi.class).getOrderStatus()
                 .enqueue(API.getCallback(this,list->{
                     CommonUtil.statusList = (ArrayList<OrderStatusDto>)list;
-                    CommonUtil.setNextApiCallTimestamp(this, SPHelper.KEY_NEXT_ORDER_STATUS_FETCH_TIMESTAMP,25,31);
+                    SPHelper.setNextApiCallTimestamp(this, SPHelper.KEY_NEXT_ORDER_STATUS_FETCH_TIMESTAMP);
                     SPHelper.storeDataInSharedPref(HomeActivity.this, SPHelper.MASTER_DATA_PREF, SPHelper.KEY_ORDER_STATUS_LIST,CommonUtil.statusList);
                 },e->{},progressDialog));
     }
@@ -194,7 +194,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void fetchDeliveryPermission(){
-        if(!CommonUtil.shouldCallApiAfterInterval(this, SPHelper.KEY_NEXT_DELIVERY_PERMISSION_FETCH_TIMESTAMP)) {
+        if(!SPHelper.shouldCallApiAfterInterval(this, SPHelper.KEY_NEXT_DELIVERY_PERMISSION_FETCH_TIMESTAMP)) {
             CommonUtil.deliveryPermission = SPHelper.getDataFromSharedPref(this, SPHelper.MASTER_DATA_PREF,
                     SPHelper.KEY_DELIVERY_PERMISSION,DeliveryPermission.class);
             if(CommonUtil.deliveryPermission!=null) return;
@@ -203,7 +203,7 @@ public class HomeActivity extends AppCompatActivity {
         API.getClient().create(DeliveryApi.class).getDeliveryPermission()
                 .enqueue(API.getCallback(this,permission->{
                     CommonUtil.deliveryPermission = permission;
-                    CommonUtil.setNextApiCallTimestamp(this, SPHelper.KEY_NEXT_DELIVERY_PERMISSION_FETCH_TIMESTAMP,10,16);
+                    SPHelper.setNextApiCallTimestamp(this, SPHelper.KEY_NEXT_DELIVERY_PERMISSION_FETCH_TIMESTAMP);
                     SPHelper.storeDataInSharedPref(HomeActivity.this, SPHelper.MASTER_DATA_PREF, SPHelper.KEY_DELIVERY_PERMISSION,CommonUtil.deliveryPermission);
                 },e->{}, null));
     }

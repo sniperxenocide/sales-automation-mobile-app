@@ -126,25 +126,5 @@ public class CommonUtil {
             FirebaseCrashlytics.getInstance().setUserId(CommonUtil.loggedInUser.getUsername());
     }
 
-    public static boolean shouldCallApiAfterInterval(Context context,String key) {
-        SharedPreferences prefs = context.getSharedPreferences(SPHelper.API_CALL_TIMESTAMP_PREF, Context.MODE_PRIVATE);
-        long nextTime = prefs.getLong(key,0L);
-        Log.d("COMMON_UTIL", "shouldCallApiAfterInterval: PREF: "+ SPHelper.API_CALL_TIMESTAMP_PREF+" key: "+key+" value: "+nextTime);
-        if (nextTime == 0L || System.currentTimeMillis() > nextTime) {
-            Log.d("COMMON_UTIL", "shouldCallApiAfterInterval: API Call possible.");
-            return true;
-        }
-        Log.d("COMMON_UTIL", "shouldCallApiAfterInterval: Can't Call API Now.");
-        return false;
-    }
-
-    // Interval in Hour
-    public static void setNextApiCallTimestamp(Context context,String key,long rangeIntervalMin,long rangeIntervalMax){
-        long newNextTime = System.currentTimeMillis() + (ThreadLocalRandom.current().nextLong(
-                rangeIntervalMin,rangeIntervalMax)* 60 * 60 * 1000);
-        SharedPreferences prefs = context.getSharedPreferences(SPHelper.API_CALL_TIMESTAMP_PREF, Context.MODE_PRIVATE);
-        prefs.edit().putLong(key, newNextTime).apply();
-    }
-
 
 }
