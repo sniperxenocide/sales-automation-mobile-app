@@ -73,17 +73,21 @@ public class SPHelper {
         return null;
     }
 
-    public static boolean shouldCallApiAfterInterval(Context context,String key) {
+    /*
+    Determines whether a specific API call should be blocked based on a previously stored
+    timestamp in SharedPreferences.
+     */
+    public static boolean shouldBlockApiCall(Context context, String key) {
         String newKey = getUserWiseKey(key);
         SharedPreferences prefs = context.getSharedPreferences(SPHelper.API_CALL_TIMESTAMP_PREF, Context.MODE_PRIVATE);
         long nextTime = prefs.getLong(newKey,0L);
         Log.d("COMMON_UTIL", "shouldCallApiAfterInterval: PREF: "+ SPHelper.API_CALL_TIMESTAMP_PREF+" key: "+newKey+" value: "+nextTime);
         if (nextTime == 0L || System.currentTimeMillis() > nextTime) {
             Log.d("COMMON_UTIL", "shouldCallApiAfterInterval: API Call possible.");
-            return true;
+            return false;
         }
         Log.d("COMMON_UTIL", "shouldCallApiAfterInterval: Can't Call API Now.");
-        return false;
+        return true;
     }
 
     // Interval in Hour

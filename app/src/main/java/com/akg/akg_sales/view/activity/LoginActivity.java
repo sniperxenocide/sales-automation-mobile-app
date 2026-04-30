@@ -66,8 +66,8 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     private void checkForUpdate(){
-        if(!SPHelper.shouldCallApiAfterInterval(this,
-                SPHelper.KEY_NEXT_APP_UPDATE_CHECK_TIMESTAMP)) return;
+        if(SPHelper.shouldBlockApiCall(this, SPHelper.KEY_NEXT_APP_UPDATE_CHECK_TIMESTAMP))
+            return;
 
         Log.d(LOG_TAG, "checkForUpdate: App Update Check Initiating...");
         ProgressDialog progressDialog = CommonUtil.showProgressDialog(this);

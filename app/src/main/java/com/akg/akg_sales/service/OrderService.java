@@ -8,17 +8,14 @@ import androidx.core.util.Consumer;
 import com.akg.akg_sales.api.API;
 import com.akg.akg_sales.api.ItemApi;
 import com.akg.akg_sales.api.OrderApi;
-import com.akg.akg_sales.dto.delivery.DeliveryPermission;
 import com.akg.akg_sales.dto.item.ItemDto;
 import com.akg.akg_sales.dto.item.ItemMaster;
 import com.akg.akg_sales.dto.order.OrderDto;
 import com.akg.akg_sales.dto.order.OrderPermission;
 import com.akg.akg_sales.dto.order.OrderRequest;
-import com.akg.akg_sales.dto.order.OrderStatusDto;
 import com.akg.akg_sales.dto.order.OrderTypeDto;
 import com.akg.akg_sales.util.CommonUtil;
 import com.akg.akg_sales.util.SPHelper;
-import com.akg.akg_sales.view.activity.HomeActivity;
 import com.google.gson.reflect.TypeToken;
 
 import java.lang.reflect.Type;
@@ -165,7 +162,7 @@ public class OrderService {
     }
 
     public static void fetchOrderPermission(Context context,Consumer<OrderPermission> callback){
-        if(!SPHelper.shouldCallApiAfterInterval(context, SPHelper.KEY_NEXT_ORDER_PERMISSION_FETCH_TIMESTAMP)) {
+        if(SPHelper.shouldBlockApiCall(context, SPHelper.KEY_NEXT_ORDER_PERMISSION_FETCH_TIMESTAMP)) {
             CommonUtil.orderPermission = SPHelper.getDataFromSharedPref(context, SPHelper.MASTER_DATA_PREF,
                     SPHelper.KEY_ORDER_PERMISSION, OrderPermission.class);
             if(CommonUtil.orderPermission!=null) {
@@ -184,7 +181,7 @@ public class OrderService {
     }
 
     public static void fetchOrderTypes(Context context,Consumer<List<OrderTypeDto>> callback){
-        if(!SPHelper.shouldCallApiAfterInterval(context, SPHelper.KEY_NEXT_ORDER_TYPE_FETCH_TIMESTAMP)) {
+        if(SPHelper.shouldBlockApiCall(context, SPHelper.KEY_NEXT_ORDER_TYPE_FETCH_TIMESTAMP)) {
             Type type = new TypeToken<ArrayList<OrderTypeDto>>() {}.getType();
             ArrayList<OrderTypeDto> orderTypes = SPHelper.getDataFromSharedPref(context, SPHelper.MASTER_DATA_PREF,
                     SPHelper.KEY_ORDER_TYPE_LIST, type);

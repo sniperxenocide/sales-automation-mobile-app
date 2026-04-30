@@ -24,7 +24,6 @@ import com.akg.akg_sales.dto.delivery.DeliveryPermission;
 import com.akg.akg_sales.dto.order.CartItemDto;
 import com.akg.akg_sales.dto.order.OrderStatusDto;
 import com.akg.akg_sales.service.CustomerService;
-import com.akg.akg_sales.service.DeliveryService;
 import com.akg.akg_sales.util.CommonUtil;
 import com.akg.akg_sales.util.SPHelper;
 import com.akg.akg_sales.view.activity.delivery.DeliveryListActivity;
@@ -76,7 +75,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void fetchHomepagePermission(ArrayList<HomeMenuItem> list,HomeMenuAdapter adapter){
-        if(!SPHelper.shouldCallApiAfterInterval(this, SPHelper.KEY_NEXT_HOMEPAGE_PERMISSION_FETCH_TIMESTAMP)) {
+        if(SPHelper.shouldBlockApiCall(this, SPHelper.KEY_NEXT_HOMEPAGE_PERMISSION_FETCH_TIMESTAMP)) {
             HomepagePermission permission = SPHelper.getDataFromSharedPref(this,
                     SPHelper.MASTER_DATA_PREF, SPHelper.KEY_HOMEPAGE_PERMISSION,HomepagePermission.class);
             if(permission!=null) {
@@ -154,7 +153,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void fetchOrderStatusFromServer(){
-        if(!SPHelper.shouldCallApiAfterInterval(this, SPHelper.KEY_NEXT_ORDER_STATUS_FETCH_TIMESTAMP)) {
+        if(SPHelper.shouldBlockApiCall(this, SPHelper.KEY_NEXT_ORDER_STATUS_FETCH_TIMESTAMP)) {
             Type type = new TypeToken<ArrayList<OrderStatusDto>>() {}.getType();
             CommonUtil.statusList = SPHelper.getDataFromSharedPref(this,
                     SPHelper.MASTER_DATA_PREF, SPHelper.KEY_ORDER_STATUS_LIST,type);
@@ -194,7 +193,7 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     private void fetchDeliveryPermission(){
-        if(!SPHelper.shouldCallApiAfterInterval(this, SPHelper.KEY_NEXT_DELIVERY_PERMISSION_FETCH_TIMESTAMP)) {
+        if(SPHelper.shouldBlockApiCall(this, SPHelper.KEY_NEXT_DELIVERY_PERMISSION_FETCH_TIMESTAMP)) {
             CommonUtil.deliveryPermission = SPHelper.getDataFromSharedPref(this, SPHelper.MASTER_DATA_PREF,
                     SPHelper.KEY_DELIVERY_PERMISSION,DeliveryPermission.class);
             if(CommonUtil.deliveryPermission!=null) return;
